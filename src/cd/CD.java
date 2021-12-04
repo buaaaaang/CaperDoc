@@ -14,16 +14,24 @@ public class CD extends XApp {
     
     // fields
     private JFrame mFrame = null;
-    private CDPDFViewer mViewer = null;
     
+    private CDPDFViewer mViewer = null;
+    public CDPDFViewer getViewer() {
+        return this.mViewer;
+    }
+    
+    private CDEventListener mEventListener = null;
+    
+    private XScenarioMgr mScenarioMgr = null;
     @Override
     public XScenarioMgr getScenarioMgr() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.mScenarioMgr;
     }
-
+    
+    private XLogMgr mLogMgr = null;
     @Override
     public XLogMgr getXLogMgr() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.mLogMgr;
     }
     
     // constructor
@@ -31,6 +39,17 @@ public class CD extends XApp {
         this.mFrame = new JFrame("CaperDoc");
         this.mFrame.setSize(CD.INITIAL_WIDTH, CD.INITIAL_HEIGHT);
         this.mViewer = new CDPDFViewer(this);
+        
+        this.mScenarioMgr = new CDScenarioMgr(this);
+        this.mLogMgr = new XLogMgr();
+        this.mLogMgr.setPrintOn(true);
+        
+        // connect to event listners
+        this.mViewer.addMouseListener(this.mEventListener);
+        this.mViewer.addMouseMotionListener(this.mEventListener);
+        this.mViewer.addMouseWheelListener(this.mEventListener);
+        this.mViewer.addKeyListener(this.mEventListener);    
+        this.mViewer.setFocusable(true);
         
         
         // build and show
