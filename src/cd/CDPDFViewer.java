@@ -52,11 +52,11 @@ public class CDPDFViewer extends JPanel {
         float pageWidth = singlePage.getWidth();
         float pageHeight = singlePage.getHeight();
         float scale = this.getWidth() * CDPDFViewer.WIDTH_PDF_RATIO / pageWidth;
-        int nPages = (int) (this.getHeight() / pageHeight * scale) + 2;
+        int nPages = (int) (this.getHeight() / (pageHeight * scale)) + 2;
         
         int xPos = (int) ((this.getWidth() * CDPDFViewer.PDF_LOCATION_RATIO));
         int yPos = -1 * ((int) (pageHeight * scale * this.mPageLocation));
-
+    
         for (int i = 0; i < nPages; i++) {
             try {
                 BufferedImage pageImage = 
