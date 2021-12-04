@@ -1,11 +1,11 @@
-package caperdoc;
+package cd;
 
 import javax.swing.JFrame;
 import x.XApp;
 import x.XLogMgr;
 import x.XScenarioMgr;
 
-public class CaperDoc extends XApp {
+public class CD extends XApp {
     // fields
     private JFrame mFrame = null;
     
@@ -20,7 +20,7 @@ public class CaperDoc extends XApp {
     }
     
     // constructor
-    public CaperDoc() {
+    public CD() {
         this.mFrame = new JFrame("CaperDoc");
         this.mFrame.setSize(800, 600);
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,7 +29,7 @@ public class CaperDoc extends XApp {
     
     // main
     public static void main(String[] args) {
-        CaperDoc myCaperDoc = new CaperDoc();
+        CD myCaperDoc = new CD();
     }
     
 }
