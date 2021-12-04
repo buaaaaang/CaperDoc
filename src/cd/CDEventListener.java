@@ -23,10 +23,16 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
 
     @Override
     public void mousePressed(MouseEvent e) {
+        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        curScene.handleMousePress(e);
+        this.mCD.getViewer().repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        curScene.handleMouseRelease(e);
+        this.mCD.getViewer().repaint();
     }
 
     @Override
@@ -39,6 +45,9 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        curScene.handleMouseDrag(e);
+        this.mCD.getViewer().repaint();
     }
 
     @Override
@@ -65,6 +74,9 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
 
     @Override
     public void keyReleased(KeyEvent e) {
+        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        curScene.handleKeyUp(e);
+        this.mCD.getViewer().repaint();
     }
     
 }

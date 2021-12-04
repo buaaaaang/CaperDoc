@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import x.XApp;
+import x.XCmdToChangeScene;
 import x.XScenario;
 
 public class CDDefaultScenario extends XScenario {
@@ -77,6 +78,10 @@ public class CDDefaultScenario extends XScenario {
                     break;
                 case KeyEvent.VK_DOWN:
                     CDCmdToGoDown.execute(cd, -1);
+                    break;
+                case KeyEvent.VK_CONTROL:
+                    XCmdToChangeScene.execute(cd, CDNavigateScenario.
+                        ZoomPanReadyScene.getSingleton(), this);
                     break;
             }
         }
