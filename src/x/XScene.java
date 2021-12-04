@@ -19,8 +19,4 @@ public abstract class XScene {
         this.mScenario = scenario;
         this.mReturnScene = null;
     }
-    
-    //abstract methods
-    public abstract void getReady();
-    public abstract void wrapUp();
 }

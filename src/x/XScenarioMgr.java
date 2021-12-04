@@ -11,10 +11,6 @@ public abstract class XScenarioMgr {
         return this.mCurScene;
     }
     public void setCurScene(XScene scene) {
-        if (this.mCurScene != null) {
-            this.mCurScene.wrapUp();
-        } 
-        scene.getReady();
         this.mCurScene = scene;
     }
     
