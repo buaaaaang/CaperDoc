@@ -29,14 +29,14 @@ public class CD extends XApp {
     // constructor
     public CD() throws IOException {
         this.mFrame = new JFrame("CaperDoc");
-        this.mFrame.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+        this.mFrame.setSize(CD.INITIAL_WIDTH, CD.INITIAL_HEIGHT);
         this.mViewer = new CDPDFViewer(this);
         
         
         // build and show
         this.mFrame.add(mViewer);
         this.mViewer.setPreferredSize(
-            new Dimension(INITIAL_WIDTH,INITIAL_HEIGHT));
+            new Dimension(CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT));
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mFrame.setVisible(true);
     }
