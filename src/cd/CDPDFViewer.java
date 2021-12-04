@@ -2,6 +2,8 @@ package cd;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,29 +15,29 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class CDPDFViewer extends JPanel {
     // constants
-    private static final float RATIO_PDF_WIDTH = 0.98f;
-    private static final float RATIO_PDF_LOCATION = 0.01f;
-    private static final float RATIO_PAGE_GAP = 0.01f;
+    private static final int PAGE_WIDTH = 1680;
+    private static final int PAGE_HEIGHT = 2376;
+    private static final int PAGE_GAP = 24;
+    private static final int PAGE_INTERVAL = 
+        CDPDFViewer.PAGE_HEIGHT + CDPDFViewer.PAGE_GAP;
+    private static final double WORLD_X_POS = 0.5 / CD.INITIAL_DIALATION *
+        (CD.INITIAL_WIDTH - CDPDFViewer.PAGE_WIDTH * CD.INITIAL_DIALATION);
+    
     
     // fields
     private CD mCD = null;
     private PDDocument mDoc = null;
     private PDFRenderer mRenderer = null;
     
-    private int mPage;
-    private float mPageLocation;
-    
     
     public CDPDFViewer(CD cd) throws IOException {
         this.mCD = cd;
         try {
             this.mDoc = PDDocument.load(new File("real analysis.pdf"));
-        } catch (IOException e) { }
+        } catch (IOException e) {
+            System.out.println("Error: cannot load file");
+        }
         this.mRenderer = new PDFRenderer(this.mDoc); 
-        
-        this.mPage = 30;
-        this.mPageLocation = 0.7f;
-        
     }
     
     @Override
@@ -44,33 +46,27 @@ public class CDPDFViewer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         
         // Render PDF pages
-        PDPage page = this.mDoc.getPage(this.mPage);
-        PDRectangle singlePage = page.getCropBox();
-        float pageWidth = singlePage.getWidth();
-        float pageHeight = singlePage.getHeight();
-        float scale = this.getWidth() * CDPDFViewer.RATIO_PDF_WIDTH / pageWidth;
-        int nPages = (int) (this.getHeight() / (pageHeight * scale)) + 2;
-        
-        int xPos = (int) ((this.getWidth() * CDPDFViewer.RATIO_PDF_LOCATION));
-        int yPos = -1 * ((int) (pageHeight * scale * this.mPageLocation));
-    
-        for (int i = 0; i < nPages; i++) {
+        Point2D.Double topPoint = this.mCD.getXform().
+            calcPtFromScreenToWorld(new Point(0,0));
+        Point2D.Double bottomPoint = this.mCD.getXform().
+            calcPtFromScreenToWorld(new Point(0,this.getHeight()));
+        int topPage = (int) (topPoint.y / CDPDFViewer.PAGE_INTERVAL);
+        int bottomPage = (int) (bottomPoint.y / CDPDFViewer.PAGE_INTERVAL) + 1;
+        float ratio = this.getHeight() / ((float)(bottomPoint.y - topPoint.y));
+        for (int p = topPage; p <= bottomPage; p++) {  
+            PDRectangle pageFrame = this.mDoc.getPage(p).getCropBox();
+            float xs = CDPDFViewer.PAGE_WIDTH * ratio / pageFrame.getWidth();
+            float ys = CDPDFViewer.PAGE_HEIGHT * ratio / pageFrame.getHeight();
+            float scale = Math.min(xs, ys);
+            Point pos = (this.mCD.getXform().calcPtFromWorldToScreen(
+                new Point2D.Double(CDPDFViewer.WORLD_X_POS, 
+                p * CDPDFViewer.PAGE_INTERVAL)));  
             try {
-                BufferedImage pageImage = 
-                    this.mRenderer.renderImage(this.mPage + i, scale);
-                g2.drawImage(pageImage, xPos, yPos, null);
-                yPos += pageHeight * scale * (1 + CDPDFViewer.RATIO_PAGE_GAP);
-            } catch (IOException e) { }
+                BufferedImage pageImage = this.mRenderer.renderImage(p, scale);
+                g2.drawImage(pageImage, pos.x, pos.y, null);
+            } catch (IOException e) {
+                System.out.println("Error: cannot load page");
+            }
         }
     }
-    
-    public void Move(float f) {
-        this.mPageLocation += f;
-        if (mPageLocation < 0 || mPageLocation >= 1) {
-            mPage += Math.floor(mPageLocation);
-            this.mPageLocation = this.mPageLocation - 
-                (float) Math.floor(this.mPageLocation);
-        }
-    }
-    
 }
