@@ -76,11 +76,11 @@ public class CDXform {
         return true;
     }
         
-    public boolean dialate(Point pt, int direction){
+    public boolean dialate(Point pt, int direction, double amount){
         Point2D.Double worldPt = this.calcPtFromScreenToWorld(pt);
         
-        double scale = 0.95;
-        if (direction < 0) { scale = 1.05; }
+        double scale = amount;
+        if (direction > 0) { scale = 1 / amount; }
         
         this.mCurXformFromWorldToScreen.translate(worldPt.x, worldPt.y);
         this.mCurXformFromWorldToScreen.scale(scale, scale);

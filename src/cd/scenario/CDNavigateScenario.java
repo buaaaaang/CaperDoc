@@ -2,6 +2,7 @@ package cd.scenario;
 
 import cd.CD;
 import cd.CDScene;
+import cd.cmd.CDCmdToZoomAtPt;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -68,6 +69,8 @@ public class CDNavigateScenario extends XScenario {
         
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            CDCmdToZoomAtPt.execute(cd, e);
         }
 
         @Override
