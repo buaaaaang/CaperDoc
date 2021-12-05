@@ -58,7 +58,6 @@ public class CDDrawScenario extends XScenario {
 
         @Override
         public void handleMouseDrag(MouseEvent e) {
-            System.out.println("Drawing");
             CD cd = (CD) this.mScenario.getApp();
             CDPtCurve curPtCurve = cd.getPtCurveMgr().getCurPtCurve();
             Point pt = e.getPoint();

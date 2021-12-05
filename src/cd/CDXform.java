@@ -86,7 +86,6 @@ public class CDXform {
         
         double s = (this.calcPtFromScreenToWorld(new Point(100,0)).x - 
             this.calcPtFromScreenToWorld(new Point(0,0)).x) / 100;
-        System.out.println("" + s);
         double scale; 
         if (direction > 0) { 
             if (s > CDXform.MAX_SCALE) {

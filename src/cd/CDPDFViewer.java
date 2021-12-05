@@ -46,6 +46,7 @@ public class CDPDFViewer extends JPanel {
             this.mDoc = PDDocument.load(new File(path));
         } catch (IOException e) {
             System.out.println("Error: No such file in the path");
+            return;
         }
         System.out.println("PDF Opened");
         this.mRenderer = new PDFRenderer(this.mDoc); 

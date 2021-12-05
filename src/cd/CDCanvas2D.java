@@ -56,7 +56,6 @@ public class CDCanvas2D extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("repaint canvas");
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
