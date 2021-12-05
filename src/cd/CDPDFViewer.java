@@ -29,7 +29,7 @@ public class CDPDFViewer extends JPanel {
     private static final Color COLOR_INFO = new Color(255,0,0,128);
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);
-    private static final int INFO_TOP_ALIGNMENT_X = 20;
+    private static final int INFO_TOP_ALIGNMENT_X = 100;
     private static final int INFO_TOP_ALIGNMENT_Y = 30;
     
     
@@ -59,9 +59,11 @@ public class CDPDFViewer extends JPanel {
             calcPtFromScreenToWorld(new Point(0,0));
         Point2D.Double bottomPoint = this.mCD.getXform().
             calcPtFromScreenToWorld(new Point(0,this.getHeight()));
+        
         int topPage = (int) (topPoint.y / CDPDFViewer.PAGE_INTERVAL);
         int bottomPage = (int) (bottomPoint.y / CDPDFViewer.PAGE_INTERVAL) + 1;
         float ratio = this.getHeight() / ((float)(bottomPoint.y - topPoint.y));
+        
         for (int p = topPage; p <= bottomPage; p++) {  
             PDRectangle pageFrame = this.mDoc.getPage(p).getCropBox();
             float xs = CDPDFViewer.PAGE_WIDTH * ratio / pageFrame.getWidth();

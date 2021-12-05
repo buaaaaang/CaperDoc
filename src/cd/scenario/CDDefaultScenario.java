@@ -2,8 +2,11 @@ package cd.scenario;
 
 import cd.CD;
 import cd.CDScene;
+import cd.cmd.CDCmdToCreateCurPtCurve;
+import cd.cmd.CDCmdToSaveFile;
 import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -52,6 +55,12 @@ public class CDDefaultScenario extends XScenario {
 
         @Override
         public void handleMousePress(MouseEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            Point pt = e.getPoint();
+            CDCmdToCreateCurPtCurve.execute(cd, pt);
+            XCmdToChangeScene.execute(cd, 
+                CDDrawScenario.DrawScene.getSingleton(), 
+                CDDefaultScenario.ReadyScene.getSingleton());
         }
 
         @Override
@@ -88,6 +97,13 @@ public class CDDefaultScenario extends XScenario {
 
         @Override
         public void handleKeyUp(KeyEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            int code = e.getKeyCode();
+            switch (code) {
+                case KeyEvent.VK_S:
+                    CDCmdToSaveFile.execute(cd);
+                    break;
+            }
         }
 
         @Override

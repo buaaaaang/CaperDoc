@@ -1,8 +1,10 @@
 package cd;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import x.XApp;
 import x.XLogMgr;
 import x.XScenarioMgr;
@@ -15,10 +17,19 @@ public class CD extends XApp {
     
     // fields
     private JFrame mFrame = null;
+    private CDPtCurveMgr mPtCurveMgr = null;
+    public CDPtCurveMgr getPtCurveMgr() {
+        return this.mPtCurveMgr;
+    }
     
     private CDPDFViewer mViewer = null;
     public CDPDFViewer getViewer() {
         return this.mViewer;
+    }
+    
+    private CDCanvas2D mCanvas = null;
+    public CDCanvas2D getCanvas() {
+        return this.mCanvas;
     }
     
     private CDXform mXform = null;
@@ -40,16 +51,22 @@ public class CD extends XApp {
         return this.mLogMgr;
     }
     
+    private JPanel mPanel = null;
+    
     // constructor
     public CD() throws IOException {
         this.mFrame = new JFrame("CaperDoc");
         this.mFrame.setSize(CD.INITIAL_WIDTH, CD.INITIAL_HEIGHT);
+        this.mPanel = new JPanel();
         this.mViewer = new CDPDFViewer(this);
+        this.mCanvas = new CDCanvas2D(this);
+        
         this.mXform = new CDXform();
         this.mXform.scale(CD.INITIAL_DIALATION);
         this.mEventListener = new CDEventListener(this);
         
         this.mScenarioMgr = new CDScenarioMgr(this);
+        this.mPtCurveMgr = new CDPtCurveMgr();
         this.mLogMgr = new XLogMgr();
         this.mLogMgr.setPrintOn(true);
         
@@ -60,9 +77,22 @@ public class CD extends XApp {
         this.mViewer.addKeyListener(this.mEventListener);    
         this.mViewer.setFocusable(true);
         
+        this.mCanvas.addMouseListener(this.mEventListener);
+        this.mCanvas.addMouseMotionListener(this.mEventListener);
+        this.mCanvas.addMouseWheelListener(this.mEventListener);
+        this.mCanvas.addKeyListener(this.mEventListener);    
+        this.mCanvas.setFocusable(true);
+        
         
         // build and show
-        this.mFrame.add(mViewer);
+//        this.mPanel.setOpaque(false);
+//        this.mPanel.setLayout(null);
+        this.mCanvas.setOpaque(false);
+        
+        this.mPanel.add(this.mViewer);
+        this.mPanel.add(this.mCanvas);
+        this.mFrame.add(this.mPanel);
+        
         this.mViewer.setPreferredSize(
             new Dimension(CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT));
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

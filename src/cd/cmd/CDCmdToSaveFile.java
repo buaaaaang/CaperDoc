@@ -4,29 +4,24 @@ import cd.CD;
 import x.XApp;
 import x.XLoggableCmd;
 
-public class CDCmdToScroll extends XLoggableCmd {
-    // constants
-    private static final int SCROLL_AMOUT = 100;
+public class CDCmdToSaveFile extends XLoggableCmd {
+    //fields
     
-    // fields
-    private int mDir;
-    
-    // private constructor
-    private CDCmdToScroll(XApp app, int dir) {
+    //private constructor
+    private CDCmdToSaveFile(XApp app) {
         super(app);
-        this.mDir = dir;
     }
     
     // JSICmdToDoSomething.execute(jsi, ...)
-    public static boolean execute(XApp app, int dir) {
-        CDCmdToScroll cmd = new CDCmdToScroll(app, dir);
+    public static boolean execute(XApp app) {
+        CDCmdToSaveFile cmd = new CDCmdToSaveFile(app);
         return cmd.execute();
     }
     
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        cd.getXform().translateUp(this.mDir * CDCmdToScroll.SCROLL_AMOUT);
+        
         return true;
     }
 
