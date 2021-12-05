@@ -52,6 +52,9 @@ public class CD extends XApp {
     }
     
     private JPanel mPanel = null;
+    public JPanel getPanel() {
+        return this.mPanel;
+    }
     
     // constructor
     public CD() throws IOException {
@@ -71,30 +74,41 @@ public class CD extends XApp {
         this.mLogMgr.setPrintOn(true);
         
         // connect to event listners
-        this.mViewer.addMouseListener(this.mEventListener);
-        this.mViewer.addMouseMotionListener(this.mEventListener);
-        this.mViewer.addMouseWheelListener(this.mEventListener);
-        this.mViewer.addKeyListener(this.mEventListener);    
-        this.mViewer.setFocusable(true);
+//        this.mViewer.addMouseListener(this.mEventListener);
+//        this.mViewer.addMouseMotionListener(this.mEventListener);
+//        this.mViewer.addMouseWheelListener(this.mEventListener);
+//        this.mViewer.addKeyListener(this.mEventListener);    
+//        this.mViewer.setFocusable(true);
+//        
+//        this.mCanvas.addMouseListener(this.mEventListener);
+//        this.mCanvas.addMouseMotionListener(this.mEventListener);
+//        this.mCanvas.addMouseWheelListener(this.mEventListener);
+//        this.mCanvas.addKeyListener(this.mEventListener);    
+//        this.mCanvas.setFocusable(true);
         
-        this.mCanvas.addMouseListener(this.mEventListener);
-        this.mCanvas.addMouseMotionListener(this.mEventListener);
-        this.mCanvas.addMouseWheelListener(this.mEventListener);
-        this.mCanvas.addKeyListener(this.mEventListener);    
-        this.mCanvas.setFocusable(true);
+        this.mPanel.addMouseListener(this.mEventListener);
+        this.mPanel.addMouseMotionListener(this.mEventListener);
+        this.mPanel.addMouseWheelListener(this.mEventListener);
+        this.mPanel.addKeyListener(this.mEventListener);    
+        this.mPanel.setFocusable(true);
         
         
         // build and show
-//        this.mPanel.setOpaque(false);
-//        this.mPanel.setLayout(null);
         this.mCanvas.setOpaque(false);
-        
-        this.mPanel.add(this.mViewer);
+        this.mPanel.setLayout(null);
         this.mPanel.add(this.mCanvas);
-        this.mFrame.add(this.mPanel);
+//        this.mCanvas.setBackground(Color.blue);
+        this.mPanel.add(this.mViewer);
         
-        this.mViewer.setPreferredSize(
-            new Dimension(CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT));
+        this.mFrame.add(this.mPanel);
+        this.mViewer.setBounds(
+            0,0,CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT);
+        this.mCanvas.setBounds(
+            0,0,CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT);
+//        this.mViewer.setPreferredSize(
+//            new Dimension(CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT));
+//        this.mCanvas.setPreferredSize(
+//            new Dimension(CD.INITIAL_WIDTH/2,CD.INITIAL_HEIGHT/2));
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mFrame.setVisible(true);
     }
@@ -103,5 +117,4 @@ public class CD extends XApp {
     public static void main(String[] args) throws IOException {
         CD myCaperDoc = new CD();
     }
-    
 }

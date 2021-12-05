@@ -51,10 +51,12 @@ public class CDCanvas2D extends JPanel {
         this.mCD = cd;
         this.mCurColorForPtCurve = CDCanvas2D.COLOR_PT_CURVE_DEFAULT;
         this.mCurStrokeForPtCurve = CDCanvas2D.STROKE_PT_CURVE_DEFAULT;
+        this.repaint();
     }
     
     @Override
     protected void paintComponent(Graphics g) {
+        System.out.println("repaint canvas");
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         

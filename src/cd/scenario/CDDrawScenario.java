@@ -58,6 +58,7 @@ public class CDDrawScenario extends XScenario {
 
         @Override
         public void handleMouseDrag(MouseEvent e) {
+            System.out.println("Drawing");
             CD cd = (CD) this.mScenario.getApp();
             CDPtCurve curPtCurve = cd.getPtCurveMgr().getCurPtCurve();
             Point pt = e.getPoint();
@@ -74,7 +75,8 @@ public class CDDrawScenario extends XScenario {
 
             Point2D.Double worldPt = 
                 cd.getXform().calcPtFromScreenToWorld(pt);
-            cd.getPtCurveMgr().getCurPtCurve().addPt(worldPt);         
+            cd.getPtCurveMgr().getCurPtCurve().addPt(worldPt);
+            cd.getCanvas().repaint();
         }
 
         @Override
@@ -106,7 +108,7 @@ public class CDDrawScenario extends XScenario {
 
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            
         }
     }
     

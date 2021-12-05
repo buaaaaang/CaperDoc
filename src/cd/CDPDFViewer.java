@@ -81,15 +81,15 @@ public class CDPDFViewer extends JPanel {
         }     
         
         // render common screen objects
-        this.drawInfo(g2);
+//        this.drawInfo(g2);
     }    
     
-    private void drawInfo(Graphics2D g2) {
-        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        String str = curScene.getClass().getSimpleName();
-        g2.setColor(CDPDFViewer.COLOR_INFO);
-        g2.setFont(CDPDFViewer.FONT_INFO);
-        g2.drawString(str, CDPDFViewer.INFO_TOP_ALIGNMENT_X, 
-            CDPDFViewer.INFO_TOP_ALIGNMENT_Y);   
-    }
+//    private void drawInfo(Graphics2D g2) {
+//        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+//        String str = curScene.getClass().getSimpleName();
+//        g2.setColor(CDPDFViewer.COLOR_INFO);
+//        g2.setFont(CDPDFViewer.FONT_INFO);
+//        g2.drawString(str, CDPDFViewer.INFO_TOP_ALIGNMENT_X, 
+//            CDPDFViewer.INFO_TOP_ALIGNMENT_Y);   
+//    }
 }
