@@ -2,7 +2,7 @@ package cd.scenario;
 
 import cd.CD;
 import cd.CDScene;
-import cd.cmd.CDCmdToGoDown;
+import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -65,7 +65,7 @@ public class CDDefaultScenario extends XScenario {
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToGoDown.execute(cd, (e.getWheelRotation() > 0) ? 1 : -1);
+            CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
         }
 
         @Override
@@ -74,10 +74,10 @@ public class CDDefaultScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_UP:
-                    CDCmdToGoDown.execute(cd, 1);
+                    CDCmdToScroll.execute(cd, 1);
                     break;
                 case KeyEvent.VK_DOWN:
-                    CDCmdToGoDown.execute(cd, -1);
+                    CDCmdToScroll.execute(cd, -1);
                     break;
                 case KeyEvent.VK_CONTROL:
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
