@@ -39,13 +39,15 @@ public class CDPDFViewer extends JPanel {
     private PDFRenderer mRenderer = null;
     
     
-    public CDPDFViewer(CD cd) throws IOException {
+    public CDPDFViewer(CD cd, String path) throws IOException {
         this.mCD = cd;
         try {
-            this.mDoc = PDDocument.load(new File("real analysis.pdf"));
+            System.out.println("Opening " + path + "...");
+            this.mDoc = PDDocument.load(new File(path));
         } catch (IOException e) {
-            System.out.println("Error: cannot load file");
+            System.out.println("Error: No such file in the path");
         }
+        System.out.println("PDF Opened");
         this.mRenderer = new PDFRenderer(this.mDoc); 
     }
     
@@ -62,6 +64,8 @@ public class CDPDFViewer extends JPanel {
         
         int topPage = (int) (topPoint.y / CDPDFViewer.PAGE_INTERVAL);
         int bottomPage = (int) (bottomPoint.y / CDPDFViewer.PAGE_INTERVAL) + 1;
+        topPage = Math.max(topPage, 0);
+        bottomPage = Math.min(bottomPage, this.mDoc.getNumberOfPages());
         float ratio = this.getHeight() / ((float)(bottomPoint.y - topPoint.y));
         
         for (int p = topPage; p <= bottomPage; p++) {  
