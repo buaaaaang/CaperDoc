@@ -6,7 +6,7 @@ import x.XLoggableCmd;
 
 public class CDCmdToScroll extends XLoggableCmd {
     // constants
-    private static final int SCROOL_AMOUT = 100;
+    private static final int SCROLL_AMOUNT = 100;
     
     // fields
     private int mDir;
@@ -26,7 +26,7 @@ public class CDCmdToScroll extends XLoggableCmd {
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        cd.getXform().translateUp(this.mDir * CDCmdToScroll.SCROOL_AMOUT);
+        cd.getXform().translateUp(this.mDir * CDCmdToScroll.SCROLL_AMOUNT);
         return true;
     }
 

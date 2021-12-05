@@ -61,6 +61,8 @@ public class CDPDFViewer extends JPanel {
             calcPtFromScreenToWorld(new Point(0,this.getHeight()));
         int topPage = (int) (topPoint.y / CDPDFViewer.PAGE_INTERVAL);
         int bottomPage = (int) (bottomPoint.y / CDPDFViewer.PAGE_INTERVAL) + 1;
+        topPage = Math.max(topPage, 0);
+        bottomPage = Math.min(bottomPage, this.mDoc.getNumberOfPages());
         float ratio = this.getHeight() / ((float)(bottomPoint.y - topPoint.y));
         for (int p = topPage; p <= bottomPage; p++) {  
             PDRectangle pageFrame = this.mDoc.getPage(p).getCropBox();
