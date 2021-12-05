@@ -29,7 +29,7 @@ public class CDPDFViewer extends JPanel {
     private static final Color COLOR_INFO = new Color(255,0,0,128);
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);
-    private static final int INFO_TOP_ALIGNMENT_X = 20;
+    private static final int INFO_TOP_ALIGNMENT_X = 100;
     private static final int INFO_TOP_ALIGNMENT_Y = 30;
     
     
@@ -39,13 +39,16 @@ public class CDPDFViewer extends JPanel {
     private PDFRenderer mRenderer = null;
     
     
-    public CDPDFViewer(CD cd) throws IOException {
+    public CDPDFViewer(CD cd, String path) throws IOException {
         this.mCD = cd;
         try {
-            this.mDoc = PDDocument.load(new File("real analysis.pdf"));
+            System.out.println("Opening " + path + "...");
+            this.mDoc = PDDocument.load(new File(path));
         } catch (IOException e) {
-            System.out.println("Error: cannot load file");
+            System.out.println("Error: No such file in the path");
+            return;
         }
+        System.out.println("PDF Opened");
         this.mRenderer = new PDFRenderer(this.mDoc); 
     }
     
@@ -59,9 +62,13 @@ public class CDPDFViewer extends JPanel {
             calcPtFromScreenToWorld(new Point(0,0));
         Point2D.Double bottomPoint = this.mCD.getXform().
             calcPtFromScreenToWorld(new Point(0,this.getHeight()));
+        
         int topPage = (int) (topPoint.y / CDPDFViewer.PAGE_INTERVAL);
         int bottomPage = (int) (bottomPoint.y / CDPDFViewer.PAGE_INTERVAL) + 1;
+        topPage = Math.max(topPage, 0);
+        bottomPage = Math.min(bottomPage, this.mDoc.getNumberOfPages());
         float ratio = this.getHeight() / ((float)(bottomPoint.y - topPoint.y));
+        
         for (int p = topPage; p <= bottomPage; p++) {  
             PDRectangle pageFrame = this.mDoc.getPage(p).getCropBox();
             float xs = CDPDFViewer.PAGE_WIDTH * ratio / pageFrame.getWidth();
@@ -79,15 +86,15 @@ public class CDPDFViewer extends JPanel {
         }     
         
         // render common screen objects
-        this.drawInfo(g2);
+//        this.drawInfo(g2);
     }    
     
-    private void drawInfo(Graphics2D g2) {
-        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        String str = curScene.getClass().getSimpleName();
-        g2.setColor(CDPDFViewer.COLOR_INFO);
-        g2.setFont(CDPDFViewer.FONT_INFO);
-        g2.drawString(str, CDPDFViewer.INFO_TOP_ALIGNMENT_X, 
-            CDPDFViewer.INFO_TOP_ALIGNMENT_Y);   
-    }
+//    private void drawInfo(Graphics2D g2) {
+//        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+//        String str = curScene.getClass().getSimpleName();
+//        g2.setColor(CDPDFViewer.COLOR_INFO);
+//        g2.setFont(CDPDFViewer.FONT_INFO);
+//        g2.drawString(str, CDPDFViewer.INFO_TOP_ALIGNMENT_X, 
+//            CDPDFViewer.INFO_TOP_ALIGNMENT_Y);   
+//    }
 }

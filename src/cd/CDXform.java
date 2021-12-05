@@ -6,6 +6,11 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 public class CDXform {
+    // constants
+    private static final double MAX_SCALE = 5;
+    private static final double MIN_SCALE = 0.4;
+    
+    // fields
     private AffineTransform mCurXformFromWorldToScreen = null;
     public AffineTransform getCurXformFromWorldToScreen() {
         return this.mCurXformFromWorldToScreen;
@@ -79,8 +84,20 @@ public class CDXform {
     public boolean dialate(Point pt, int direction, double amount){
         Point2D.Double worldPt = this.calcPtFromScreenToWorld(pt);
         
-        double scale = amount;
-        if (direction > 0) { scale = 1 / amount; }
+        double s = (this.calcPtFromScreenToWorld(new Point(100,0)).x - 
+            this.calcPtFromScreenToWorld(new Point(0,0)).x) / 100;
+        double scale; 
+        if (direction > 0) { 
+            if (s > CDXform.MAX_SCALE) {
+                return false;
+            }
+            scale = 1 / amount; 
+        } else {
+            if (s < CDXform.MIN_SCALE) {
+                return false;
+            }
+            scale = amount;
+        }
         
         this.mCurXformFromWorldToScreen.translate(worldPt.x, worldPt.y);
         this.mCurXformFromWorldToScreen.scale(scale, scale);

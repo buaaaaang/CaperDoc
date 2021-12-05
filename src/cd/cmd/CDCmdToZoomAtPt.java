@@ -8,7 +8,7 @@ import x.XLoggableCmd;
 
 public class CDCmdToZoomAtPt extends XLoggableCmd {
     // constants
-    private static final double AMOUNT = 1.005;
+    private static final double ZOOM_RATIO = 1.05;
     
     // fields
     private MouseWheelEvent mEvent;
@@ -30,7 +30,7 @@ public class CDCmdToZoomAtPt extends XLoggableCmd {
         CD cd = (CD) this.mApp;
         Point pt = this.mEvent.getPoint();
         int dir = this.mEvent.getWheelRotation();
-        cd.getXform().dialate(pt, dir, CDCmdToZoomAtPt.AMOUNT);
+        cd.getXform().dialate(pt, dir, CDCmdToZoomAtPt.ZOOM_RATIO);
         return true;
     }
 
