@@ -23,7 +23,7 @@ public class CDCanvas2D extends JPanel {
     
     private static final Stroke STROKE_PT_CURVE_DEFAULT = new BasicStroke(5f,
         BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    public static final Stroke STROKE_SELECTION_BOX = new BasicStroke(5f);
+    public static final Stroke STROKE_SELECTION_BOX = new BasicStroke(2f);
     
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);

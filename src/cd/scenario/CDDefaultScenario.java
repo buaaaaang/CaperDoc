@@ -1,8 +1,10 @@
 package cd.scenario;
 
 import cd.CD;
+import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.cmd.CDCmdToCreateCurPtCurve;
+import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
 import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
@@ -91,6 +93,19 @@ public class CDDefaultScenario extends XScenario {
                 case KeyEvent.VK_CONTROL:
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
                         ZoomPanReadyScene.getSingleton(), this);
+                    break;
+                case KeyEvent.VK_CLOSE_BRACKET:
+                    CDCmdToIncreaseStrokeWidthForCurPtCurve.execute(cd, 
+                            CDCanvas2D.STROKE_WIDTH_INCREMENT);
+                    break;
+                case KeyEvent.VK_OPEN_BRACKET:
+                    CDCmdToIncreaseStrokeWidthForCurPtCurve.execute(cd, 
+                            -CDCanvas2D.STROKE_WIDTH_INCREMENT);
+                    break;
+                case KeyEvent.VK_SHIFT:
+                    XCmdToChangeScene.execute(cd, 
+                        CDSelectScenario.SelectReadyScene.getSingleton(), 
+                        this);
                     break;
             }
         }
