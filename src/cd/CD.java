@@ -1,5 +1,7 @@
 package cd;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,8 +19,9 @@ import x.XScenarioMgr;
 
 public class CD extends XApp {
     // constants
-    public static final int INITIAL_WIDTH = 1700;
-    private static final int INITIAL_HEIGHT = 1000;
+    public static final int INITIAL_PANEL_WIDTH = 1300;
+    private static final int INITIAL_PANEL_HEIGHT = 1000;
+    public static final int INITIAL_HIERARCHY_WIDTH = 300;
     
     // fields
     private JFrame mFrame = null;
@@ -35,6 +38,21 @@ public class CD extends XApp {
     private CDCanvas2D mCanvas = null;
     public CDCanvas2D getCanvas() {
         return this.mCanvas;
+    }
+    
+    private CDButtonViewer mButtonViewer = null;
+    public CDButtonViewer getButtonViewer() {
+        return this.mButtonViewer;
+    }
+    
+    private JPanel mPanel = null;
+    public JPanel getPanel() {
+        return this.mPanel;
+    }
+    
+    private JPanel mHierarchy = null;
+    public JPanel getHierarchy() {
+        return this.mHierarchy;
     }
     
     private CDXform mXform = null;
@@ -56,19 +74,18 @@ public class CD extends XApp {
         return this.mLogMgr;
     }
     
-    private JPanel mPanel = null;
-    public JPanel getPanel() {
-        return this.mPanel;
-    }
+
     
     // constructor
     public CD(String path) throws IOException {
         this.mFrame = new JFrame("CaperDoc");
-        this.mFrame.setSize(CD.INITIAL_WIDTH, CD.INITIAL_HEIGHT);
+        this.mFrame.setSize(CD.INITIAL_PANEL_WIDTH, CD.INITIAL_PANEL_HEIGHT);
 
         this.mPanel = new JPanel();
+        this.mHierarchy = new JPanel();
         this.mViewer = new CDPDFViewer(this, path);
         this.mCanvas = new CDCanvas2D(this);
+        this.mButtonViewer = new CDButtonViewer(this);
         
         this.mXform = new CDXform();
         this.mEventListener = new CDEventListener(this);
@@ -84,18 +101,33 @@ public class CD extends XApp {
         this.mPanel.addKeyListener(this.mEventListener);    
         this.mPanel.setFocusable(true);
         
-        // build and show
-        this.mCanvas.setOpaque(false);
-        this.mPanel.setLayout(null);
-        this.mPanel.add(this.mCanvas);
-//        this.mCanvas.setBackground(Color.blue);
-        this.mPanel.add(this.mViewer);
+        this.mHierarchy.addMouseListener(this.mEventListener);
+        this.mHierarchy.addMouseMotionListener(this.mEventListener);
+        this.mHierarchy.addMouseWheelListener(this.mEventListener);
+        this.mHierarchy.addKeyListener(this.mEventListener);    
+        this.mHierarchy.setFocusable(true);
         
+        // build and show
+        
+        this.mPanel.setLayout(null);
+//        this.mButtonViewer.setOpaque(false);
+        
+        this.mCanvas.setOpaque(false);
+        this.mPanel.add(this.mButtonViewer);
+        this.mPanel.add(this.mCanvas);
+        this.mPanel.add(this.mViewer);
+//        this.mPanel.setBackground(Color.blue);
+        this.mPanel.setOpaque(false);
+        this.mHierarchy.setBackground(Color.orange);
+        
+        this.mViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
+        this.mCanvas.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
+        this.mButtonViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
+        
+        this.mFrame.add(this.mHierarchy);
+        this.mHierarchy.setBounds(0, 0, INITIAL_HIERARCHY_WIDTH, INITIAL_PANEL_HEIGHT);
         this.mFrame.add(this.mPanel);
-        this.mViewer.setBounds(
-            0,0,CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT);
-        this.mCanvas.setBounds(
-            0,0,CD.INITIAL_WIDTH,CD.INITIAL_HEIGHT);
+        
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mFrame.setVisible(true);
     }
