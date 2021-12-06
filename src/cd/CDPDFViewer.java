@@ -16,21 +16,13 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class CDPDFViewer extends JPanel {
     // constants
-    // about pdf rendering
     private static final int PAGE_WIDTH = 1680;
     private static final int PAGE_HEIGHT = 2376;
     private static final int PAGE_GAP = 24;
-    private static final int PAGE_INTERVAL = 
+    public static final int PAGE_INTERVAL = 
         CDPDFViewer.PAGE_HEIGHT + CDPDFViewer.PAGE_GAP;
-    private static final double WORLD_X_POS = 0.5 / CD.INITIAL_DIALATION *
-        (CD.INITIAL_WIDTH - CDPDFViewer.PAGE_WIDTH * CD.INITIAL_DIALATION);
-    
-    // about topleft info
-    private static final Color COLOR_INFO = new Color(255,0,0,128);
-    private static final Font FONT_INFO = 
-        new Font("Monospaced", Font.PLAIN, 24);
-    private static final int INFO_TOP_ALIGNMENT_X = 100;
-    private static final int INFO_TOP_ALIGNMENT_Y = 30;
+    private static final double WORLD_X_POS = 0.5 / CDXform.INITIAL_DIALATION *
+        (CD.INITIAL_WIDTH - CDPDFViewer.PAGE_WIDTH * CDXform.INITIAL_DIALATION);
     
     
     // fields
@@ -84,17 +76,5 @@ public class CDPDFViewer extends JPanel {
                 System.out.println("Error: cannot load page");
             }
         }     
-        
-        // render common screen objects
-//        this.drawInfo(g2);
     }    
-    
-//    private void drawInfo(Graphics2D g2) {
-//        CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-//        String str = curScene.getClass().getSimpleName();
-//        g2.setColor(CDPDFViewer.COLOR_INFO);
-//        g2.setFont(CDPDFViewer.FONT_INFO);
-//        g2.drawString(str, CDPDFViewer.INFO_TOP_ALIGNMENT_X, 
-//            CDPDFViewer.INFO_TOP_ALIGNMENT_Y);   
-//    }
 }

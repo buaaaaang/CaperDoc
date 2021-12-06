@@ -19,7 +19,6 @@ public class CD extends XApp {
     // constants
     public static final int INITIAL_WIDTH = 1700;
     private static final int INITIAL_HEIGHT = 1000;
-    public static final double INITIAL_DIALATION = 0.4;
     
     // fields
     private JFrame mFrame = null;
@@ -72,7 +71,6 @@ public class CD extends XApp {
         this.mCanvas = new CDCanvas2D(this);
         
         this.mXform = new CDXform();
-        this.mXform.scale(CD.INITIAL_DIALATION);
         this.mEventListener = new CDEventListener(this);
         
         this.mScenarioMgr = new CDScenarioMgr(this);
