@@ -12,7 +12,7 @@ import cd.CD;
 import cd.CDCanvas2D;
 import cd.CDPtCurve;
 import cd.CDScene;
-import cd.CDSelectionBox;
+import cd.CDBox;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToCreateSelectionBox;
 import cd.cmd.CDCmdToDeleteSelectedPtCurves;
@@ -73,7 +73,6 @@ public class CDSelectScenario extends XScenario {
             XCmdToChangeScene.execute(cd, 
                 CDSelectScenario.SelectScene.getSingleton(), 
                 this.getReturnScene());
-
         }
 
         @Override
@@ -204,9 +203,10 @@ public class CDSelectScenario extends XScenario {
         @Override
         public void renderScreenObjects(Graphics2D g2) {
             if (((CDSelectScenario) this.mScenario).getSelectionBox() != null){
-                g2.setColor(CDCanvas2D.COLOR_SELECTION_BOX);
-                g2.setStroke(CDCanvas2D.STROKE_SELECTION_BOX);
-                g2.draw(((CDSelectScenario) this.mScenario).getSelectionBox());
+//                g2.setColor(CDCanvas2D.COLOR_SELECTION_BOX);
+//                g2.setStroke(CDCanvas2D.STROKE_SELECTION_BOX);
+//                g2.draw(((CDSelectScenario) this.mScenario).getSelectionBox());
+                ((CDSelectScenario) this.mScenario).drawSelectionBox(g2);
             }
         }
         
@@ -312,13 +312,13 @@ public class CDSelectScenario extends XScenario {
         }
     }
     
-    private CDSelectionBox mCurSelectionBox = null;
+    private CDBox mCurSelectionBox = null;
     
-    public CDSelectionBox getSelectionBox(){
+    public CDBox getSelectionBox(){
         return this.mCurSelectionBox;
     }
     
-    public void setCurSelectionBox(CDSelectionBox selectionBox) {
+    public void setCurSelectionBox(CDBox selectionBox) {
         this.mCurSelectionBox = selectionBox;
     }
     

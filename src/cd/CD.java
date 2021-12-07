@@ -112,8 +112,13 @@ public class CD extends XApp {
         this.mPanel.setLayout(null);
 //        this.mButtonViewer.setOpaque(false);
         
+        
+        this.mButtonViewer.setOpaque(false);
+//        this.mHierarchy.setOpaque(false);
         this.mCanvas.setOpaque(false);
+        
         this.mPanel.add(this.mButtonViewer);
+        this.mPanel.add(this.mHierarchy);
         this.mPanel.add(this.mCanvas);
         this.mPanel.add(this.mViewer);
 //        this.mPanel.setBackground(Color.blue);
@@ -122,10 +127,11 @@ public class CD extends XApp {
         
         this.mViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
         this.mCanvas.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
+        this.mHierarchy.setBounds(0, 0, INITIAL_HIERARCHY_WIDTH, INITIAL_PANEL_HEIGHT);
         this.mButtonViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
         
         this.mFrame.add(this.mHierarchy);
-        this.mHierarchy.setBounds(0, 0, INITIAL_HIERARCHY_WIDTH, INITIAL_PANEL_HEIGHT);
+        
         this.mFrame.add(this.mPanel);
         
         this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

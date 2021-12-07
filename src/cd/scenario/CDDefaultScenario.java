@@ -107,6 +107,11 @@ public class CDDefaultScenario extends XScenario {
                         CDSelectScenario.SelectReadyScene.getSingleton(), 
                         this);
                     break;
+                case KeyEvent.VK_C:
+                    XCmdToChangeScene.execute(cd, 
+                        CDCropScenario.CropReadyScene.getSingleton(), 
+                        this);
+                    break;
             }
         }
 
