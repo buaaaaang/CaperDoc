@@ -20,7 +20,7 @@ public class CDPDFViewer extends JPanel {
     public static final int PAGE_INTERVAL = 
         CDPDFViewer.PAGE_HEIGHT + CDPDFViewer.PAGE_GAP;
     private static final double WORLD_X_POS = 0.5 / CDXform.INITIAL_DIALATION *
-        (CD.INITIAL_WIDTH - CDPDFViewer.PAGE_WIDTH * CDXform.INITIAL_DIALATION);
+        (CD.INITIAL_PANEL_WIDTH - CDPDFViewer.PAGE_WIDTH * CDXform.INITIAL_DIALATION);
     
     
     // fields

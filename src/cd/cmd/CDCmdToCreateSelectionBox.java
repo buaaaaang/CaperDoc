@@ -2,7 +2,7 @@ package cd.cmd;
 
 import java.awt.Point;
 import cd.scenario.CDSelectScenario;
-import cd.CDSelectionBox;
+import cd.CDBox;
 import x.XApp;
 import x.XLoggableCmd;
 
@@ -25,7 +25,7 @@ public class CDCmdToCreateSelectionBox extends XLoggableCmd {
     
     @Override
     protected boolean defineCmd() {
-        CDSelectionBox selectionBox = new CDSelectionBox(this.mPt);
+        CDBox selectionBox = new CDBox(this.mPt);
         CDSelectScenario.getSingleton().setCurSelectionBox(selectionBox);
         return true;
     }
