@@ -20,6 +20,7 @@ public class CDButtonViewer extends JPanel {
     
     public CDButtonViewer(CD cd) {
         this.mCD = cd;
+        
         this.repaint();
     }
     

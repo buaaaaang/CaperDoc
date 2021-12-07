@@ -24,7 +24,15 @@ public class CDPDFViewer extends JPanel {
     // fields
     private CD mCD = null;
     private PDDocument mDoc = null;
+    public PDDocument getDocument() {
+        return this.mDoc;
+    }
+  
     private PDFRenderer mRenderer = null;
+    public PDFRenderer getRenderer() {
+        return this.mRenderer;
+    }
+
     final double worldXPos;
     
     public CDPDFViewer(CD cd, String path) throws IOException {

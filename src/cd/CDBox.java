@@ -8,6 +8,9 @@ import java.awt.Rectangle;
 public class CDBox extends Rectangle {
     
     private Point mAnchorPt = null;
+    public Point getAnchorPt() {
+        return this.mAnchorPt;
+    }
 
     public CDBox(Point pt) {
         super(pt);
