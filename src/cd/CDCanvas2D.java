@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -18,16 +17,18 @@ public class CDCanvas2D extends JPanel {
     // fields and constants
     private static final Color COLOR_PT_CURVE_DEFAULT = new Color(0, 0, 0, 255);
     public static final Color COLOR_SELECTION_BOX = new Color(255, 0, 0, 64);
+    public static final Color COLOR_CROP_BOX = Color.CYAN;
     private static final Color COLOR_SELECTED_PT_CURVE = Color.ORANGE;
     private static final Color COLOR_INFO = new Color(255,0,0,128);
     
     private static final Stroke STROKE_PT_CURVE_DEFAULT = new BasicStroke(5f,
         BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    public static final Stroke STROKE_SELECTION_BOX = new BasicStroke(5f);
+    public static final Stroke STROKE_SELECTION_BOX = new BasicStroke(2f);
+    public static final Stroke STROKE_CROP_BOX = new BasicStroke(2f);
     
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);
-    private static final int INFO_TOP_ALIGNMENT_X = 20;
+    private static final int INFO_TOP_ALIGNMENT_X = 1000;
     private static final int INFO_TOP_ALIGNMENT_Y = 30;
     
     private static final double PEN_TIP_OFFSET = 30.0;
