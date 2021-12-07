@@ -11,12 +11,15 @@ import cd.cmd.CDCmdToUpdateCropBox;
 import cd.cmd.CDCmdToUpdateSelectionBox;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -93,6 +96,7 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
+                    ((CDCropScenario)this.mScenario).createCroppedImage();
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -162,6 +166,7 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
+                    ((CDCropScenario)this.mScenario).createCroppedImage();
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -198,27 +203,32 @@ public class CDCropScenario extends XScenario {
         g2.draw(this.mCropBox);
     }
     
-    public BufferedImage createCoppedImage() {
+    public BufferedImage createCroppedImage() {
         CD cd = (CD)this.getApp();
         Point screenAnchorPt = this.mCropBox.getAnchorPt();
         Point2D.Double worldAnchorPt = 
             cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
         cd.getViewer();
         
-//        Point pos = (this.mCD.getXform().calcPtFromWorldToScreen(
-//            new Point2D.Double(CDPDFViewer.WORLD_X_POS, 
-//            p * CDPDFViewer.PAGE_INTERVAL)));  
-//        try {
-//            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(p, scale);
-//
-//        } catch (IOException e) {
-//            System.out.println("Error: cannot load page");
-//        }
         
+        int x = this.mCropBox.x;
+        int y = this.mCropBox.y;
         int width = this.mCropBox.width;
         int height = this.mCropBox.height;
-        
-        return null;/////////////////
-        
+        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
+        try{
+            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(1, 1);
+            BufferedImage croppedImage = cropImage(pageImage, screenRect);
+            File outputfile = new File("Cropped_Image/cropped.jpg");
+            ImageIO.write(croppedImage, "jpg", outputfile);
+        } catch (IOException e) {
+                System.out.println("Error: cannot load page");
+        }
+        return null;
     }
+    
+    private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
+      BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
+      return dest; 
+   }
 }
