@@ -1,7 +1,5 @@
 package cd;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -35,7 +33,12 @@ public class CDPDFViewer extends JPanel {
         this.mCD = cd;
         try {
             System.out.println("Opening " + path + "...");
+            System.out.println("\ndon't worry about red error message\n"
+                + "-----------------------------");
             this.mDoc = PDDocument.load(new File(path));
+            // 조교님한테 이부분 물어보기
+            System.out.println("-----------------------------\n");
+            System.out.println("Opening " + path + "...");
         } catch (IOException e) {
             System.out.println("Error: No such file in the path");
             return;

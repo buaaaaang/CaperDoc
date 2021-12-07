@@ -9,7 +9,7 @@ public class CDXform {
     // constants
     private static final double MAX_SCALE = 5;
     private static final double MIN_SCALE = 0.4;
-    public static final double INITIAL_DIALATION = 0.4;
+    public static final double INITIAL_DIALATION = 0.28;
     
     // fields
     private AffineTransform mCurXformFromWorldToScreen = null;

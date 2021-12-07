@@ -17,6 +17,7 @@ import x.XApp;
 import x.XLogMgr;
 import x.XScenarioMgr;
 
+@SuppressWarnings("unchecked")
 public class CD extends XApp {
     // constants
     public static final int INITIAL_PANEL_WIDTH = 1300;
@@ -175,6 +176,7 @@ public class CD extends XApp {
     }
     
     // main
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException, ParseException {
         // get file path to open from user
         Scanner sc = new Scanner(System.in);
