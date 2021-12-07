@@ -6,12 +6,17 @@ import cd.CDScene;
 import cd.CDBox;
 import cd.cmd.CDCmdToCreateCropBox;
 import cd.cmd.CDCmdToCreateSelectionBox;
+import cd.cmd.CDCmdToDestroyCropBox;
 import cd.cmd.CDCmdToUpdateCropBox;
 import cd.cmd.CDCmdToUpdateSelectionBox;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -82,6 +87,17 @@ public class CDCropScenario extends XScenario {
 
         @Override
         public void handleKeyUp(KeyEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            int code = e.getKeyCode();
+            switch (code) {
+                case KeyEvent.VK_C:
+
+//                    CDCmdToSaveCroppedImg.execute(cd, e);
+                    CDCmdToDestroyCropBox.execute(cd);
+                    XCmdToChangeScene.execute(cd, 
+                        CDDefaultScenario.ReadyScene.getSingleton(), null);
+                    break;
+            }
         }
 
         @Override
@@ -90,6 +106,9 @@ public class CDCropScenario extends XScenario {
 
         @Override
         public void renderScreenObjects(Graphics2D g2) {
+            if (((CDCropScenario) this.mScenario).getCropBox() != null){
+                ((CDCropScenario) this.mScenario).drawCropBox(g2);
+            }
         }
 
     }
@@ -141,12 +160,9 @@ public class CDCropScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_C:
-//                    if CDCmdToCheckCopped.execute(cd) {
-//                        
-//                    } else {
-//                        
-//                    }
-//                    CDCmdToSaveCroppedImg.execute(cd, e)
+
+//                    CDCmdToSaveCroppedImg.execute(cd, e);
+                    CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
                     break;
@@ -179,6 +195,30 @@ public class CDCropScenario extends XScenario {
     public void drawCropBox(Graphics2D g2) {
         g2.setColor(CDCanvas2D.COLOR_CROP_BOX);
         g2.setStroke(CDCanvas2D.STROKE_CROP_BOX);
-        g2.draw(this.getCropBox());
+        g2.draw(this.mCropBox);
+    }
+    
+    public BufferedImage createCoppedImage() {
+        CD cd = (CD)this.getApp();
+        Point screenAnchorPt = this.mCropBox.getAnchorPt();
+        Point2D.Double worldAnchorPt = 
+            cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
+        cd.getViewer();
+        
+//        Point pos = (this.mCD.getXform().calcPtFromWorldToScreen(
+//            new Point2D.Double(CDPDFViewer.WORLD_X_POS, 
+//            p * CDPDFViewer.PAGE_INTERVAL)));  
+//        try {
+//            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(p, scale);
+//
+//        } catch (IOException e) {
+//            System.out.println("Error: cannot load page");
+//        }
+        
+        int width = this.mCropBox.width;
+        int height = this.mCropBox.height;
+        
+        return null;/////////////////
+        
     }
 }

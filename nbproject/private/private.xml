@@ -5,8 +5,7 @@
         <group>
             <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToSaveFile.java</file>
             <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CD.java</file>
-            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToZoomAtPt.java</file>
-            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDEventListener.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDCanvas2D.java</file>
             <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/scenario/CDDefaultScenario.java</file>
         </group>
     </open-files>
