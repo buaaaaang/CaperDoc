@@ -9,9 +9,10 @@ public class CDXform {
     // constants
     private static final double MAX_SCALE = 5;
     private static final double MIN_SCALE = 0.4;
-    public static final double INITIAL_DIALATION = 0.28;
     
     // fields
+    private CD mCD = null;
+    
     private AffineTransform mCurXformFromWorldToScreen = null;
     public AffineTransform getCurXformFromWorldToScreen() {
         return this.mCurXformFromWorldToScreen;
@@ -31,15 +32,16 @@ public class CDXform {
             this.mCurXformFromWorldToScreen);
     }
     
-    public CDXform() {
+    public CDXform(CD cd) {
+        this.mCD = cd;
         this.mCurXformFromScreenToWorld = new AffineTransform();
         this.mCurXformFromWorldToScreen = new AffineTransform();
         this.mStartXformFromWorldToScreen = new AffineTransform();
         this.mStartScreenPt = new Point();
-        this.mCurXformFromWorldToScreen.scale(CDXform.INITIAL_DIALATION, 
-            CDXform.INITIAL_DIALATION);
-        this.mCurXformFromScreenToWorld.scale(1/CDXform.INITIAL_DIALATION, 
-            1/CDXform.INITIAL_DIALATION);
+        double initialScale = (double) cd.getInitialHeight() / 
+            CDPDFViewer.PAGE_INTERVAL;
+        this.mCurXformFromWorldToScreen.scale(initialScale, initialScale); 
+        this.mCurXformFromScreenToWorld.scale(1/initialScale, 1/initialScale); 
     }
         
     public void updateCurXformFromScreenToWorld(){
@@ -112,9 +114,15 @@ public class CDXform {
         return true;
     }
     
+    
+    private double getProperDialation() {
+        CDPDFViewer viewer = this.mCD.getViewer();
+        return viewer.getHeight() * 0.7 / CDPDFViewer.PAGE_INTERVAL;
+    }
+    
     private AffineTransform getDefaultXformFromWorldToScreen() {
         AffineTransform xform = new AffineTransform();
-        xform.scale(CDXform.INITIAL_DIALATION, CDXform.INITIAL_DIALATION);
+        xform.scale(this.getProperDialation(), this.getProperDialation());
         return xform;
     }
     

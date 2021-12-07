@@ -19,18 +19,20 @@ public class CDPDFViewer extends JPanel {
     private static final int PAGE_GAP = 24;
     public static final int PAGE_INTERVAL = 
         CDPDFViewer.PAGE_HEIGHT + CDPDFViewer.PAGE_GAP;
-    private static final double WORLD_X_POS = 0.5 / CDXform.INITIAL_DIALATION *
-        (CD.INITIAL_PANEL_WIDTH - CDPDFViewer.PAGE_WIDTH * CDXform.INITIAL_DIALATION);
     
     
     // fields
     private CD mCD = null;
     private PDDocument mDoc = null;
     private PDFRenderer mRenderer = null;
-    
+    final double worldXPos;
     
     public CDPDFViewer(CD cd, String path) throws IOException {
         this.mCD = cd;
+        System.out.println("" + cd.getInitialHeight());
+        double initialScale = (double) CDPDFViewer.PAGE_HEIGHT / 
+            cd.getInitialHeight();
+        this.worldXPos = (CD.INITIAL_HIERARCHY_WIDTH + 50) * initialScale;
         try {
             System.out.println("Opening " + path + "...");
             System.out.println("\ndon't worry about red error message\n"
@@ -70,7 +72,7 @@ public class CDPDFViewer extends JPanel {
             float ys = CDPDFViewer.PAGE_HEIGHT * ratio / pageFrame.getHeight();
             float scale = Math.min(xs, ys);
             Point pos = (this.mCD.getXform().calcPtFromWorldToScreen(
-                new Point2D.Double(CDPDFViewer.WORLD_X_POS, 
+                new Point2D.Double(this.worldXPos, 
                 p * CDPDFViewer.PAGE_INTERVAL)));  
             try {
                 BufferedImage pageImage = this.mRenderer.renderImage(p, scale);
