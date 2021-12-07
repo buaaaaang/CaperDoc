@@ -15,10 +15,11 @@ import x.XApp;
 import x.XLogMgr;
 import x.XScenarioMgr;
 
+@SuppressWarnings("unchecked")
 public class CD extends XApp {
     // constants
-    public static final int INITIAL_WIDTH = 1700;
-    private static final int INITIAL_HEIGHT = 1000;
+    public static final int INITIAL_WIDTH = 1200;
+    private static final int INITIAL_HEIGHT = 700;
     
     // fields
     private JFrame mFrame = null;
@@ -137,6 +138,7 @@ public class CD extends XApp {
     }
     
     // main
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException, ParseException {
         // get file path to open from user
         Scanner sc = new Scanner(System.in);
