@@ -2,6 +2,8 @@ package cd;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,12 +22,20 @@ import x.XScenarioMgr;
 @SuppressWarnings("unchecked")
 public class CD extends XApp {
     // constants
-    public static final int INITIAL_PANEL_WIDTH = 1300;
-    private static final int INITIAL_PANEL_HEIGHT = 1000;
-    public static final int INITIAL_HIERARCHY_WIDTH = 300;
+    public static final int INITIAL_HIERARCHY_WIDTH = 150;
     
     // fields
     private JFrame mFrame = null;
+    
+    private final int initialWidth;
+    public int getInitialWidth() {
+        return this.initialWidth;
+    }
+    private final int initialHeight;
+    public int getInitialHeight() {
+        return this.initialHeight;
+    }
+    
     private CDPtCurveMgr mPtCurveMgr = null;
     public CDPtCurveMgr getPtCurveMgr() {
         return this.mPtCurveMgr;
@@ -79,8 +89,13 @@ public class CD extends XApp {
     
     // constructor
     public CD(String path) throws IOException {
+        Dimension size  =Toolkit.getDefaultToolkit().getScreenSize();
+        this.initialWidth = (int) size.getWidth();
+        this.initialHeight = (int) size.getHeight() - 40;
+        
         this.mFrame = new JFrame("CaperDoc");
-        this.mFrame.setSize(CD.INITIAL_PANEL_WIDTH, CD.INITIAL_PANEL_HEIGHT);
+        this.mFrame.setSize(this.initialWidth, this.initialHeight);
+        //this.mFrame.setVisible(true);
 
         this.mPanel = new JPanel();
         this.mHierarchy = new JPanel();
@@ -88,9 +103,9 @@ public class CD extends XApp {
         this.mCanvas = new CDCanvas2D(this);
         this.mButtonViewer = new CDButtonViewer(this);
         
-        this.mXform = new CDXform();
+        this.mXform = new CDXform(this);
         this.mEventListener = new CDEventListener(this);
-        
+                
         this.mScenarioMgr = new CDScenarioMgr(this);
         this.mPtCurveMgr = new CDPtCurveMgr();
         this.mLogMgr = new XLogMgr();
@@ -101,12 +116,6 @@ public class CD extends XApp {
         this.mPanel.addMouseWheelListener(this.mEventListener);
         this.mPanel.addKeyListener(this.mEventListener);    
         this.mPanel.setFocusable(true);
-        
-        this.mHierarchy.addMouseListener(this.mEventListener);
-        this.mHierarchy.addMouseMotionListener(this.mEventListener);
-        this.mHierarchy.addMouseWheelListener(this.mEventListener);
-        this.mHierarchy.addKeyListener(this.mEventListener);    
-        this.mHierarchy.setFocusable(true);
         
         // build and show
         
@@ -126,10 +135,12 @@ public class CD extends XApp {
         this.mPanel.setOpaque(false);
         this.mHierarchy.setBackground(Color.orange);
         
-        this.mViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
-        this.mCanvas.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
-        this.mHierarchy.setBounds(0, 0, INITIAL_HIERARCHY_WIDTH, INITIAL_PANEL_HEIGHT);
-        this.mButtonViewer.setBounds(0,0,CD.INITIAL_PANEL_WIDTH,CD.INITIAL_PANEL_HEIGHT);
+        this.mViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
+        this.mCanvas.setBounds(0,0, this.initialWidth, this.initialHeight);
+        this.mHierarchy.setBounds(0, 0, CD.INITIAL_HIERARCHY_WIDTH, 
+            this.initialHeight);
+        this.mButtonViewer.setBounds(0,0, this.initialWidth, 
+            this.initialHeight);
         
         this.mFrame.add(this.mHierarchy);
         
