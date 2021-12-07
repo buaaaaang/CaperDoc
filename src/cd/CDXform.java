@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 
 public class CDXform {
     // constants
-    private static final double MAX_SCALE = 5;
+    private static final double MAX_SCALE = 200;
     private static final double MIN_SCALE = 0.4;
     
     // fields
