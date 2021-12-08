@@ -36,7 +36,7 @@ public class CDCropScenario extends XScenario {
         assert (CDCropScenario.mSingleton != null);
         return CDCropScenario.mSingleton;
     }
-    
+    private int num = 0;
     // private constructor 
     private CDCropScenario(XApp app) {
         super(app);
@@ -96,7 +96,14 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    ((CDCropScenario)this.mScenario).createCroppedImage();
+                    CDBox cropBox = ((CDCropScenario) this.mScenario).getCropBox();
+                    if (cropBox != null){
+                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
+                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
+                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
+//                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", startPos[0], startPos[1], startPos[2]));
+//                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", endPos[0], endPos[1], endPos[2]));
+                    }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -166,7 +173,11 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    ((CDCropScenario)this.mScenario).createCroppedImage();
+                    if (((CDCropScenario) this.mScenario).getCropBox() != null){
+                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
+                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
+                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
+                    }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -203,23 +214,52 @@ public class CDCropScenario extends XScenario {
         g2.draw(this.mCropBox);
     }
     
-    public BufferedImage createCroppedImage() {
+    public Rectangle calcRectToCrop() {
         CD cd = (CD)this.getApp();
-        Point screenAnchorPt = this.mCropBox.getAnchorPt();
-        Point2D.Double worldAnchorPt = 
-            cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
-        cd.getViewer();
+        CDBox cropBox = this.getCropBox();
+        CDBox reformulatedCropBox = cropBox.getReformulatedBox();
+        Point startScreenPt = reformulatedCropBox.getAnchorPt();
+        Point endScreenPt = reformulatedCropBox.getEndPt();
+        double[] startPos = cd.getViewer().getPageLocationFromPts(startScreenPt);
+        double[] endPos = cd.getViewer().getPageLocationFromPts(endScreenPt);
+        int page = (int)startPos[0];
         
+        Point startCropPt = new Point((int)startPos[1], (int)startPos[2]);
+        Point endCropPt = new Point((int)endPos[1], (int)endPos[2]);
+        Rectangle rectToCrop = new Rectangle(startCropPt);
+        rectToCrop.add(endCropPt);
         
-        int x = this.mCropBox.x;
-        int y = this.mCropBox.y;
-        int width = this.mCropBox.width;
-        int height = this.mCropBox.height;
-        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
+        return rectToCrop;
+    }
+    
+    public int calcPageToCrop() {
+        CD cd = (CD)this.getApp();
+        CDBox cropBox = this.getCropBox();
+        
+        Point startScreenPt = cropBox.getAnchorPt();
+        double[] startPos = cd.getViewer().getPageLocationFromPts(startScreenPt);
+        int page = (int)startPos[0];
+        return page;
+    }
+    
+    public BufferedImage createCroppedImage(int page, Rectangle rect) {
+        CD cd = (CD)this.getApp();
+//        Point screenAnchorPt = this.mCropBox.getAnchorPt();
+//        Point2D.Double worldAnchorPt = 
+//            cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
+//        cd.getViewer();
+//        
+//        
+//        int x = this.mCropBox.x;
+//        int y = this.mCropBox.y;
+//        int width = this.mCropBox.width;
+//        int height = this.mCropBox.height;
+//        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
         try{
-            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(1, 1);
-            BufferedImage croppedImage = cropImage(pageImage, screenRect);
-            File outputfile = new File("Cropped_Image/cropped.jpg");
+            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(page, 1);
+            BufferedImage croppedImage = cropImage(pageImage, rect);
+            File outputfile = new File(String.format("Cropped_Image/cropped%d.jpg", this.num));
+            this.num += 1;
             ImageIO.write(croppedImage, "jpg", outputfile);
         } catch (IOException e) {
                 System.out.println("Error: cannot load page");
@@ -228,7 +268,8 @@ public class CDCropScenario extends XScenario {
     }
     
     private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-      BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
-      return dest; 
+        System.out.println(String.format("%d, %d, %d, %d", rect.x, rect.y, Math.abs(rect.width), Math.abs(rect.height)));
+        BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
+        return dest; 
    }
 }

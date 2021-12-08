@@ -94,7 +94,7 @@ public class CDPDFViewer extends JPanel {
         }     
     }    
     
-    private double[] getPageLocationFromPts(Point pt) {
+    public double[] getPageLocationFromPts(Point pt) {
         CDXform xform = this.mCD.getXform();
         Point2D.Double worldPt = xform.calcPtFromScreenToWorld(pt);
         int page = (int) Math.floor(worldPt.y / CDPDFViewer.PAGE_INTERVAL);
