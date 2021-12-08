@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import net.sourceforge.tess4j.Tesseract;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -96,13 +97,23 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    CDBox cropBox = ((CDCropScenario) this.mScenario).getCropBox();
-                    if (cropBox != null){
-                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
-                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
-                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
-//                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", startPos[0], startPos[1], startPos[2]));
-//                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", endPos[0], endPos[1], endPos[2]));
+//                    CDBox cropBox = ((CDCropScenario) this.mScenario).getCropBox();
+//                    if (cropBox != null){
+//                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
+//                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
+//                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
+////                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", startPos[0], startPos[1], startPos[2]));
+////                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", endPos[0], endPos[1], endPos[2]));
+//                    }
+                    CDCropScenario scenario = (CDCropScenario)this.mScenario;
+                    if (scenario.getCropBox() != null){
+                        int page = scenario.calcPageToCrop();
+                        Rectangle rectToCrop = scenario.calcRectToCrop();
+                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
+                        String ocrText = scenario.readImage(croppedImage);
+//                        System.out.println(ocrText);
+                        System.out.println("cropped image" + scenario.num + ": " + ocrText);
+
                     }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
@@ -173,10 +184,13 @@ public class CDCropScenario extends XScenario {
                 case KeyEvent.VK_C:
 
 //                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    if (((CDCropScenario) this.mScenario).getCropBox() != null){
-                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
-                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
-                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
+                    CDCropScenario scenario = (CDCropScenario)this.mScenario;
+                    if (scenario.getCropBox() != null){
+                        int page = scenario.calcPageToCrop();
+                        Rectangle rectToCrop = scenario.calcRectToCrop();
+                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
+                        String ocrText = scenario.readImage(croppedImage);
+                        System.out.println("cropped image" + scenario.num + ": " + ocrText);
                     }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
@@ -255,21 +269,35 @@ public class CDCropScenario extends XScenario {
 //        int width = this.mCropBox.width;
 //        int height = this.mCropBox.height;
 //        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
+        BufferedImage croppedImage = null;
         try{
             BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(page, 1);
-            BufferedImage croppedImage = cropImage(pageImage, rect);
+            croppedImage = cropImage(pageImage, rect);
+            
             File outputfile = new File(String.format("Cropped_Image/cropped%d.jpg", this.num));
             this.num += 1;
             ImageIO.write(croppedImage, "jpg", outputfile);
         } catch (IOException e) {
                 System.out.println("Error: cannot load page");
         }
-        return null;
+        return croppedImage;
     }
     
     private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-        System.out.println(String.format("%d, %d, %d, %d", rect.x, rect.y, Math.abs(rect.width), Math.abs(rect.height)));
+//        System.out.println(String.format("%d, %d, %d, %d", rect.x, rect.y, Math.abs(rect.width), Math.abs(rect.height)));
         BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
         return dest; 
    }
+    
+    private String readImage(BufferedImage image) {
+        Tesseract instance = Tesseract.getInstance();
+        String result = "";
+        try {
+            result = instance.doOCR(image);
+        } catch (Exception e) {
+            System.out.println("Can't read image");
+        }
+        
+        return result;
+    }
 }
