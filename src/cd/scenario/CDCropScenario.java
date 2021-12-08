@@ -103,7 +103,6 @@ public class CDCropScenario extends XScenario {
                         CDCmdToSetCropPage.execute(cd);
                         CDCmdToSetRectToCrop.execute(cd);
                         CDCmdToCreateCroppedImg.execute(cd);
-//                        BufferedImage croppedImage = scenario.createCroppedImage(scenario.mCropPage, scenario.mRectToCrop);
                         
                         String ocrText = scenario.readImage(scenario.mCroppedImg);
                         System.out.println("cropped image" + scenario.num + ": " + ocrText);
@@ -180,7 +179,6 @@ public class CDCropScenario extends XScenario {
                         CDCmdToSetCropPage.execute(cd);
                         CDCmdToSetRectToCrop.execute(cd);
                         CDCmdToCreateCroppedImg.execute(cd);
-//                        BufferedImage croppedImage = scenario.createCroppedImage(scenario.mCropPage, scenario.mRectToCrop);
                         
                         String ocrText = scenario.readImage(scenario.mCroppedImg);
                         System.out.println("cropped image" + scenario.num + ": " + ocrText);
@@ -251,12 +249,6 @@ public class CDCropScenario extends XScenario {
     public void setOCRText(String str) {
         this.mOCRText = str;
     }
-    
-//    int page = scenario.calcPageToCrop();
-//                        Rectangle rectToCrop = scenario.calcRectToCrop();
-//                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
-//                        String ocrText = scenario.readImage(croppedImage);
-
     
     public Rectangle calcRectToCrop() {
         CD cd = (CD)this.getApp();

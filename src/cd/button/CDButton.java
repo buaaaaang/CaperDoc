@@ -3,6 +3,7 @@ package cd.button;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 abstract class CDButton {
     // constans
@@ -13,16 +14,25 @@ abstract class CDButton {
     public boolean isHighlighted() {
         return this.mHighlighted;
     }
-    public void setHighlightOff(boolean b) {
+    public void setHighlight(boolean b) {
         this.mHighlighted = b;
     }
     
+    private Point mPos = null;
+    public Point getPos() {
+        return this.mPos;
+    }
+    public void setPos(Point pos) {
+        this.mPos = pos;
+    }
+    
     // constructor
-    public CDButton() {
+    public CDButton(Point pos) {
         this.mHighlighted = false;
+        this.mPos = pos;
     }
     
     // abstract methods
-    abstract boolean Contains(Point pt);
-    abstract void draw(Graphics2D g2);
+    public abstract boolean contains(Point pt);
+    public abstract void draw(Graphics2D g2);
 }

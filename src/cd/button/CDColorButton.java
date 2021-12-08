@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.JPanel;
 
-public class CDColorChooserButton extends CDButton {
+public class CDColorButton extends CDButton {
     
     private int mScreenPositionFromRight;
     private int mScreenPositionFromTop;
@@ -14,9 +14,10 @@ public class CDColorChooserButton extends CDButton {
     private Color mColor = null;
     private JPanel mPanel = null;
     
-    public CDColorChooserButton(Color color, int right, int top, int r,
+    public CDColorButton(Color color, int right, int top, int r, Point pos,
         JPanel panel) {
-        super();
+        super(pos);
+        this.mColor = color;
         this.mScreenPositionFromRight = right;
         this.mScreenPositionFromTop = top;
         this.mRadius = r; 
@@ -25,14 +26,14 @@ public class CDColorChooserButton extends CDButton {
     }
 
     @Override
-    boolean Contains(Point pt) {
+    public boolean contains(Point pt) {
         int dx = this.mPanel.getWidth() - this.mScreenPositionFromRight - pt.x;
         int dy = this.mScreenPositionFromTop - pt.y;
         return ((dx*dx + dy*dy) < this.mRadius * this.mRadius);
     }
 
     @Override
-    void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2) {
         if (this.isHighlighted()) {
             g2.setColor(CDButton.HIGHLIGHT_COLOR);
             g2.fillOval(this.mPanel.getWidth() - this.mScreenPositionFromRight,

@@ -1,6 +1,7 @@
 package cd;
 
 import java.awt.BasicStroke;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,6 +33,8 @@ public class CDButtonViewer extends JPanel {
         g2.transform(this.mCD.getXform().getCurXformFromWorldToScreen());
         
         // render commom world objects
+        this.drawContents(g2);
+        this.drawColorButtons(g2);
         
         g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());
         
@@ -43,6 +46,24 @@ public class CDButtonViewer extends JPanel {
 
         //render the current scene's screen objects
         curScene.renderScreenObjects(g2);
+    }
+    
+    public void drawContents(Graphics2D g2) {
+        if (this.mCD.getButtonMgr().getContents() == null) {
+            return;
+        }
+        this.mCD.getButtonMgr().getContents().forEach(contentButton -> {
+            contentButton.draw(g2);
+        });
+    }
+    
+    public void drawColorButtons(Graphics2D g2) {
+        if (this.mCD.getButtonMgr().getColorButtons() == null) {
+            return;
+        }
+        this.mCD.getButtonMgr().getColorButtons().forEach(colorButton -> {
+            colorButton.draw(g2);
+        });
     }
     
 }

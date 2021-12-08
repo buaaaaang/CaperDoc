@@ -41,6 +41,11 @@ public class CD extends XApp {
         return this.mPtCurveMgr;
     }
     
+    private CDButtonMgr mButtonMgr = null;
+    public CDButtonMgr getButtonMgr() {
+        return this.mButtonMgr;
+    }
+    
     private CDPDFViewer mViewer = null;
     public CDPDFViewer getViewer() {
         return this.mViewer;
@@ -72,7 +77,7 @@ public class CD extends XApp {
     }
     
     private CDEventListener mEventListener = null;
-    
+            
     private XScenarioMgr mScenarioMgr = null;
     @Override
     public XScenarioMgr getScenarioMgr() {
@@ -108,6 +113,7 @@ public class CD extends XApp {
                 
         this.mScenarioMgr = new CDScenarioMgr(this);
         this.mPtCurveMgr = new CDPtCurveMgr();
+        this.mButtonMgr = new CDButtonMgr(this);
         this.mLogMgr = new XLogMgr();
         this.mLogMgr.setPrintOn(true);
         
