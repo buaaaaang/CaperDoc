@@ -5,8 +5,11 @@ import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.CDBox;
 import cd.cmd.CDCmdToCreateCropBox;
+import cd.cmd.CDCmdToCreateCroppedImg;
 import cd.cmd.CDCmdToCreateSelectionBox;
 import cd.cmd.CDCmdToDestroyCropBox;
+import cd.cmd.CDCmdToSetCropPage;
+import cd.cmd.CDCmdToSetRectToCrop;
 import cd.cmd.CDCmdToUpdateCropBox;
 import cd.cmd.CDCmdToUpdateSelectionBox;
 import java.awt.Graphics2D;
@@ -95,25 +98,15 @@ public class CDCropScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_C:
-
-//                    CDCmdToSaveCroppedImg.execute(cd, e);
-//                    CDBox cropBox = ((CDCropScenario) this.mScenario).getCropBox();
-//                    if (cropBox != null){
-//                        int page = ((CDCropScenario)this.mScenario).calcPageToCrop();
-//                        Rectangle rectToCrop = ((CDCropScenario)this.mScenario).calcRectToCrop();
-//                        ((CDCropScenario)this.mScenario).createCroppedImage(page, rectToCrop);
-////                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", startPos[0], startPos[1], startPos[2]));
-////                        System.out.println(String.format("%3.1f, %3.1f, %3.1f", endPos[0], endPos[1], endPos[2]));
-//                    }
                     CDCropScenario scenario = (CDCropScenario)this.mScenario;
                     if (scenario.getCropBox() != null){
-                        int page = scenario.calcPageToCrop();
-                        Rectangle rectToCrop = scenario.calcRectToCrop();
-                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
-                        String ocrText = scenario.readImage(croppedImage);
-//                        System.out.println(ocrText);
+                        CDCmdToSetCropPage.execute(cd);
+                        CDCmdToSetRectToCrop.execute(cd);
+                        CDCmdToCreateCroppedImg.execute(cd);
+//                        BufferedImage croppedImage = scenario.createCroppedImage(scenario.mCropPage, scenario.mRectToCrop);
+                        
+                        String ocrText = scenario.readImage(scenario.mCroppedImg);
                         System.out.println("cropped image" + scenario.num + ": " + ocrText);
-
                     }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
@@ -182,14 +175,14 @@ public class CDCropScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_C:
-
-//                    CDCmdToSaveCroppedImg.execute(cd, e);
                     CDCropScenario scenario = (CDCropScenario)this.mScenario;
                     if (scenario.getCropBox() != null){
-                        int page = scenario.calcPageToCrop();
-                        Rectangle rectToCrop = scenario.calcRectToCrop();
-                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
-                        String ocrText = scenario.readImage(croppedImage);
+                        CDCmdToSetCropPage.execute(cd);
+                        CDCmdToSetRectToCrop.execute(cd);
+                        CDCmdToCreateCroppedImg.execute(cd);
+//                        BufferedImage croppedImage = scenario.createCroppedImage(scenario.mCropPage, scenario.mRectToCrop);
+                        
+                        String ocrText = scenario.readImage(scenario.mCroppedImg);
                         System.out.println("cropped image" + scenario.num + ": " + ocrText);
                     }
                     CDCmdToDestroyCropBox.execute(cd);
@@ -213,20 +206,57 @@ public class CDCropScenario extends XScenario {
     }
     
     private CDBox mCropBox = null;
-    
     public CDBox getCropBox(){
         return this.mCropBox;
     }
-    
     public void setCropBox(CDBox selectionBox) {
         this.mCropBox = selectionBox;
     }
-    
     public void drawCropBox(Graphics2D g2) {
         g2.setColor(CDCanvas2D.COLOR_CROP_BOX);
         g2.setStroke(CDCanvas2D.STROKE_CROP_BOX);
         g2.draw(this.mCropBox);
     }
+    
+    private static final int RENDER_SCALE_FOR_CROP = 4;
+    
+    private int mCropPage = 1;
+    public int getCropPage() {
+        return this.mCropPage;
+    }
+    public void setCropPage(int page) {
+        this.mCropPage = page;
+    }
+    
+    private Rectangle mRectToCrop = null;
+    public Rectangle getRectToCrop() {
+        return this.mRectToCrop;
+    }
+    public void setRectToCrop(Rectangle rect) {
+        this.mRectToCrop = rect;
+    }
+    
+    private BufferedImage mCroppedImg = null;
+    public BufferedImage getCroppedImage() {
+        return this.mCroppedImg;
+    }
+    public void setCroppedImage(BufferedImage img) {
+        this.mCroppedImg = img;
+    }
+    
+    private String mOCRText = null;
+    public String getOCRText() {
+        return this.mOCRText;
+    }
+    public void setOCRText(String str) {
+        this.mOCRText = str;
+    }
+    
+//    int page = scenario.calcPageToCrop();
+//                        Rectangle rectToCrop = scenario.calcRectToCrop();
+//                        BufferedImage croppedImage = scenario.createCroppedImage(page, rectToCrop);
+//                        String ocrText = scenario.readImage(croppedImage);
+
     
     public Rectangle calcRectToCrop() {
         CD cd = (CD)this.getApp();
@@ -238,8 +268,8 @@ public class CDCropScenario extends XScenario {
         double[] endPos = cd.getViewer().getPageLocationFromPts(endScreenPt);
         int page = (int)startPos[0];
         
-        Point startCropPt = new Point((int)startPos[1], (int)startPos[2]);
-        Point endCropPt = new Point((int)endPos[1], (int)endPos[2]);
+        Point startCropPt = new Point((int)startPos[1] * this.RENDER_SCALE_FOR_CROP, (int)startPos[2] * this.RENDER_SCALE_FOR_CROP);
+        Point endCropPt = new Point((int)endPos[1] * this.RENDER_SCALE_FOR_CROP, (int)endPos[2] * this.RENDER_SCALE_FOR_CROP);
         Rectangle rectToCrop = new Rectangle(startCropPt);
         rectToCrop.add(endCropPt);
         
@@ -256,24 +286,14 @@ public class CDCropScenario extends XScenario {
         return page;
     }
     
-    public BufferedImage createCroppedImage(int page, Rectangle rect) {
+    public BufferedImage createCroppedImage(int page, Rectangle scaledRect) {
         CD cd = (CD)this.getApp();
-//        Point screenAnchorPt = this.mCropBox.getAnchorPt();
-//        Point2D.Double worldAnchorPt = 
-//            cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
-//        cd.getViewer();
-//        
-//        
-//        int x = this.mCropBox.x;
-//        int y = this.mCropBox.y;
-//        int width = this.mCropBox.width;
-//        int height = this.mCropBox.height;
-//        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
+
         BufferedImage croppedImage = null;
         try{
-            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(page, 1);
-            croppedImage = cropImage(pageImage, rect);
-            
+            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(page, this.RENDER_SCALE_FOR_CROP);
+            croppedImage = cropImage(pageImage, scaledRect);
+            this.mCroppedImg = croppedImage;
             File outputfile = new File(String.format("Cropped_Image/cropped%d.jpg", this.num));
             this.num += 1;
             ImageIO.write(croppedImage, "jpg", outputfile);
@@ -284,7 +304,6 @@ public class CDCropScenario extends XScenario {
     }
     
     private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-//        System.out.println(String.format("%d, %d, %d, %d", rect.x, rect.y, Math.abs(rect.width), Math.abs(rect.height)));
         BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
         return dest; 
    }
@@ -297,7 +316,6 @@ public class CDCropScenario extends XScenario {
         } catch (Exception e) {
             System.out.println("Can't read image");
         }
-        
         return result;
     }
 }
