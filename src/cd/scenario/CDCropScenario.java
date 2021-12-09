@@ -70,9 +70,12 @@ public class CDCropScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToCreateCropBox.execute(cd, e.getPoint());   
-            XCmdToChangeScene.execute(cd, 
-                CDCropScenario.CropScene.getSingleton(), this.getReturnScene());
+            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
+                CDCmdToCreateCropBox.execute(cd, e.getPoint());   
+                XCmdToChangeScene.execute(cd, 
+                    CDCropScenario.CropScene.getSingleton(), 
+                    this.getReturnScene());
+            }
         }
 
         @Override

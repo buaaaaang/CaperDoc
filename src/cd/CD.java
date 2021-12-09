@@ -23,6 +23,7 @@ import x.XScenarioMgr;
 public class CD extends XApp {
     // constants
     public static final int INITIAL_HIERARCHY_WIDTH = 150;
+    private static final Color SIDE_COLOR = new Color(200, 200, 200, 255);
     
     // fields
     private JFrame mFrame = null;
@@ -49,6 +50,11 @@ public class CD extends XApp {
         return this.mButtonMgr;
     }
     
+    private JPanel mPanel = null;
+    public JPanel getPanel() {
+        return this.mPanel;
+    }
+    
     private CDPDFViewer mPDFViewer = null;
     public CDPDFViewer getPDFViewer() {
         return this.mPDFViewer;
@@ -68,8 +74,6 @@ public class CD extends XApp {
     public CDSideViewer getSideViewer() {
         return this.mSideViewer;
     }
-    
-    private JPanel mPanel = null;
     
     private CDXform mXform = null;
     public CDXform getXform() {
@@ -124,22 +128,17 @@ public class CD extends XApp {
         this.mPanel.setFocusable(true);
         
         // build and show
-        
         this.mPanel.setLayout(null);
-//        this.mButtonViewer.setOpaque(false);
-        
         
         this.mButtonViewer.setOpaque(false);
-//        this.mHierarchy.setOpaque(false);
         this.mCanvas.setOpaque(false);
         
         this.mPanel.add(this.mButtonViewer);
         this.mPanel.add(this.mSideViewer);
         this.mPanel.add(this.mCanvas);
         this.mPanel.add(this.mPDFViewer);
-//        this.mPanel.setBackground(Color.blue);
         this.mPanel.setOpaque(false);
-        this.mSideViewer.setBackground(Color.orange);
+        this.mSideViewer.setBackground(CD.SIDE_COLOR);
         
         this.mPDFViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
         this.mCanvas.setBounds(0,0, this.initialWidth, this.initialHeight);
@@ -147,8 +146,6 @@ public class CD extends XApp {
             this.initialHeight);
         this.mButtonViewer.setBounds(0,0, this.initialWidth, 
             this.initialHeight);
-        
-        this.mFrame.add(this.mSideViewer);
         
         this.mFrame.add(this.mPanel);
         

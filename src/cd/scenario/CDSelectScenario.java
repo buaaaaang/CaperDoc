@@ -69,10 +69,12 @@ public class CDSelectScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
-            XCmdToChangeScene.execute(cd, 
-                CDSelectScenario.SelectScene.getSingleton(), 
-                this.getReturnScene());
+            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
+                CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
+                XCmdToChangeScene.execute(cd, 
+                    CDSelectScenario.SelectScene.getSingleton(), 
+                    this.getReturnScene());
+            }
         }
 
         @Override

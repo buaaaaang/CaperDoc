@@ -26,20 +26,14 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
         
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleMousePress(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleMouseRelease(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 
     @Override
@@ -54,10 +48,7 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     public void mouseDragged(MouseEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleMouseDrag(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 
     @Override
@@ -68,10 +59,7 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     public void mouseWheelMoved(MouseWheelEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleMouseScroll(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 
     @Override
@@ -82,19 +70,13 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     public void keyPressed(KeyEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleKeyDown(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
         curScene.handleKeyUp(e);
-        this.mCD.getPDFViewer().repaint();
-        this.mCD.getCanvas().repaint();
-        this.mCD.getButtonViewer().repaint();
-        this.mCD.getSideViewer().repaint();
+        this.mCD.getPanel().repaint();
     }
 }

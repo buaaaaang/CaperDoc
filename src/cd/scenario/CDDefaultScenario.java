@@ -59,10 +59,12 @@ public class CDDefaultScenario extends XScenario {
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
             Point pt = e.getPoint();
-            CDCmdToCreateCurPtCurve.execute(cd, pt);
-            XCmdToChangeScene.execute(cd, 
-                CDDrawScenario.DrawScene.getSingleton(), 
-                CDDefaultScenario.ReadyScene.getSingleton());
+            if (pt.x > CD.INITIAL_HIERARCHY_WIDTH) {
+                CDCmdToCreateCurPtCurve.execute(cd, pt);
+                XCmdToChangeScene.execute(cd, 
+                    CDDrawScenario.DrawScene.getSingleton(), 
+                    CDDefaultScenario.ReadyScene.getSingleton());
+            }
         }
 
         @Override
@@ -76,7 +78,9 @@ public class CDDefaultScenario extends XScenario {
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
+            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
+                CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
+            }
         }
 
         @Override

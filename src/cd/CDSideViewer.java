@@ -3,6 +3,7 @@ package cd;
 import cd.button.CDContentButton;
 import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,6 +13,8 @@ import javax.swing.JPanel;
 public class CDSideViewer extends JPanel {
     // constants
     private static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
+    private static final int GAP_LEFT = 5;
+    private static final int GAP_UP = 5;
     
     public enum Mode {
         HIERARCHY, IMPLY
@@ -52,18 +55,18 @@ public class CDSideViewer extends JPanel {
         this.mLastHiearchyShift = 0;
     }
     
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        Graphics2D g2 = (Graphics2D) g;
-//        
-//        if (this.mMode == Mode.HIERARCHY) {
-//            this.drawHierarchies(g2);
-//        } else {
-//            this.drawImplies(g2);
-//        }
-//        
-//    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        
+        if (this.mMode == Mode.HIERARCHY) {
+            this.drawHierarchies(g2);
+        } else {
+            this.drawImplies(g2);
+        }
+        
+    }
     
     public void drawHierarchies(Graphics2D g2) {
         ArrayList<CDHierarchyButton> buttons = 
@@ -81,6 +84,11 @@ public class CDSideViewer extends JPanel {
                 CD.INITIAL_HIERARCHY_WIDTH - CDHierarchyButton.SIDE_GAP, 
                 CDHierarchyButton.HEIGHT - 2 * CDHierarchyButton.GAP);
         }
+        g2.setColor(Color.black);
+        g2.setFont(CDSideViewer.FONT);
+        g2.drawString(button.getName(), CDSideViewer.GAP_LEFT, 
+            CDHierarchyButton.HEIGHT * index - this.mShiftAmount + 
+            CDSideViewer.GAP_UP);
     }
     
     public void drawImplies(Graphics2D g2) {
@@ -98,6 +106,11 @@ public class CDSideViewer extends JPanel {
                 CDImplyButton.SIDE_GAP, 
                 CDImplyButton.HEIGHT - 2 * CDImplyButton.GAP);
         }
+        g2.setColor(Color.black);
+        g2.setFont(CDSideViewer.FONT);
+        g2.drawString(button.getName(), CDSideViewer.GAP_LEFT, 
+            CDHierarchyButton.HEIGHT * index - this.mShiftAmount + 
+            CDSideViewer.GAP_UP);
     }
     
     public void shift(int amount) {
