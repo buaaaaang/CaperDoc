@@ -26,6 +26,9 @@ public class CD extends XApp {
     
     // fields
     private JFrame mFrame = null;
+    public JFrame getFrame() {
+        return this.mFrame;
+    }
     
     private final int initialWidth;
     public int getInitialWidth() {

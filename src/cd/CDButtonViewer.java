@@ -1,5 +1,6 @@
 package cd;
 
+import cd.button.CDColorButton;
 import java.awt.BasicStroke;
 import java.awt.Button;
 import java.awt.Color;
@@ -27,43 +28,53 @@ public class CDButtonViewer extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
+        this.setSize(this.mCD.getFrame().getWidth(), 
+            this.mCD.getFrame().getHeight());
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
         g2.transform(this.mCD.getXform().getCurXformFromWorldToScreen());
-        
-        // render commom world objects
-        this.drawContents(g2);
-        this.drawColorButtons(g2);
-        
-        g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());
+        // render world objects      
         
         // render the current scene's world objects
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        curScene.renderWorldObjects(g2);
+        curScene.renderWorldObjects(g2);        
         
-        //render common screen objects
+        g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());   
+        //render screen objects
+        this.drawColorButtons(g2); 
 
+        
         //render the current scene's screen objects
         curScene.renderScreenObjects(g2);
     }
     
-    public void drawContents(Graphics2D g2) {
-        if (this.mCD.getButtonMgr().getContents() == null) {
-            return;
-        }
-        this.mCD.getButtonMgr().getContents().forEach(contentButton -> {
-            contentButton.draw(g2);
-        });
-    }
-    
-    public void drawColorButtons(Graphics2D g2) {
+    private void drawColorButtons(Graphics2D g2) {
         if (this.mCD.getButtonMgr().getColorButtons() == null) {
             return;
         }
         this.mCD.getButtonMgr().getColorButtons().forEach(colorButton -> {
-            colorButton.draw(g2);
+            this.drawColorButton(g2, colorButton);
         });
+    }
+    
+    private void drawColorButton(Graphics2D g2, CDColorButton colorButton) {
+        if (colorButton.isHighlighted()) {
+            g2.setColor(CDColorButton.HIGHLIGHT_COLOR);
+            g2.fillOval(this.getWidth() + (int) ((colorButton.getRadius() -
+                colorButton.getHighLightRadius()) * 0.5) -
+                colorButton.getScreenPositionFromRight(),
+                colorButton.getScreenPositionFromTop() +
+                (int) ((colorButton.getRadius() -
+                colorButton.getHighLightRadius()) * 0.5), 
+                colorButton.getHighLightRadius(), 
+                colorButton.getHighLightRadius());
+        }
+        g2.setColor(colorButton.getColor());
+        g2.fillOval(this.getWidth() - colorButton.getScreenPositionFromRight(),
+            colorButton.getScreenPositionFromTop(),
+            colorButton.getRadius(), colorButton.getRadius());        
     }
     
 }

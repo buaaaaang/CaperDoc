@@ -2,12 +2,12 @@ package cd.button;
 
 import java.awt.Point;
 
-public class CDContentButton extends CDWorldButton {
+public class CDUseButton extends CDWorldButton{
     
-    public CDContentButton(String name, Point pos) {
-        super(name, pos);
+    public CDUseButton(String name, Point pt) {
+        super(name, pt);
     }
-
+    
     @Override
     public boolean contains(Point pt) {
         return true;

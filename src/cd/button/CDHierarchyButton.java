@@ -2,9 +2,9 @@ package cd.button;
 
 import java.awt.Point;
 
-public class CDContentButton extends CDWorldButton {
+public class CDHierarchyButton extends CDWorldButton {
     
-    public CDContentButton(String name, Point pos) {
+    public CDHierarchyButton(String name, Point pos) {
         super(name, pos);
     }
 

@@ -1,22 +1,13 @@
 package cd;
 
 import cd.button.CDColorButton;
-import cd.button.CDContentButton;
 import java.awt.Color;
 import java.awt.List;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
-public class CDButtonMgr {
-    private ArrayList<CDContentButton> mContents = null;
-    public ArrayList<CDContentButton> getContents() {
-        return this.mContents;
-    }
-    public void addContent(CDContentButton button) {
-        this.mContents.add(button);
-    }
-    
+public class CDButtonMgr {    
     private ArrayList<CDColorButton> mColorButtons = null;
     
     public ArrayList<CDColorButton> getColorButtons() {
@@ -27,12 +18,13 @@ public class CDButtonMgr {
     }
     
     public CDButtonMgr(CD cd) {
-        this.mContents = new ArrayList<CDContentButton>();
         this.mColorButtons = new ArrayList<CDColorButton>();
-        Point dummyPos = new Point(0, 0);
         JPanel panel = cd.getButtonViewer();
-        CDColorButton bt1 = new CDColorButton(Color.red, 1, 1, 100, dummyPos, panel);
-        bt1.setHighlight(true);
-        this.addColorButton(bt1);
+        
+        this.addColorButton(new CDColorButton(Color.black, 140, 15, 20, panel));
+        this.addColorButton(new CDColorButton(Color.red, 110, 15, 20, panel));
+        this.addColorButton(new CDColorButton(Color.blue, 80, 15, 20, panel));
+        this.addColorButton(new CDColorButton(new Color(255, 200, 0, 128), 
+            50, 15, 20, panel));
     }
 }

@@ -6,8 +6,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 abstract class CDButton {
-    // constans
-    protected static final Color HIGHLIGHT_COLOR = Color.ORANGE;
+    
+    public enum Button {
+        COLOR, CONTENT, USED, USE, NONE
+    }
     
     // fields
     private boolean mHighlighted;
@@ -18,21 +20,12 @@ abstract class CDButton {
         this.mHighlighted = b;
     }
     
-    private Point mPos = null;
-    public Point getPos() {
-        return this.mPos;
-    }
-    public void setPos(Point pos) {
-        this.mPos = pos;
-    }
-    
     // constructor
-    public CDButton(Point pos) {
+    public CDButton() {
         this.mHighlighted = false;
-        this.mPos = pos;
     }
     
     // abstract methods
     public abstract boolean contains(Point pt);
-    public abstract void draw(Graphics2D g2);
+//    public abstract void draw(Graphics2D g2);
 }

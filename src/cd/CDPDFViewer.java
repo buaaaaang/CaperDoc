@@ -60,6 +60,9 @@ public class CDPDFViewer extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
+        this.setSize(this.mCD.getFrame().getWidth(), 
+            this.mCD.getFrame().getHeight());
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         

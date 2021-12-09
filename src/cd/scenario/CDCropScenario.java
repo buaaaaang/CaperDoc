@@ -104,7 +104,8 @@ public class CDCropScenario extends XScenario {
                         CDCmdToSetRectToCrop.execute(cd);
                         CDCmdToCreateCroppedImg.execute(cd);
                         
-                        String ocrText = scenario.readImage(scenario.mCroppedImg);
+                        String ocrText = scenario.readImage(
+                            scenario.mCroppedImg);
                         System.out.println("cropped image" + scenario.num + ": " + ocrText);
                     }
                     CDCmdToDestroyCropBox.execute(cd);
@@ -157,7 +158,8 @@ public class CDCropScenario extends XScenario {
         public void handleMouseRelease(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
             XCmdToChangeScene.execute(cd, 
-                CDCropScenario.CropReadyScene.getSingleton(), this.getReturnScene());
+                CDCropScenario.CropReadyScene.getSingleton(), 
+                this.getReturnScene());
         }
         
         @Override

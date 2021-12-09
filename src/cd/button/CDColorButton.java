@@ -6,21 +6,38 @@ import java.awt.Point;
 import javax.swing.JPanel;
 
 public class CDColorButton extends CDButton {
+    //constants
+    public static final Color HIGHLIGHT_COLOR = new Color(0,0,0,32);
     
     private int mScreenPositionFromRight;
+    public int getScreenPositionFromRight() {
+        return this.mScreenPositionFromRight;
+    }
     private int mScreenPositionFromTop;
+    public int getScreenPositionFromTop() {
+        return this.mScreenPositionFromTop;
+    }
     private int mRadius;
+    public int getRadius() {
+        return this.mRadius;
+    }
     private int mHighLightRadius;
+    public int getHighLightRadius() {
+        return this.mHighLightRadius;
+    }
     private Color mColor = null;
+    public Color getColor() {
+        return this.mColor;
+    }
     private JPanel mPanel = null;
     
-    public CDColorButton(Color color, int right, int top, int r, Point pos,
+    public CDColorButton(Color color, int right, int top, int radius, 
         JPanel panel) {
-        super(pos);
+        super();
         this.mColor = color;
         this.mScreenPositionFromRight = right;
         this.mScreenPositionFromTop = top;
-        this.mRadius = r; 
+        this.mRadius = radius; 
         this.mHighLightRadius = (int) (this.mRadius * 1.2);
         this.mPanel = panel;
     }
@@ -30,18 +47,5 @@ public class CDColorButton extends CDButton {
         int dx = this.mPanel.getWidth() - this.mScreenPositionFromRight - pt.x;
         int dy = this.mScreenPositionFromTop - pt.y;
         return ((dx*dx + dy*dy) < this.mRadius * this.mRadius);
-    }
-
-    @Override
-    public void draw(Graphics2D g2) {
-        if (this.isHighlighted()) {
-            g2.setColor(CDButton.HIGHLIGHT_COLOR);
-            g2.fillOval(this.mPanel.getWidth() - this.mScreenPositionFromRight,
-                this.mScreenPositionFromTop, this.mHighLightRadius, 
-                this.mHighLightRadius);
-        }
-        g2.setColor(this.mColor);
-        g2.fillOval(this.mPanel.getWidth() - this.mScreenPositionFromRight,
-            this.mScreenPositionFromTop, this.mRadius, this.mRadius);
     }
 }
