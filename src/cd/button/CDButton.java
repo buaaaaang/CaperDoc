@@ -5,13 +5,18 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-abstract class CDButton {
+public abstract class CDButton {
     
     public enum Button {
-        COLOR, CONTENT, USED, USE, NONE
+        COLOR, CONTENT, IMPLY, USED, HIERARCHY, NONE
     }
     
     // fields
+    protected Button mKind;
+    public Button getKind() {
+        return this.mKind;
+    }
+    
     private boolean mHighlighted;
     public boolean isHighlighted() {
         return this.mHighlighted;

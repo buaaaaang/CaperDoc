@@ -2,10 +2,11 @@ package cd.button;
 
 import java.awt.Point;
 
-public class CDUseButton extends CDWorldButton{
+public class CDNeedButton extends CDWorldButton{
     
-    public CDUseButton(String name, Point pt) {
+    public CDNeedButton(String name, Point pt) {
         super(name, pt);
+        this.mKind = CDButton.Button.IMPLY;
     }
     
     @Override

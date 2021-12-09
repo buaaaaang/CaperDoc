@@ -49,9 +49,9 @@ public class CD extends XApp {
         return this.mButtonMgr;
     }
     
-    private CDPDFViewer mViewer = null;
+    private CDPDFViewer mPDFViewer = null;
     public CDPDFViewer getViewer() {
-        return this.mViewer;
+        return this.mPDFViewer;
     }
     
     private CDCanvas2D mCanvas = null;
@@ -69,9 +69,9 @@ public class CD extends XApp {
         return this.mPanel;
     }
     
-    private JPanel mHierarchy = null;
+    private JPanel mSideViewer = null;
     public JPanel getHierarchy() {
-        return this.mHierarchy;
+        return this.mSideViewer;
     }
     
     private CDXform mXform = null;
@@ -106,8 +106,8 @@ public class CD extends XApp {
         //this.mFrame.setVisible(true);
 
         this.mPanel = new JPanel();
-        this.mHierarchy = new JPanel();
-        this.mViewer = new CDPDFViewer(this, path);
+        this.mSideViewer = new CDSideViewer(this);
+        this.mPDFViewer = new CDPDFViewer(this, path);
         this.mCanvas = new CDCanvas2D(this);
         this.mButtonViewer = new CDButtonViewer(this);
         
@@ -137,21 +137,21 @@ public class CD extends XApp {
         this.mCanvas.setOpaque(false);
         
         this.mPanel.add(this.mButtonViewer);
-        this.mPanel.add(this.mHierarchy);
+        this.mPanel.add(this.mSideViewer);
         this.mPanel.add(this.mCanvas);
-        this.mPanel.add(this.mViewer);
+        this.mPanel.add(this.mPDFViewer);
 //        this.mPanel.setBackground(Color.blue);
         this.mPanel.setOpaque(false);
-        this.mHierarchy.setBackground(Color.orange);
+        this.mSideViewer.setBackground(Color.orange);
         
-        this.mViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
+        this.mPDFViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
         this.mCanvas.setBounds(0,0, this.initialWidth, this.initialHeight);
-        this.mHierarchy.setBounds(0, 0, CD.INITIAL_HIERARCHY_WIDTH, 
+        this.mSideViewer.setBounds(0, 0, CD.INITIAL_HIERARCHY_WIDTH, 
             this.initialHeight);
         this.mButtonViewer.setBounds(0,0, this.initialWidth, 
             this.initialHeight);
         
-        this.mFrame.add(this.mHierarchy);
+        this.mFrame.add(this.mSideViewer);
         
         this.mFrame.add(this.mPanel);
         

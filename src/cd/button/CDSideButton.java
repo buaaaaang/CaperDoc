@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-abstract class CDScreenButton extends CDButton {
+abstract class CDSideButton extends CDButton {
     protected String mName = null;
     public String getName() {
         return this.mName;
@@ -27,7 +27,7 @@ abstract class CDScreenButton extends CDButton {
     }
     
     // constructor
-    public CDScreenButton(String name, double y) {
+    public CDSideButton(String name, double y) {
         this.mName = name;
         this.mContentPosition = y;
     }

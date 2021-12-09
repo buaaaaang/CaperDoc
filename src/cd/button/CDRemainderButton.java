@@ -2,10 +2,10 @@ package cd.button;
 
 import java.awt.Point;
 
-public class CDUsedButton extends CDScreenButton {
+public class CDRemainderButton extends CDButton {
     
-    public CDUsedButton(String name, double y) {
-        super(name, y);
+    public CDRemainderButton() {
+        this.mKind = CDButton.Button.NONE;
     }
     
     @Override

@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class CDColorButton extends CDButton {
     //constants
-    public static final Color HIGHLIGHT_COLOR = new Color(0,0,0,32);
+    public static final Color HIGHLIGHT_COLOR = new Color(0,0,0,64);
     
     private int mScreenPositionFromRight;
     public int getScreenPositionFromRight() {
@@ -34,11 +34,12 @@ public class CDColorButton extends CDButton {
     public CDColorButton(Color color, int right, int top, int radius, 
         JPanel panel) {
         super();
+        this.mKind = CDButton.Button.COLOR;
         this.mColor = color;
         this.mScreenPositionFromRight = right;
         this.mScreenPositionFromTop = top;
         this.mRadius = radius; 
-        this.mHighLightRadius = (int) (this.mRadius * 1.2);
+        this.mHighLightRadius = (int) (this.mRadius * 1.3);
         this.mPanel = panel;
     }
 
