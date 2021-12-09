@@ -42,7 +42,7 @@ public class CDCmdToCreateContentButton extends XLoggableCmd {
         CDBox cropBox = CDCropScenario.getSingleton().getCropBox();
         AffineTransform at = cd.getXform().getCurXformFromScreenToWorld();
         CDHierarchyButton b = 
-            new CDHierarchyButton(ocrText, cropBox.getBounds().y);
+            new CDHierarchyButton(ocrText, cropBox.getBounds().y, cd);
         cd.getButtonMgr().addHierarchyButton(b);
         Shape box = at.createTransformedShape(cropBox);
         cd.getButtonMgr().addContentButton(

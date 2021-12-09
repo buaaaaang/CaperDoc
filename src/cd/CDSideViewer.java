@@ -6,6 +6,7 @@ import cd.button.CDImplyButton;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class CDSideViewer extends JPanel {
@@ -22,18 +23,24 @@ public class CDSideViewer extends JPanel {
     private Mode mMode;
     public void setHierarchyMode() {
         this.mMode = Mode.HIERARCHY;
-        this.mShiftedAmount = this.mLastHiearchyShift;
+        this.mShiftAmount = this.mLastHiearchyShift;
     }
     public void setImplyMode() {
         this.mMode = Mode.IMPLY;
-        this.mLastHiearchyShift = this.mShiftedAmount;
-        this.mShiftedAmount = 0;
+        this.mLastHiearchyShift = this.mShiftAmount;
+        this.mShiftAmount = 0;
     }
     
-    private int mShiftedAmount;
+    private int mShiftAmount;
+    public int getShiftAmount() {
+        return this.mShiftAmount;
+    }
     private int mLastHiearchyShift;
     
     private CDContentButton mImplyContent = null;
+    public CDContentButton getImplyContent() {
+        return this.mImplyContent;
+    }
     public void setImplyContent(CDContentButton button) {
         this.mImplyContent = button;
     }
@@ -41,18 +48,56 @@ public class CDSideViewer extends JPanel {
     public CDSideViewer(CD cd) {
         this.mCD = cd;
         this.mMode = Mode.HIERARCHY;
-        this.mShiftedAmount = 0;
+        this.mShiftAmount = 0;
         this.mLastHiearchyShift = 0;
     }
     
-    @Override
-    protected void paintComponent(Graphics g) {
-        this.setSize(this.mCD.getFrame().getWidth(), 
-            this.mCD.getFrame().getHeight());
-        
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//        super.paintComponent(g);
+//        Graphics2D g2 = (Graphics2D) g;
+//        
+//        if (this.mMode == Mode.HIERARCHY) {
+//            this.drawHierarchies(g2);
+//        } else {
+//            this.drawImplies(g2);
+//        }
+//        
+//    }
+    
+    public void drawHierarchies(Graphics2D g2) {
+        ArrayList<CDHierarchyButton> buttons = 
+            this.mCD.getButtonMgr().getHierarchyButtons();
+        for (int i=0; i < buttons.size(); i++) {
+            this.drawHierarchy(g2, buttons.get(i), i);
+        }
+    }
+    private void drawHierarchy(Graphics2D g2, CDHierarchyButton button, 
+        int index) {
+        if (button.isHighlighted()) {
+            g2.setColor(CDHierarchyButton.HIGHLIGHT_COLOR);
+            g2.fillRect(0, CDHierarchyButton.HEIGHT * index - 
+                this.mShiftAmount - CDHierarchyButton.GAP, 
+                CD.INITIAL_HIERARCHY_WIDTH - CDHierarchyButton.SIDE_GAP, 
+                CDHierarchyButton.HEIGHT - 2 * CDHierarchyButton.GAP);
+        }
+    }
+    
+    public void drawImplies(Graphics2D g2) {
+        ArrayList<CDImplyButton> buttons = this.mImplyContent.getImplyButtons();
+        for (int i=0; i < buttons.size(); i++) {
+            this.drawImply(g2, buttons.get(i), i);
+        }
+    }
+    private void drawImply(Graphics2D g2, CDImplyButton button, 
+        int index) {
+        if (button.isHighlighted()) {
+            g2.setColor(CDImplyButton.HIGHLIGHT_COLOR);
+            g2.fillRect(0, CDImplyButton.HEIGHT * index - this.mShiftAmount - 
+                CDImplyButton.GAP, CD.INITIAL_HIERARCHY_WIDTH - 
+                CDImplyButton.SIDE_GAP, 
+                CDImplyButton.HEIGHT - 2 * CDImplyButton.GAP);
+        }
     }
     
     public void shift(int amount) {
@@ -65,9 +110,9 @@ public class CDSideViewer extends JPanel {
             maxShift = Math.max(this.mImplyContent.getImplyButtons().size() * 
                 CDImplyButton.HEIGHT, 0);
         }
-        int afterShift = this.mShiftedAmount + amount;
+        int afterShift = this.mShiftAmount + amount;
         if (afterShift >= minShift && afterShift <= maxShift) {
-            this.mShiftedAmount = afterShift;
+            this.mShiftAmount = afterShift;
         }
     }
 }

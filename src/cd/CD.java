@@ -50,7 +50,7 @@ public class CD extends XApp {
     }
     
     private CDPDFViewer mPDFViewer = null;
-    public CDPDFViewer getViewer() {
+    public CDPDFViewer getPDFViewer() {
         return this.mPDFViewer;
     }
     
@@ -64,15 +64,12 @@ public class CD extends XApp {
         return this.mButtonViewer;
     }
     
-    private JPanel mPanel = null;
-    public JPanel getPanel() {
-        return this.mPanel;
-    }
-    
-    private JPanel mSideViewer = null;
-    public JPanel getHierarchy() {
+    private CDSideViewer mSideViewer = null;
+    public CDSideViewer getSideViewer() {
         return this.mSideViewer;
     }
+    
+    private JPanel mPanel = null;
     
     private CDXform mXform = null;
     public CDXform getXform() {
@@ -106,10 +103,10 @@ public class CD extends XApp {
         //this.mFrame.setVisible(true);
 
         this.mPanel = new JPanel();
-        this.mSideViewer = new CDSideViewer(this);
         this.mPDFViewer = new CDPDFViewer(this, path);
         this.mCanvas = new CDCanvas2D(this);
         this.mButtonViewer = new CDButtonViewer(this);
+        this.mSideViewer = new CDSideViewer(this);
         
         this.mXform = new CDXform(this);
         this.mEventListener = new CDEventListener(this);

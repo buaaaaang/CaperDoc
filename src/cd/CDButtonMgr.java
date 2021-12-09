@@ -18,7 +18,7 @@ public class CDButtonMgr {
     public ArrayList<CDColorButton> getColorButtons() {
         return this.mColorButtons;
     }
-    public void addColorButton(CDColorButton button) {
+    private void addColorButton(CDColorButton button) {
         this.mColorButtons.add(button);
     }
     
@@ -43,6 +43,13 @@ public class CDButtonMgr {
         return this.mImplyButtons;
     }
     public void addImplyButton(CDImplyButton button) {
+        for (int i=0; i < this.mImplyButtons.size(); i++) {
+            if (this.mImplyButtons.get(i).getContentPosition() > 
+                button.getContentPosition()) {
+                this.mImplyButtons.add(i, button);
+                return;
+            }
+        }
         this.mImplyButtons.add(button);
     }
 
@@ -51,6 +58,13 @@ public class CDButtonMgr {
         return this.mHierarchyButtons;
     }
     public void addHierarchyButton(CDHierarchyButton button) {
+        for (int i=0; i < this.mHierarchyButtons.size(); i++) {
+            if (this.mHierarchyButtons.get(i).getContentPosition() > 
+                button.getContentPosition()) {
+                this.mHierarchyButtons.add(i, button);
+                return;
+            }
+        }
         this.mHierarchyButtons.add(button);
     }
 

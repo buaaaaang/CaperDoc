@@ -210,9 +210,9 @@ public class CDCropScenario extends XScenario {
         CDBox reformulatedCropBox = cropBox.getReformulatedBox();
         Point startScreenPt = reformulatedCropBox.getAnchorPt();
         Point endScreenPt = reformulatedCropBox.getEndPt();
-        double[] startPos = cd.getViewer().
+        double[] startPos = cd.getPDFViewer().
             getPageLocationFromPts(startScreenPt);
-        double[] endPos = cd.getViewer().getPageLocationFromPts(endScreenPt);
+        double[] endPos = cd.getPDFViewer().getPageLocationFromPts(endScreenPt);
         
         Point startCropPt = new Point((int)startPos[1] * 
             CDCropScenario.RENDER_SCALE_FOR_CROP, (int)startPos[2] * 
@@ -231,7 +231,7 @@ public class CDCropScenario extends XScenario {
         CDBox cropBox = this.getCropBox();
         
         Point startScreenPt = cropBox.getAnchorPt();
-        double[] startPos = cd.getViewer().
+        double[] startPos = cd.getPDFViewer().
             getPageLocationFromPts(startScreenPt);
         int page = (int)startPos[0];
         return page;
@@ -242,7 +242,7 @@ public class CDCropScenario extends XScenario {
 
         BufferedImage croppedImage = null;
         try{
-            BufferedImage pageImage = cd.getViewer().getRenderer().
+            BufferedImage pageImage = cd.getPDFViewer().getRenderer().
                 renderImage(page, CDCropScenario.RENDER_SCALE_FOR_CROP);
             croppedImage = cropImage(pageImage, scaledRect);
         } catch (IOException e) {

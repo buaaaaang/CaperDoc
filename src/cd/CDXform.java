@@ -116,7 +116,7 @@ public class CDXform {
     
     
     private double getProperDialation() {
-        CDPDFViewer viewer = this.mCD.getViewer();
+        CDPDFViewer viewer = this.mCD.getPDFViewer();
         return viewer.getHeight() * 0.7 / CDPDFViewer.PAGE_INTERVAL;
     }
     
