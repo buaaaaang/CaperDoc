@@ -5,8 +5,6 @@ import java.awt.Point;
 
 public abstract class CDButton {
     
-    public static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
-    
     public enum Button {
         COLOR, CONTENT, IMPLY, NEED, HIERARCHY, SIDE, NONE
     }

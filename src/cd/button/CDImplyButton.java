@@ -1,10 +1,7 @@
 package cd.button;
 
 import cd.CD;
-import cd.CDButtonMgr;
 import cd.CDSideViewer;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Point;
 
 public class CDImplyButton extends CDSideButton {

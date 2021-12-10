@@ -6,6 +6,7 @@ import cd.button.CDContentButton;
 import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
 import cd.button.CDNeedButton;
+import cd.button.CDSideButton;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,7 +42,8 @@ public class CDButtonViewer extends JPanel {
         
         g2.transform(this.mCD.getXform().getCurXformFromWorldToScreen());
         // render world objects 
-        this.drawContentButtons(g2);
+        this.drawContentButtons(g2); 
+        this.drawNeedButtons(g2);  
         
         // render the current scene's world objects
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
@@ -49,8 +51,7 @@ public class CDButtonViewer extends JPanel {
         
         g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());   
         //render screen objects
-        this.drawColorButtons(g2);     
-        this.drawNeedButtons(g2);  
+        this.drawColorButtons(g2);    
         this.drawDummyHierarchy(g2);
         this.mDummyHierarchyPos = null;
 
@@ -118,9 +119,9 @@ public class CDButtonViewer extends JPanel {
     }
     
     private void drawNeedButton(Graphics2D g2, CDNeedButton button) {
-        Point pos = this.mCD.getXform().calcPtFromWorldToScreen(
-            new Point2D.Double(button.getPosition().x, button.getPosition().y));
-        g2.setFont(CDButton.FONT);
+        Point pos = new Point((int) button.getPosition().x, 
+            (int) button.getPosition().y);
+        g2.setFont(CDNeedButton.FONT);
         if (button.getWidth() == 0) {
             button.setWidth(2 * CDNeedButton.GAP_SIDE + g2.getFontMetrics().
                 stringWidth(button.getName()));
@@ -133,24 +134,24 @@ public class CDButtonViewer extends JPanel {
         g2.fillRect(pos.x, pos.y, button.getWidth(), CDNeedButton.HEIGHT);
         g2.setColor(Color.black);
         g2.drawString(button.getName(), CDNeedButton.GAP_SIDE + pos.x, 
-            pos.y + CDNeedButton.GAP_UP);
+            pos.y + CDNeedButton.GAP_UP_TEXT);
     }
     
     private void drawDummyHierarchy(Graphics2D g2) {
         if (this.mDummyHierarchyPos == null) {
             return;
         }
-        g2.setFont(CDButton.FONT);
-        int width = 2 * CDNeedButton.GAP_SIDE + g2.getFontMetrics().
+        g2.setFont(CDSideButton.FONT);
+        int width = 2 * CDSideButton.GAP_SIDE + g2.getFontMetrics().
             stringWidth(this.mDummyHierarchy.getName());
         int xPos = this.mDummyHierarchyPos.x - (int) (width * 0.5);
         int yPos = this.mDummyHierarchyPos.y - 
-            (int) (CDNeedButton.HEIGHT * 0.5);
-        g2.setColor(CDHierarchyButton.HIGHLIGHT_COLOR);
-        g2.fillRect(xPos, yPos, width, CDNeedButton.HEIGHT);
+            (int) (CDSideButton.HEIGHT * 0.5);
+        g2.setColor(CDSideButton.HIGHLIGHT_COLOR);
+        g2.fillRect(xPos, yPos, width, CDSideButton.HEIGHT);
         g2.setColor(Color.black);
-        g2.drawString(this.mDummyHierarchy.getName(), CDNeedButton.GAP_SIDE +
-            xPos, yPos + CDNeedButton.GAP_UP);
+        g2.drawString(this.mDummyHierarchy.getName(), CDSideButton.GAP_SIDE +
+            xPos, yPos + CDSideButton.GAP_UP_TEXT);
     }
     
 }

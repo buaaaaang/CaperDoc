@@ -1,17 +1,16 @@
 package cd.scenario;
 
 import cd.CD;
-import cd.CDButtonMgr;
 import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
+import cd.button.CDNeedButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
 import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -92,6 +91,18 @@ public class CDDefaultScenario extends XScenario {
                         CDColorScenario.ColorScene.getSingleton(), 
                         this);
                     break;
+                case NEED:
+                    CDNeedButton needButton = 
+                        cd.getButtonMgr().getCurWorkingNeedButton();
+                    needButton.setInitialPressedPoint(e.getPoint());
+                    needButton.setMoved(false);
+                    needButton.setHighlight(true);
+                    CDButtonScenario.getSingleton().
+                        setCurHandlingNeedButton(needButton);
+                    XCmdToChangeScene.execute(cd, 
+                        CDButtonScenario.NeedPressedScene.getSingleton(), 
+                        this);
+                    break;
                 case NONE:
                     CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
                     XCmdToChangeScene.execute(cd, 
@@ -112,8 +123,14 @@ public class CDDefaultScenario extends XScenario {
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            if (e.getPoint().x > CD.HIERARCHY_WIDTH) {
-                CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                case COLOR:
+                case CONTENT:
+                case NEED:
+                    CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
             }
         }
 

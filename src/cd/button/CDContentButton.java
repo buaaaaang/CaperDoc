@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class CDContentButton extends CDWorldButton {
@@ -43,7 +44,7 @@ public class CDContentButton extends CDWorldButton {
     private CD mCD = null;
     
     public CDContentButton(String name, Shape rec, CD cd) {
-        super(name, new Point(rec.getBounds().x, rec.getBounds().y));
+        super(name, new Point2D.Double(rec.getBounds().x, rec.getBounds().y));
         this.mKind = CDButton.Button.CONTENT;
         this.mBox = rec;
         this.mNeedButtons = new ArrayList<>();

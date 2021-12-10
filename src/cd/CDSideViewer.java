@@ -6,7 +6,6 @@ import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
 import cd.button.CDSideButton;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class CDSideViewer extends JPanel {
                 CDSideButton.GAP_SIDE, CDSideButton.HEIGHT);
         }
         g2.setColor(Color.black);
-        g2.setFont(CDButton.FONT);
+        g2.setFont(CDSideButton.FONT);
         g2.drawString(button.getName(), CDSideButton .GAP_SIDE_TEXT, 
             CDSideButton.HEIGHT * index - this.mShiftAmount+ 
             CDSideButton.GAP_UP_TEXT);
@@ -104,7 +103,7 @@ public class CDSideViewer extends JPanel {
                 CDSideButton.GAP_SIDE, CDSideButton.HEIGHT);
         }
         g2.setColor(Color.black);
-        g2.setFont(CDButton.FONT);
+        g2.setFont(CDSideButton.FONT);
         g2.drawString(button.getName(), CDSideButton.GAP_SIDE_TEXT, 
             CDSideButton.HEIGHT * index - this.mShiftAmount + 
             CDSideButton.GAP_UP_TEXT);
