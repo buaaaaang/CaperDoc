@@ -17,6 +17,9 @@ public class CDContentButton extends CDWorldButton {
     }
     
     private CDHierarchyButton mHierarchyButton = null;
+    public void setHierarchyButton(CDHierarchyButton b) {
+        this.mHierarchyButton = b;
+    }
     public CDHierarchyButton getNeedButton() {
         return this.mHierarchyButton;
     }
@@ -39,12 +42,10 @@ public class CDContentButton extends CDWorldButton {
     
     private CD mCD = null;
     
-    public CDContentButton(String name, Shape rec, CDHierarchyButton b, 
-        CD cd) {
+    public CDContentButton(String name, Shape rec, CD cd) {
         super(name, new Point(rec.getBounds().x, rec.getBounds().y));
         this.mKind = CDButton.Button.CONTENT;
         this.mBox = rec;
-        this.mHierarchyButton = b;
         this.mNeedButtons = new ArrayList<>();
         this.mImplyButtons = new ArrayList<>();
         this.mCD = cd;
