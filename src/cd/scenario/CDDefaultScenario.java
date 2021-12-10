@@ -5,6 +5,7 @@ import cd.CDButtonMgr;
 import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.button.CDButton;
+import cd.button.CDColorButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
@@ -79,6 +80,13 @@ public class CDDefaultScenario extends XScenario {
                     button.setHighlight(true);
                     XCmdToChangeScene.execute(cd, 
                         CDButtonScenario.HierarchyPressedScene.getSingleton(), 
+                        this);
+                    break;
+                case COLOR:
+                    CDColorButton cb = (CDColorButton)button;
+                    CDColorScenario.getSingleton().setCurHandlingButton(cb);
+                    XCmdToChangeScene.execute(cd, 
+                        CDColorScenario.ColorScene.getSingleton(), 
                         this);
                     break;
                 case NONE:

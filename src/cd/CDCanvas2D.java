@@ -23,6 +23,8 @@ public class CDCanvas2D extends JPanel {
     
     private static final Stroke STROKE_PT_CURVE_DEFAULT = new BasicStroke(5f,
         BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    private static final Stroke SAVED_STROKE_PT_CURVE_DEFAULT = 
+        new BasicStroke(20f,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static final Stroke STROKE_SELECTION_BOX = new BasicStroke(2f);
     public static final Stroke STROKE_CROP_BOX = new BasicStroke(2f);
     
@@ -47,11 +49,24 @@ public class CDCanvas2D extends JPanel {
     public Stroke getCurStrokeForPtCurve() {
         return this.mCurStrokeForPtCurve;
     }
+    public void setCurStrokeForPtCurve(Stroke stroke)  {
+        this.mCurStrokeForPtCurve = stroke;
+    }
+    
+    private Stroke mSavedStrokePtCurve = null;
+    public Stroke getSavedStrokeForPtCurve() {
+        return this.mSavedStrokePtCurve;
+    }
+    public void setSavedStrokeForPtCurve(Stroke stroke)  {
+        this.mSavedStrokePtCurve = stroke;
+    }
     
     public CDCanvas2D(CD cd) {
         this.mCD = cd;
         this.mCurColorForPtCurve = CDCanvas2D.COLOR_PT_CURVE_DEFAULT;
         this.mCurStrokeForPtCurve = CDCanvas2D.STROKE_PT_CURVE_DEFAULT;
+        this.mSavedStrokePtCurve = 
+            CDCanvas2D.SAVED_STROKE_PT_CURVE_DEFAULT;
         this.repaint();
     }
     
