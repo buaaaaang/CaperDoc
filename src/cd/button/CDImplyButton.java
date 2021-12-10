@@ -6,8 +6,8 @@ import java.awt.Point;
 
 public class CDImplyButton extends CDSideButton {
     
-    public CDImplyButton(String name, double y, CD cd, CDContentButton b) {
-        super(name, y, cd, b);
+    public CDImplyButton(String name, double y, CD cd) {
+        super(name, y, cd);
         this.mKind = CDButton.Button.IMPLY;
     }
     
