@@ -5,8 +5,14 @@ import cd.CDButtonMgr;
 import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDButton.Button;
+import cd.button.CDContentButton;
+import cd.button.CDHierarchyButton;
+import cd.button.CDImplyButton;
+import cd.button.CDNeedButton;
 import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -164,7 +170,6 @@ public class CDButtonScenario extends XScenario {
                         getCurHandlingButton(), e.getPoint());
                     break;
             }
-            
         }
 
         @Override
@@ -184,8 +189,30 @@ public class CDButtonScenario extends XScenario {
                     }
                     break;
                 case CONTENT:
+                    CDContentButton cont_use = cd.getButtonMgr().
+                        getCurWorkingContentButton();
+                    Rectangle box = cont_use.getBox().getBounds();
+                    // we may change site of need button
+                    CDNeedButton need = new CDNeedButton(button.getName(),
+                        new Point(box.x - 200, box.y), cd, cont_use);
+                    cd.getButtonMgr().addNeedButton(need);
+                    cont_use.addNeedButton(need);
+                    CDContentButton cont_used = 
+                        ((CDButtonScenario) this.mScenario).
+                        getCurHandlingHierarchyButton().getContentButton();
+                    CDImplyButton imply = new CDImplyButton(button.getName(),
+                        cd, cont_used);
+                    ((CDButtonScenario) this.mScenario).
+                        getCurHandlingHierarchyButton().getContentButton().
+                        addImplyButton(imply);
                     
                     break;
+
+
+
+
+
+
             }
             ((CDButtonScenario) this.mScenario).getCurHandlingButton().
                 setHighlight(false);
@@ -221,4 +248,12 @@ public class CDButtonScenario extends XScenario {
     public CDButton getCurHandlingButton() {
         return this.mCurHandlingButton;
     }
+    private CDHierarchyButton mCurHandlingHierarchyButton = null;
+    public void setCurHandlingHierarchyButton(CDHierarchyButton button) {
+        this.mCurHandlingHierarchyButton = button;
+    }
+    public CDHierarchyButton getCurHandlingHierarchyButton() {
+        return this.mCurHandlingHierarchyButton;
+    }
+    
 }
