@@ -76,6 +76,7 @@ public class CDDefaultScenario extends XScenario {
                 case HIERARCHY:
                     CDButtonScenario.getSingleton().
                         setCurHandlingButton(button);
+                    button.setHighlight(true);
                     XCmdToChangeScene.execute(cd, 
                         CDButtonScenario.HierarchyPressedScene.getSingleton(), 
                         this);

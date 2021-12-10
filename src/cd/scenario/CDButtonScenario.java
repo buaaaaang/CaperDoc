@@ -162,12 +162,34 @@ public class CDButtonScenario extends XScenario {
                     cd.getButtonViewer().setDummyButton(
                         ((CDButtonScenario) this.mScenario).
                         getCurHandlingButton(), e.getPoint());
+                    break;
             }
             
         }
 
         @Override
         public void handleMouseRelease(MouseEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            CDButtonMgr mgr = cd.getButtonMgr();
+            CDButton button = mgr.checkButton(e.getPoint());
+            Button kind = button.getKind();
+            switch (kind) {
+                case HIERARCHY:
+                    if (cd.getButtonMgr().getCurWorkingHierarchyButton() ==
+                        ((CDButtonScenario) this.mScenario).
+                        getCurHandlingButton()) {
+                        cd.getXform().goToYPos((int) cd.getButtonMgr().
+                            getCurWorkingHierarchyButton().
+                            getContentPosition());
+                    }
+                    break;
+                case CONTENT:
+                    
+                    break;
+            }
+            ((CDButtonScenario) this.mScenario).getCurHandlingButton().
+                setHighlight(false);
+            XCmdToChangeScene.execute(cd, this.mReturnScene, null);
         }
         
         @Override

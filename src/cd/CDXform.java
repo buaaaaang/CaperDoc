@@ -117,7 +117,7 @@ public class CDXform {
     
     private double getProperDialation() {
         CDPDFViewer viewer = this.mCD.getPDFViewer();
-        return viewer.getHeight() * 0.7 / CDPDFViewer.PAGE_INTERVAL;
+        return viewer.getHeight() / (CDPDFViewer.PAGE_INTERVAL * 0.7);
     }
     
     private AffineTransform getDefaultXformFromWorldToScreen() {
@@ -138,7 +138,7 @@ public class CDXform {
     public boolean goToYPos(int y) {
         this.mCurXformFromWorldToScreen = 
             this.getDefaultXformFromWorldToScreen();
-        double diff = y - CDPDFViewer.PAGE_INTERVAL * 0.5;
+        double diff = y - CDPDFViewer.PAGE_INTERVAL * 0.5 * 0.7;
         this.mCurXformFromWorldToScreen.translate(0, -diff);
         this.updateCurXformFromScreenToWorld();
         return true;
