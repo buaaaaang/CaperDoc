@@ -12,11 +12,24 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/LG/Documents/GitHub/CaperDoc/src/cd/CDXform.java</file>
-            <file>file:/C:/Users/LG/Documents/GitHub/CaperDoc/src/cd/CDCanvas2D.java</file>
-            <file>file:/C:/Users/LG/Documents/GitHub/CaperDoc/src/cd/CDPDFViewer.java</file>
-            <file>file:/C:/Users/LG/Documents/GitHub/CaperDoc/src/cd/CD.java</file>
-            <file>file:/C:/Users/LG/Documents/GitHub/CaperDoc/src/cd/CDEventListener.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToSaveFile.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/button/CDColorButton.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/button/CDConceptButton.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/button/CDContentButton.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/scenario/CDDefaultScenario.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDBox.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDXform.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/scenario/CDSelectScenario.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CD.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDPtCurveMgr.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToDoSomething.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToCreateCroppedImg.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDButtonViewer.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/cmd/CDCmdToSetCropPage.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDCanvas2D.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/scenario/CDCropScenario.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/CDButtonMgr.java</file>
+            <file>file:/C:/Users/kyuju/Documents/GitHub/CaperDoc/src/cd/button/CDButton.java</file>
         </group>
     </open-files>
 </project-private>

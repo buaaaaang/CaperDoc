@@ -28,7 +28,7 @@ public class CDCanvas2D extends JPanel {
     
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);
-    private static final int INFO_TOP_ALIGNMENT_X = 1000;
+    private static final int INFO_TOP_ALIGNMENT_X = 250;
     private static final int INFO_TOP_ALIGNMENT_Y = 30;
     
     private static final double PEN_TIP_OFFSET = 30.0;
@@ -57,6 +57,9 @@ public class CDCanvas2D extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
+        this.setSize(this.mCD.getFrame().getWidth(), 
+            this.mCD.getFrame().getHeight());
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
@@ -163,7 +166,7 @@ public class CDCanvas2D extends JPanel {
         String str = curScene.getClass().getSimpleName();
         g2.setColor(CDCanvas2D.COLOR_INFO);
         g2.setFont(CDCanvas2D.FONT_INFO);
-        g2.drawString(str, CDCanvas2D.INFO_TOP_ALIGNMENT_X, 
+        g2.drawString(str, this.getWidth() - CDCanvas2D.INFO_TOP_ALIGNMENT_X, 
                 CDCanvas2D.INFO_TOP_ALIGNMENT_Y);
     } 
 

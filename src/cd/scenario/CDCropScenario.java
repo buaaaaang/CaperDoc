@@ -4,6 +4,8 @@ import cd.CD;
 import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.CDBox;
+import cd.button.CDButton;
+import cd.cmd.CDCmdToCreateContentButton;
 import cd.cmd.CDCmdToCreateCropBox;
 import cd.cmd.CDCmdToCreateSelectionBox;
 import cd.cmd.CDCmdToDestroyCropBox;
@@ -20,6 +22,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -67,9 +71,15 @@ public class CDCropScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToCreateCropBox.execute(cd, e.getPoint());   
-            XCmdToChangeScene.execute(cd, 
-                CDCropScenario.CropScene.getSingleton(), this.getReturnScene());
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                    CDCmdToCreateCropBox.execute(cd, e.getPoint());   
+                    XCmdToChangeScene.execute(cd, 
+                        CDCropScenario.CropScene.getSingleton(), 
+                        this.getReturnScene());
+            }
         }
 
         @Override
@@ -94,9 +104,10 @@ public class CDCropScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_C:
-
-//                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    ((CDCropScenario)this.mScenario).createCroppedImage();
+                    CDCropScenario scenario = (CDCropScenario)this.mScenario;
+                    if (scenario.getCropBox() != null){
+                        CDCmdToCreateContentButton.execute(cd);
+                    }
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -147,7 +158,8 @@ public class CDCropScenario extends XScenario {
         public void handleMouseRelease(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
             XCmdToChangeScene.execute(cd, 
-                CDCropScenario.CropReadyScene.getSingleton(), this.getReturnScene());
+                CDCropScenario.CropReadyScene.getSingleton(), 
+                this.getReturnScene());
         }
         
         @Override
@@ -164,9 +176,6 @@ public class CDCropScenario extends XScenario {
             int code = e.getKeyCode();
             switch (code) {
                 case KeyEvent.VK_C:
-
-//                    CDCmdToSaveCroppedImg.execute(cd, e);
-                    ((CDCropScenario)this.mScenario).createCroppedImage();
                     CDCmdToDestroyCropBox.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
@@ -188,47 +197,81 @@ public class CDCropScenario extends XScenario {
     }
     
     private CDBox mCropBox = null;
-    
     public CDBox getCropBox(){
         return this.mCropBox;
     }
-    
     public void setCropBox(CDBox selectionBox) {
         this.mCropBox = selectionBox;
     }
-    
     public void drawCropBox(Graphics2D g2) {
         g2.setColor(CDCanvas2D.COLOR_CROP_BOX);
         g2.setStroke(CDCanvas2D.STROKE_CROP_BOX);
         g2.draw(this.mCropBox);
     }
     
-    public BufferedImage createCroppedImage() {
+    private static final int RENDER_SCALE_FOR_CROP = 4;
+    
+    public Rectangle calcRectToCrop() {
         CD cd = (CD)this.getApp();
-        Point screenAnchorPt = this.mCropBox.getAnchorPt();
-        Point2D.Double worldAnchorPt = 
-            cd.getXform().calcPtFromScreenToWorld(screenAnchorPt);
-        cd.getViewer();
+        CDBox cropBox = this.getCropBox();
+        CDBox reformulatedCropBox = cropBox.getReformulatedBox();
+        Point startScreenPt = reformulatedCropBox.getAnchorPt();
+        Point endScreenPt = reformulatedCropBox.getEndPt();
+        double[] startPos = cd.getPDFViewer().
+            getPageLocationFromPts(startScreenPt);
+        double[] endPos = cd.getPDFViewer().getPageLocationFromPts(endScreenPt);
         
+        Point startCropPt = new Point((int)startPos[1] * 
+            CDCropScenario.RENDER_SCALE_FOR_CROP, (int)startPos[2] * 
+            CDCropScenario.RENDER_SCALE_FOR_CROP);
+        Point endCropPt = new Point((int)endPos[1] * 
+            CDCropScenario.RENDER_SCALE_FOR_CROP, (int)endPos[2] * 
+            CDCropScenario.RENDER_SCALE_FOR_CROP);
+        Rectangle rectToCrop = new Rectangle(startCropPt);
+        rectToCrop.add(endCropPt);
         
-        int x = this.mCropBox.x;
-        int y = this.mCropBox.y;
-        int width = this.mCropBox.width;
-        int height = this.mCropBox.height;
-        Rectangle screenRect = new Rectangle(x, y, x + width, y + height);
+        return rectToCrop;
+    }
+    
+    public int calcPageToCrop() {
+        CD cd = (CD)this.getApp();
+        CDBox cropBox = this.getCropBox();
+        
+        Point startScreenPt = cropBox.getAnchorPt();
+        double[] startPos = cd.getPDFViewer().
+            getPageLocationFromPts(startScreenPt);
+        int page = (int)startPos[0];
+        return page;
+    }
+    
+    public BufferedImage createCroppedImage(int page, Rectangle scaledRect) {
+        CD cd = (CD)this.getApp();
+
+        BufferedImage croppedImage = null;
         try{
-            BufferedImage pageImage = cd.getViewer().getRenderer().renderImage(1, 1);
-            BufferedImage croppedImage = cropImage(pageImage, screenRect);
-            File outputfile = new File("Cropped_Image/cropped.jpg");
-            ImageIO.write(croppedImage, "jpg", outputfile);
+            BufferedImage pageImage = cd.getPDFViewer().getRenderer().
+                renderImage(page, CDCropScenario.RENDER_SCALE_FOR_CROP);
+            croppedImage = cropImage(pageImage, scaledRect);
         } catch (IOException e) {
                 System.out.println("Error: cannot load page");
         }
-        return null;
+        return croppedImage;
     }
     
     private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-      BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, rect.height);
-      return dest; 
+        BufferedImage dest = src.getSubimage(rect.x, rect.y, rect.width, 
+            rect.height);
+        return dest; 
    }
+    
+    public static String readImage(BufferedImage image) {
+        Tesseract instance = Tesseract.getInstance();
+        String result = "";
+        try {
+            result = instance.doOCR(image);
+        } catch (TesseractException e) {
+            System.out.println("Can't read image");
+        }
+        return result;
+    }
 }

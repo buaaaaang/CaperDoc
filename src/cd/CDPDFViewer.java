@@ -41,7 +41,7 @@ public class CDPDFViewer extends JPanel {
         System.out.println("" + cd.getInitialHeight());
         double initialScale = (double) CDPDFViewer.PAGE_HEIGHT / 
             cd.getInitialHeight();
-        this.worldXPos = (CD.INITIAL_HIERARCHY_WIDTH + 50) * initialScale;
+        this.worldXPos = (CD.HIERARCHY_WIDTH + 50) * initialScale;
         try {
             System.out.println("Opening " + path + "...");
             System.out.println("\ndon't worry about red error message\n"
@@ -60,6 +60,9 @@ public class CDPDFViewer extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
+        this.setSize(this.mCD.getFrame().getWidth(), 
+            this.mCD.getFrame().getHeight());
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
@@ -94,7 +97,7 @@ public class CDPDFViewer extends JPanel {
         }     
     }    
     
-    private double[] getPageLocationFromPts(Point pt) {
+    public double[] getPageLocationFromPts(Point pt) {
         CDXform xform = this.mCD.getXform();
         Point2D.Double worldPt = xform.calcPtFromScreenToWorld(pt);
         int page = (int) Math.floor(worldPt.y / CDPDFViewer.PAGE_INTERVAL);

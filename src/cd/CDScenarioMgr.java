@@ -1,5 +1,6 @@
 package cd;
 
+import cd.scenario.CDButtonScenario;
 import cd.scenario.CDCropScenario;
 import cd.scenario.CDDefaultScenario;
 import cd.scenario.CDDrawScenario;
@@ -20,6 +21,7 @@ public class CDScenarioMgr extends XScenarioMgr {
         this.mScenarios.add(CDDrawScenario.createSingleton(this.mApp));
         this.mScenarios.add(CDSelectScenario.createSingleton(this.mApp));
         this.mScenarios.add(CDCropScenario.createSingleton(this.mApp));
+        this.mScenarios.add(CDButtonScenario.createSingleton(this.mApp));
     }
 
     @Override

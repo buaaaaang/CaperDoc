@@ -22,10 +22,14 @@ import x.XScenarioMgr;
 @SuppressWarnings("unchecked")
 public class CD extends XApp {
     // constants
-    public static final int INITIAL_HIERARCHY_WIDTH = 150;
+    public static final int HIERARCHY_WIDTH = 150;
+    private static final Color SIDE_COLOR = new Color(200, 200, 200, 255);
     
     // fields
     private JFrame mFrame = null;
+    public JFrame getFrame() {
+        return this.mFrame;
+    }
     
     private final int initialWidth;
     public int getInitialWidth() {
@@ -41,9 +45,19 @@ public class CD extends XApp {
         return this.mPtCurveMgr;
     }
     
-    private CDPDFViewer mViewer = null;
-    public CDPDFViewer getViewer() {
-        return this.mViewer;
+    private CDButtonMgr mButtonMgr = null;
+    public CDButtonMgr getButtonMgr() {
+        return this.mButtonMgr;
+    }
+    
+    private JPanel mPanel = null;
+    public JPanel getPanel() {
+        return this.mPanel;
+    }
+    
+    private CDPDFViewer mPDFViewer = null;
+    public CDPDFViewer getPDFViewer() {
+        return this.mPDFViewer;
     }
     
     private CDCanvas2D mCanvas = null;
@@ -56,14 +70,9 @@ public class CD extends XApp {
         return this.mButtonViewer;
     }
     
-    private JPanel mPanel = null;
-    public JPanel getPanel() {
-        return this.mPanel;
-    }
-    
-    private JPanel mHierarchy = null;
-    public JPanel getHierarchy() {
-        return this.mHierarchy;
+    private CDSideViewer mSideViewer = null;
+    public CDSideViewer getSideViewer() {
+        return this.mSideViewer;
     }
     
     private CDXform mXform = null;
@@ -72,7 +81,7 @@ public class CD extends XApp {
     }
     
     private CDEventListener mEventListener = null;
-    
+            
     private XScenarioMgr mScenarioMgr = null;
     @Override
     public XScenarioMgr getScenarioMgr() {
@@ -98,16 +107,17 @@ public class CD extends XApp {
         //this.mFrame.setVisible(true);
 
         this.mPanel = new JPanel();
-        this.mHierarchy = new JPanel();
-        this.mViewer = new CDPDFViewer(this, path);
+        this.mPDFViewer = new CDPDFViewer(this, path);
         this.mCanvas = new CDCanvas2D(this);
         this.mButtonViewer = new CDButtonViewer(this);
+        this.mSideViewer = new CDSideViewer(this);
         
         this.mXform = new CDXform(this);
         this.mEventListener = new CDEventListener(this);
                 
         this.mScenarioMgr = new CDScenarioMgr(this);
         this.mPtCurveMgr = new CDPtCurveMgr();
+        this.mButtonMgr = new CDButtonMgr(this);
         this.mLogMgr = new XLogMgr();
         this.mLogMgr.setPrintOn(true);
         
@@ -118,31 +128,24 @@ public class CD extends XApp {
         this.mPanel.setFocusable(true);
         
         // build and show
-        
         this.mPanel.setLayout(null);
-//        this.mButtonViewer.setOpaque(false);
-        
         
         this.mButtonViewer.setOpaque(false);
-//        this.mHierarchy.setOpaque(false);
         this.mCanvas.setOpaque(false);
         
         this.mPanel.add(this.mButtonViewer);
-        this.mPanel.add(this.mHierarchy);
+        this.mPanel.add(this.mSideViewer);
         this.mPanel.add(this.mCanvas);
-        this.mPanel.add(this.mViewer);
-//        this.mPanel.setBackground(Color.blue);
+        this.mPanel.add(this.mPDFViewer);
         this.mPanel.setOpaque(false);
-        this.mHierarchy.setBackground(Color.orange);
+        this.mSideViewer.setBackground(CD.SIDE_COLOR);
         
-        this.mViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
+        this.mPDFViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
         this.mCanvas.setBounds(0,0, this.initialWidth, this.initialHeight);
-        this.mHierarchy.setBounds(0, 0, CD.INITIAL_HIERARCHY_WIDTH, 
+        this.mSideViewer.setBounds(0, 0, CD.HIERARCHY_WIDTH, 
             this.initialHeight);
         this.mButtonViewer.setBounds(0,0, this.initialWidth, 
             this.initialHeight);
-        
-        this.mFrame.add(this.mHierarchy);
         
         this.mFrame.add(this.mPanel);
         

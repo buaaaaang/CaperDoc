@@ -13,6 +13,7 @@ import cd.CDCanvas2D;
 import cd.CDPtCurve;
 import cd.CDScene;
 import cd.CDBox;
+import cd.button.CDButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToCreateSelectionBox;
 import cd.cmd.CDCmdToDeleteSelectedPtCurves;
@@ -69,10 +70,15 @@ public class CDSelectScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
-            XCmdToChangeScene.execute(cd, 
-                CDSelectScenario.SelectScene.getSingleton(), 
-                this.getReturnScene());
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                    CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
+                    XCmdToChangeScene.execute(cd, 
+                        CDSelectScenario.SelectScene.getSingleton(), 
+                        this.getReturnScene());
+            }
         }
 
         @Override
