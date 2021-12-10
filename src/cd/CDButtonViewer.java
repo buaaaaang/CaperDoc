@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 
 public class CDButtonViewer extends JPanel {
@@ -41,15 +42,15 @@ public class CDButtonViewer extends JPanel {
         g2.transform(this.mCD.getXform().getCurXformFromWorldToScreen());
         // render world objects 
         this.drawContentButtons(g2);
-        this.drawNeedButtons(g2);
         
         // render the current scene's world objects
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        curScene.renderWorldObjects(g2);        
+        curScene.renderWorldObjects(g2);  
         
         g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());   
         //render screen objects
-        this.drawColorButtons(g2); 
+        this.drawColorButtons(g2);     
+        this.drawNeedButtons(g2);  
         this.drawDummyHierarchy(g2);
         this.mDummyHierarchyPos = null;
 
@@ -117,21 +118,22 @@ public class CDButtonViewer extends JPanel {
     }
     
     private void drawNeedButton(Graphics2D g2, CDNeedButton button) {
-        Point pos = button.getPosition();
+        Point pos = this.mCD.getXform().calcPtFromWorldToScreen(
+            new Point2D.Double(button.getPosition().x, button.getPosition().y));
         g2.setFont(CDButton.FONT);
         if (button.getWidth() == 0) {
             button.setWidth(2 * CDNeedButton.GAP_SIDE + g2.getFontMetrics().
-                stringWidth(this.mDummyHierarchy.getName()));
+                stringWidth(button.getName()));
         }
         if (button.isHighlighted()) {
-            g2.setColor(CDContentButton.HIGHLIGHT_COLOR);
+            g2.setColor(CDNeedButton.HIGHLIGHT_COLOR);
             g2.fillRect(pos.x, pos.y, button.getWidth(), CDNeedButton.HEIGHT);
         }
-        g2.setColor(CDContentButton.COLOR);
+        g2.setColor(CDNeedButton.COLOR);
         g2.fillRect(pos.x, pos.y, button.getWidth(), CDNeedButton.HEIGHT);
         g2.setColor(Color.black);
-        g2.drawString(this.mDummyHierarchy.getName(), CDNeedButton.GAP_SIDE +
-            pos.x, pos.y + CDNeedButton.GAP_UP);
+        g2.drawString(button.getName(), CDNeedButton.GAP_SIDE + pos.x, 
+            pos.y + CDNeedButton.GAP_UP);
     }
     
     private void drawDummyHierarchy(Graphics2D g2) {

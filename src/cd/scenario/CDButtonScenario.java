@@ -81,14 +81,20 @@ public class CDButtonScenario extends XScenario {
                 case IMPLY:
                     cd.getXform().goToYPos((int) 
                         mgr.getCurWorkingImplyButton().getContentPosition());
+                    ((CDButtonScenario) this.mScenario).getCurHandlingButton().
+                        setHighlight(false);
+                    cd.getSideViewer().setHierarchyMode();
                     XCmdToChangeScene.execute(cd, 
                         CDDefaultScenario.ReadyScene.getSingleton(), null);
+                    break;
+                case COLOR:
                 case SIDE:
                 case NONE:
                     ((CDButtonScenario) this.mScenario).getCurHandlingButton().
                         setHighlight(false);
                     cd.getSideViewer().setHierarchyMode();
-                    XCmdToChangeScene.execute(cd, this.mReturnScene, null);
+                    XCmdToChangeScene.execute(cd, 
+                        CDDefaultScenario.ReadyScene.getSingleton(), null);
             }
         }
 
@@ -192,20 +198,21 @@ public class CDButtonScenario extends XScenario {
                     CDContentButton cont_use = cd.getButtonMgr().
                         getCurWorkingContentButton();
                     Rectangle box = cont_use.getBox().getBounds();
-                    // we may change site of need button
-                    CDNeedButton need = new CDNeedButton(button.getName(),
-                        new Point(box.x - 200, box.y), cd, cont_use);
-                    cd.getButtonMgr().addNeedButton(need);
-                    cont_use.addNeedButton(need);
                     CDContentButton cont_used = 
                         ((CDButtonScenario) this.mScenario).
                         getCurHandlingHierarchyButton().getContentButton();
-                    CDImplyButton imply = new CDImplyButton(button.getName(),
-                        cd, cont_used);
-                    ((CDButtonScenario) this.mScenario).
-                        getCurHandlingHierarchyButton().getContentButton().
-                        addImplyButton(imply);
-                    
+                    // we may change site of need button
+                    CDNeedButton need = new CDNeedButton(cont_used.getName(),
+                        new Point(box.x - 200, box.y), cd, cont_use);
+                    CDImplyButton imply = new CDImplyButton(cont_use.getName(),
+                        cont_use.getBox().getBounds().y, cd, cont_used);
+                    if (cont_use == cont_used) {
+                        break;
+                    }
+                    cd.getButtonMgr().addNeedButton(need);
+                    cd.getButtonMgr().addImplyButton(imply);
+                    cont_use.addNeedButton(need);
+                    cont_used.addImplyButton(imply);
                     break;
 
 
