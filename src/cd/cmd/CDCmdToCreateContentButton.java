@@ -46,7 +46,7 @@ public class CDCmdToCreateContentButton extends XLoggableCmd {
             new CDHierarchyButton(ocrText, box.getBounds().y, cd);
         cd.getButtonMgr().addHierarchyButton(b);
         cd.getButtonMgr().addContentButton(
-            new CDContentButton(ocrText, box, b));
+            new CDContentButton(ocrText, box, b, cd));
         return true;
     }
 

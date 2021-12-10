@@ -22,7 +22,7 @@ import x.XScenarioMgr;
 @SuppressWarnings("unchecked")
 public class CD extends XApp {
     // constants
-    public static final int INITIAL_HIERARCHY_WIDTH = 150;
+    public static final int HIERARCHY_WIDTH = 150;
     private static final Color SIDE_COLOR = new Color(200, 200, 200, 255);
     
     // fields
@@ -142,7 +142,7 @@ public class CD extends XApp {
         
         this.mPDFViewer.setBounds(0,0, this.initialWidth, this.initialHeight);
         this.mCanvas.setBounds(0,0, this.initialWidth, this.initialHeight);
-        this.mSideViewer.setBounds(0, 0, CD.INITIAL_HIERARCHY_WIDTH, 
+        this.mSideViewer.setBounds(0, 0, CD.HIERARCHY_WIDTH, 
             this.initialHeight);
         this.mButtonViewer.setBounds(0,0, this.initialWidth, 
             this.initialHeight);

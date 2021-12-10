@@ -8,13 +8,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 abstract class CDSideButton extends CDButton {
-    protected String mName = null;
-    public String getName() {
-        return this.mName;
-    }
-    public void setName(String name) {
-        this.mName = name;
-    }
     
     protected double mContentPosition;
     public double getContentPosition() {
@@ -25,7 +18,7 @@ abstract class CDSideButton extends CDButton {
     
     // constructor
     public CDSideButton(String name, double y, CD cd) {
-        this.mName = name;
+        super(name);
         this.mContentPosition = y;
         this.mCD = cd;
     }

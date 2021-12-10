@@ -1,20 +1,25 @@
 package cd.button;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 public abstract class CDButton {
     
     public enum Button {
-        COLOR, CONTENT, IMPLY, USED, HIERARCHY, NONE
+        COLOR, CONTENT, IMPLY, NEED, HIERARCHY, SIDE, NONE
     }
     
     // fields
     protected Button mKind;
     public Button getKind() {
         return this.mKind;
+    }
+    
+    protected String mName = null;
+    public String getName() {
+        return this.mName;
+    }
+    public void setName(String name) {
+        this.mName = name;
     }
     
     private boolean mHighlighted;
@@ -26,8 +31,9 @@ public abstract class CDButton {
     }
     
     // constructor
-    public CDButton() {
+    public CDButton(String name) {
         this.mHighlighted = false;
+        this.mName = name;
     }
     
     // abstract methods

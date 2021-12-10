@@ -7,14 +7,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class CDSideViewer extends JPanel {
     // constants
-    private static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
-    private static final int GAP_LEFT = 5;
-    private static final int GAP_UP = 5;
+    public static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
+    public static final int GAP_LEFT = 5;
+    public static final int GAP_UP = 20;
     
     public enum Mode {
         HIERARCHY, IMPLY
@@ -24,14 +25,18 @@ public class CDSideViewer extends JPanel {
     private CD mCD = null;
     
     private Mode mMode;
+    public Mode getMode() {
+        return this.mMode;
+    }
     public void setHierarchyMode() {
         this.mMode = Mode.HIERARCHY;
         this.mShiftAmount = this.mLastHiearchyShift;
     }
-    public void setImplyMode() {
+    public void setImplyMode(CDContentButton button) {
         this.mMode = Mode.IMPLY;
         this.mLastHiearchyShift = this.mShiftAmount;
         this.mShiftAmount = 0;
+        this.mImplyContent = button;
     }
     
     private int mShiftAmount;
@@ -43,9 +48,6 @@ public class CDSideViewer extends JPanel {
     private CDContentButton mImplyContent = null;
     public CDContentButton getImplyContent() {
         return this.mImplyContent;
-    }
-    public void setImplyContent(CDContentButton button) {
-        this.mImplyContent = button;
     }
     
     public CDSideViewer(CD cd) {
@@ -81,7 +83,7 @@ public class CDSideViewer extends JPanel {
             g2.setColor(CDHierarchyButton.HIGHLIGHT_COLOR);
             g2.fillRect(0, CDHierarchyButton.HEIGHT * index - 
                 this.mShiftAmount - CDHierarchyButton.GAP, 
-                CD.INITIAL_HIERARCHY_WIDTH - CDHierarchyButton.SIDE_GAP, 
+                CD.HIERARCHY_WIDTH - CDHierarchyButton.SIDE_GAP, 
                 CDHierarchyButton.HEIGHT - 2 * CDHierarchyButton.GAP);
         }
         g2.setColor(Color.black);
@@ -102,7 +104,7 @@ public class CDSideViewer extends JPanel {
         if (button.isHighlighted()) {
             g2.setColor(CDImplyButton.HIGHLIGHT_COLOR);
             g2.fillRect(0, CDImplyButton.HEIGHT * index - this.mShiftAmount - 
-                CDImplyButton.GAP, CD.INITIAL_HIERARCHY_WIDTH - 
+                CDImplyButton.GAP, CD.HIERARCHY_WIDTH - 
                 CDImplyButton.SIDE_GAP, 
                 CDImplyButton.HEIGHT - 2 * CDImplyButton.GAP);
         }

@@ -33,7 +33,7 @@ public class CDColorButton extends CDButton {
     
     public CDColorButton(Color color, int right, int top, int radius, 
         JPanel panel) {
-        super();
+        super("");
         this.mKind = CDButton.Button.COLOR;
         this.mColor = color;
         this.mScreenPositionFromRight = right;

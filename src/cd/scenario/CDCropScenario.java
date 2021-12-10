@@ -4,6 +4,7 @@ import cd.CD;
 import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.CDBox;
+import cd.button.CDButton;
 import cd.cmd.CDCmdToCreateContentButton;
 import cd.cmd.CDCmdToCreateCropBox;
 import cd.cmd.CDCmdToCreateSelectionBox;
@@ -70,11 +71,14 @@ public class CDCropScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
-                CDCmdToCreateCropBox.execute(cd, e.getPoint());   
-                XCmdToChangeScene.execute(cd, 
-                    CDCropScenario.CropScene.getSingleton(), 
-                    this.getReturnScene());
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                    CDCmdToCreateCropBox.execute(cd, e.getPoint());   
+                    XCmdToChangeScene.execute(cd, 
+                        CDCropScenario.CropScene.getSingleton(), 
+                        this.getReturnScene());
             }
         }
 

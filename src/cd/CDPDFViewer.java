@@ -41,7 +41,7 @@ public class CDPDFViewer extends JPanel {
         System.out.println("" + cd.getInitialHeight());
         double initialScale = (double) CDPDFViewer.PAGE_HEIGHT / 
             cd.getInitialHeight();
-        this.worldXPos = (CD.INITIAL_HIERARCHY_WIDTH + 50) * initialScale;
+        this.worldXPos = (CD.HIERARCHY_WIDTH + 50) * initialScale;
         try {
             System.out.println("Opening " + path + "...");
             System.out.println("\ndon't worry about red error message\n"

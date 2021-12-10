@@ -7,6 +7,7 @@ import cd.button.CDHierarchyButton;
 import cd.button.CDRemainderButton;
 import cd.button.CDNeedButton;
 import cd.button.CDImplyButton;
+import cd.button.CDSideRemainderButton;
 import java.awt.Color;
 import java.awt.List;
 import java.awt.Point;
@@ -67,7 +68,32 @@ public class CDButtonMgr {
         }
         this.mHierarchyButtons.add(button);
     }
-
+    
+    private CDColorButton mCurWorkingColorButton = null;
+    public CDColorButton getCurWorkingColorButton() {
+        return this.mCurWorkingColorButton;
+    }
+    
+    private CDContentButton mCurWorkingContentButton = null;
+    public CDContentButton getCurWorkingContentButton() {
+        return this.mCurWorkingContentButton;
+    }
+    
+    private CDNeedButton mCurWorkingNeedButton = null;
+    public CDNeedButton getCurWorkingNeedButton() {
+        return this.mCurWorkingNeedButton;
+    }
+    
+    private CDHierarchyButton mCurWorkingHierarchyButton = null;
+    public CDHierarchyButton getCurWorkingHierarchyButton() {
+        return this.mCurWorkingHierarchyButton;
+    }
+    
+    private CDImplyButton mCurWorkingImplyButton = null;
+    public CDImplyButton getCurWorkingImplyButton() {
+        return this.mCurWorkingImplyButton;
+    }
+    
     
     public CDButtonMgr(CD cd) {
         JPanel panel = cd.getButtonViewer();
@@ -86,32 +112,37 @@ public class CDButtonMgr {
         this.mHierarchyButtons = new ArrayList<>();
     }
     
-    public CDButton CheckButton(Point pt) {
-        for (CDColorButton colorButton: this.mColorButtons) {
-            if (colorButton.contains(pt)) {
-                return colorButton;
+    public CDButton checkButton(Point pt) {
+        for (CDColorButton button: this.mColorButtons) {
+            if (button.contains(pt)) {
+                this.mCurWorkingColorButton = button;
+                return button;
             }
         }
-        if (pt.x < CD.INITIAL_HIERARCHY_WIDTH) { 
+        if (pt.x < CD.HIERARCHY_WIDTH) { 
             for (CDImplyButton button: this.mImplyButtons) {
                 if (button.contains(pt)) {
+                    this.mCurWorkingImplyButton = button;
                     return button;
                 }
             }   
             for (CDHierarchyButton button: this.mHierarchyButtons) {
                 if (button.contains(pt)) {
+                    this.mCurWorkingHierarchyButton = button;
                     return button;
                 }
             }   
-            return new CDRemainderButton();
+            return new CDSideRemainderButton();
         } else {
             for (CDContentButton button: this.mContentButtons) {
                 if (button.contains(pt)) {
+                    this.mCurWorkingContentButton = button;
                     return button;
                 }
             }  
             for (CDNeedButton button: this.mNeedButtons) {
                 if (button.contains(pt)) {
+                    this.mCurWorkingNeedButton = button;
                     return button;
                 }
             }   

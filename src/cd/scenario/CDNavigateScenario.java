@@ -2,6 +2,7 @@ package cd.scenario;
 
 import cd.CD;
 import cd.CDScene;
+import cd.button.CDButton;
 import cd.cmd.CDCmdToZoomAtPt;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -54,11 +55,14 @@ public class CDNavigateScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
-                cd.getXform().setStartScreenPt(e.getPoint());
-                XCmdToChangeScene.execute(cd, 
-                    CDNavigateScenario.PanScene.getSingleton(), 
-                    this.mReturnScene);
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                    cd.getXform().setStartScreenPt(e.getPoint());
+                    XCmdToChangeScene.execute(cd, 
+                        CDNavigateScenario.PanScene.getSingleton(), 
+                        this.mReturnScene);
             }
         }
 

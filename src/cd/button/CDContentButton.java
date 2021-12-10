@@ -1,5 +1,6 @@
 package cd.button;
 
+import cd.CD;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -36,18 +37,23 @@ public class CDContentButton extends CDWorldButton {
         this.mImplyButtons.add(button);
     }
     
-    public CDContentButton(String name, Shape rec, CDHierarchyButton b) {
+    private CD mCD = null;
+    
+    public CDContentButton(String name, Shape rec, CDHierarchyButton b, 
+        CD cd) {
         super(name, new Point(rec.getBounds().x, rec.getBounds().y));
         this.mKind = CDButton.Button.CONTENT;
         this.mBox = rec;
         this.mHierarchyButton = b;
         this.mNeedButtons = new ArrayList<>();
         this.mImplyButtons = new ArrayList<>();
+        this.mCD = cd;
     }
 
     @Override
     public boolean contains(Point pt) {
-        return this.mBox.contains(pt);
+        return this.mBox.contains(this.mCD.getXform().
+            calcPtFromScreenToWorld(pt));
     }
     
 }

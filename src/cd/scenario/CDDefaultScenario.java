@@ -1,8 +1,10 @@
 package cd.scenario;
 
 import cd.CD;
+import cd.CDButtonMgr;
 import cd.CDCanvas2D;
 import cd.CDScene;
+import cd.button.CDButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
@@ -58,12 +60,32 @@ public class CDDefaultScenario extends XScenario {
         @Override
         public void handleMousePress(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            Point pt = e.getPoint();
-            if (pt.x > CD.INITIAL_HIERARCHY_WIDTH) {
-                CDCmdToCreateCurPtCurve.execute(cd, pt);
-                XCmdToChangeScene.execute(cd, 
-                    CDDrawScenario.DrawScene.getSingleton(), 
-                    CDDefaultScenario.ReadyScene.getSingleton());
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case CONTENT:
+                    cd.getSideViewer().setImplyMode(
+                        cd.getButtonMgr().getCurWorkingContentButton());
+                    CDButtonScenario.getSingleton().
+                        setCurHandlingButton(button);
+                    button.setHighlight(true);
+                    XCmdToChangeScene.execute(cd, 
+                        CDButtonScenario.ContentChoosedScene.getSingleton(), 
+                        null);
+                    break;
+                case HIERARCHY:
+                    CDButtonScenario.getSingleton().
+                        setCurHandlingButton(button);
+                    XCmdToChangeScene.execute(cd, 
+                        CDButtonScenario.HierarchyPressedScene.getSingleton(), 
+                        this);
+                    break;
+                case NONE:
+                    CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
+                    XCmdToChangeScene.execute(cd, 
+                        CDDrawScenario.DrawScene.getSingleton(), 
+                        CDDefaultScenario.ReadyScene.getSingleton());
+                    break;
             }
         }
 
@@ -78,7 +100,7 @@ public class CDDefaultScenario extends XScenario {
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            if (e.getPoint().x > CD.INITIAL_HIERARCHY_WIDTH) {
+            if (e.getPoint().x > CD.HIERARCHY_WIDTH) {
                 CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
             }
         }

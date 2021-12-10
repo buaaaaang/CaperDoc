@@ -134,5 +134,14 @@ public class CDXform {
         this.updateCurXformFromScreenToWorld();
         return true;
     }
+        
+    public boolean goToYPos(int y) {
+        this.mCurXformFromWorldToScreen = 
+            this.getDefaultXformFromWorldToScreen();
+        double diff = y - CDPDFViewer.PAGE_INTERVAL * 0.5;
+        this.mCurXformFromWorldToScreen.translate(0, -diff);
+        this.updateCurXformFromScreenToWorld();
+        return true;
+    }
     
 }

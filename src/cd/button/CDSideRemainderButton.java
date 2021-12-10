@@ -2,11 +2,11 @@ package cd.button;
 
 import java.awt.Point;
 
-public class CDRemainderButton extends CDButton {
+public class CDSideRemainderButton extends CDButton {
     
-    public CDRemainderButton() {
+    public CDSideRemainderButton() {
         super("");
-        this.mKind = CDButton.Button.NONE;
+        this.mKind = CDButton.Button.SIDE;
     }
     
     @Override

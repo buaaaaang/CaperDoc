@@ -1,25 +1,26 @@
 package cd;
 
+import cd.button.CDButton;
 import cd.button.CDColorButton;
 import cd.button.CDContentButton;
-import java.awt.BasicStroke;
-import java.awt.Button;
-import java.awt.Font;
+import cd.button.CDHierarchyButton;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Stroke;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class CDButtonViewer extends JPanel {
     // fields and constants
     private CD mCD = null;
+
+    private CDButton mDummyHierarchy = null;
+    private Point mDummyHierarchyPos = null;
+    public void setDummyButton(CDButton button, Point pos) {
+        this.mDummyHierarchy = button;
+        this.mDummyHierarchyPos = pos;
+    }
     
     public CDButtonViewer(CD cd) {
         this.mCD = cd;
@@ -46,8 +47,9 @@ public class CDButtonViewer extends JPanel {
         g2.transform(this.mCD.getXform().getCurXformFromScreenToWorld());   
         //render screen objects
         this.drawColorButtons(g2); 
+        this.drawDummyHierarchy(g2);
+        this.mDummyHierarchyPos = null;
 
-        
         //render the current scene's screen objects
         curScene.renderScreenObjects(g2);
     }
@@ -95,12 +97,27 @@ public class CDButtonViewer extends JPanel {
         int xPos = box.x;
         int yPos = box.y;
         if (button.isHighlighted()) {
+            System.out.println("dfdf");
             g2.setColor(CDContentButton.HIGHLIGHT_COLOR);
-            g2.fillRect(xPos - (int) (0.15 * width), yPos - (int) (0.15 * 
-                height), (int) (WIDTH * 1.3), (int) (HEIGHT * 1.3));
+            g2.fillRect(xPos, yPos, width, height);
         }
         g2.setColor(CDContentButton.COLOR);
         g2.fillRect(xPos, yPos, width, height);
+    }
+    
+    private void drawDummyHierarchy(Graphics2D g2) {
+        if (this.mDummyHierarchyPos == null) {
+            return;
+        }
+        int xPos = this.mDummyHierarchyPos.x - (int) (CD.HIERARCHY_WIDTH * 0.5);
+        int yPos = this.mDummyHierarchyPos.y - 
+            (int) (CDHierarchyButton.HEIGHT * 0.5);
+        g2.setColor(CDHierarchyButton.HIGHLIGHT_COLOR);
+        g2.fillRect(xPos, yPos, CD.HIERARCHY_WIDTH, CDHierarchyButton.HEIGHT);
+        g2.setColor(Color.black);
+        g2.setFont(CDSideViewer.FONT);
+        g2.drawString(this.mDummyHierarchy.getName(), CDSideViewer.GAP_LEFT +
+            xPos, yPos + CDSideViewer.GAP_UP);
     }
     
 }

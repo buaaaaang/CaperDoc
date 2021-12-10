@@ -83,7 +83,8 @@ public class CDDrawScenario extends XScenario {
             CD cd = (CD) this.mScenario.getApp();
             CDPtCurve curPtCurve = cd.getPtCurveMgr().getCurPtCurve(); 
             if (curPtCurve.getPts().size() >= 2) {
-                cd.getPtCurveMgr().getPtCurves().add(cd.getPtCurveMgr().getCurPtCurve());
+                cd.getPtCurveMgr().getPtCurves().add(cd.getPtCurveMgr().
+                    getCurPtCurve());
             }
             cd.getPtCurveMgr().setCurPtCurve(null);
             XCmdToChangeScene.execute(cd, this.mReturnScene, null);

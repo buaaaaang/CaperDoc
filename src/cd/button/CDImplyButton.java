@@ -2,6 +2,7 @@ package cd.button;
 
 import cd.CD;
 import cd.CDButtonMgr;
+import cd.CDSideViewer;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -13,17 +14,20 @@ public class CDImplyButton extends CDSideButton {
     
     public CDImplyButton(String name, double y, CD cd) {
         super(name, y, cd);
-        this.mKind = CDButton.Button.USED;
+        this.mKind = CDButton.Button.NEED;
     }
     
     @Override
     public boolean contains(Point pt) {
+        if (this.mCD.getSideViewer().getMode() == CDSideViewer.Mode.HIERARCHY) {
+            return false;
+        }
         int n = this.mCD.getSideViewer().getImplyContent().getImplyButtons().
             indexOf(this);
         int shift = this.mCD.getSideViewer().getShiftAmount();
         boolean b1 = pt.y > (CDImplyButton.HEIGHT * n - shift) &&
             pt.y < (CDImplyButton.HEIGHT * (n + 1) - shift);
-        boolean b2 = pt.x < CD.INITIAL_HIERARCHY_WIDTH;
+        boolean b2 = pt.x < CD.HIERARCHY_WIDTH;
         return b1 && b2;
     }
     
