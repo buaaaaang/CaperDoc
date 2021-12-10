@@ -36,6 +36,11 @@ public class CDNeedButton extends CDWorldButton{
     
     CD mCD = null;
     
+    private Point2D.Double mInitialPosition = null;
+    public void setInitialPosition() {
+        this.mInitialPosition = this.mWorldPosition;
+    }
+    
     private Point mInitialPressedPoint = null;
     public Point getInitialPressedPoint() {
         return this.mInitialPressedPoint;
@@ -52,6 +57,11 @@ public class CDNeedButton extends CDWorldButton{
         this.Moved = m;
     }
     
+    private Rectangle mBox= null;
+    public Rectangle getBox() {
+        return this.mBox;
+    }
+    
     public CDNeedButton(String name, double y, Point2D.Double pt, CD cd, 
         CDContentButton b) {
         super(name, pt);
@@ -60,23 +70,27 @@ public class CDNeedButton extends CDWorldButton{
         this.mWidth = 0;
         this.mContentButton = b;
         this.mContentPosition = y;
+        this.mBox = new Rectangle((int) this.getPosition().x, 
+            (int) this.getPosition().y, 30, HEIGHT);
     }
     
     public void moveScreenPosition(int dx, int dy) {
-        Point2D.Double p0 = this.mWorldPosition;
+        Point2D.Double p0 = this.mInitialPosition;
         Point p0_screen = this.mCD.getXform().calcPtFromWorldToScreen(p0);
         Point p_screen = new Point(p0_screen.x + dx, p0_screen.y + dy);
         this.mWorldPosition = 
             this.mCD.getXform().calcPtFromScreenToWorld(p_screen);
         this.Moved = true;
+        this.mBox = new Rectangle((int) this.getPosition().x, 
+            (int) this.getPosition().y, this.mWidth, HEIGHT);
     }
     
     @Override
     public boolean contains(Point pt) {
-        Point p = new Point((int) this.getPosition().x, 
-            (int) this.getPosition().y);
-        Rectangle box = new Rectangle(p.x, p.y, this.mWidth, HEIGHT);
-        return box.contains(this.mCD.getXform().calcPtFromScreenToWorld(pt));
+        Rectangle box = new Rectangle((int) this.getPosition().x, 
+            (int) this.getPosition().y, this.mWidth, HEIGHT);
+        return box.contains(
+            this.mCD.getXform().calcPtFromScreenToWorld(pt));
     }
     
 }

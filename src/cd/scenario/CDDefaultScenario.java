@@ -96,6 +96,7 @@ public class CDDefaultScenario extends XScenario {
                         cd.getButtonMgr().getCurWorkingNeedButton();
                     needButton.setInitialPressedPoint(e.getPoint());
                     needButton.setMoved(false);
+                    needButton.setInitialPosition();
                     needButton.setHighlight(true);
                     CDButtonScenario.getSingleton().
                         setCurHandlingNeedButton(needButton);

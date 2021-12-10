@@ -203,9 +203,32 @@ public class CDButtonScenario extends XScenario {
                     CDContentButton cont_used = CDButtonScenario.getSingleton().
                         getCurHandlingHierarchyButton().getContentButton();
                     // we may change site of need button
+                    int i = -1;
+                    boolean p = true;
+                    while (p) {
+                        i++;
+                        p = false;       
+                        for (CDContentButton b1: 
+                            cd.getButtonMgr().getContentButtons()) {
+                            if (b1.getBox().contains(new Point2D.Double(
+                                cd.getPDFViewer().getWorldXPos() + 10,
+                                box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
+                                p = true;
+                            }     
+                        }
+                        for (CDNeedButton b2: 
+                            cd.getButtonMgr().getNeedButtons()) {
+                            if (b2.getBox().contains(new Point2D.Double(
+                                cd.getPDFViewer().getWorldXPos() + 15,
+                                box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
+                                p = true;
+                            }
+                        }
+                    }
                     CDNeedButton need = new CDNeedButton(cont_used.getName(),
-                        cont_used.getPosition().y, 
-                        new Point2D.Double(box.x - 200, box.y), cd, cont_use);
+                        cont_used.getPosition().y, new Point2D.Double(
+                        cd.getPDFViewer().getWorldXPos(), 
+                        box.y + i * CDNeedButton.HEIGHT * 1.2), cd, cont_use);
                     CDImplyButton imply = new CDImplyButton(cont_use.getName(),
                         cont_use.getPosition().y, cd, cont_used);
                     if (cont_use == cont_used) {
@@ -272,7 +295,7 @@ public class CDButtonScenario extends XScenario {
                 Math.pow(initialPt.y - e.getPoint().y, 2) >
                 Math.pow(CDButtonScenario.MAX_DRAG_DISTANCE_TO_CLICK, 2)) {
                 button.moveScreenPosition(e.getPoint().x - initialPt.x,
-                    e.getPoint().y = initialPt.y);
+                    e.getPoint().y - initialPt.y);
             }
         }
 
