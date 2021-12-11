@@ -46,10 +46,10 @@ public class CDContentButton extends CDWorldButton {
     public CDContentButton(String name, Shape rec, CD cd) {
         super(name, new Point2D.Double(rec.getBounds().x, rec.getBounds().y));
         this.mKind = CDButton.Button.CONTENT;
-        this.mBox = rec;
         this.mNeedButtons = new ArrayList<>();
         this.mImplyButtons = new ArrayList<>();
         this.mCD = cd;
+        this.mBox = rec;
     }
 
     @Override

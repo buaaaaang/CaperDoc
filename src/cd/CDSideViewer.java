@@ -114,10 +114,10 @@ public class CDSideViewer extends JPanel {
         int maxShift;
         if (this.mMode == Mode.HIERARCHY) {
             maxShift = Math.max(this.mCD.getButtonMgr().getHierarchyButtons().
-                size() * CDHierarchyButton.HEIGHT, 0);
+                size() * CDHierarchyButton.HEIGHT - this.getHeight(), 0);
         } else {
             maxShift = Math.max(this.mImplyContent.getImplyButtons().size() * 
-                CDImplyButton.HEIGHT, 0);
+                CDImplyButton.HEIGHT - this.getHeight(), 0);
         }
         int afterShift = this.mShiftAmount + amount;
         if (afterShift >= minShift && afterShift <= maxShift) {

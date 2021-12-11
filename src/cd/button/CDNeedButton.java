@@ -16,11 +16,6 @@ public class CDNeedButton extends CDWorldButton{
     public static final int GAP_UP_TEXT = 30;
     public static final Font FONT = new Font("Monospaced", Font.PLAIN, 30);
     
-    private CDContentButton mContentButton = null;
-    public CDContentButton getContentButton() {
-        return this.mContentButton;
-    }
-    
     protected double mContentPosition;
     public double getContentPosition() {
         return this.mContentPosition;
@@ -62,13 +57,11 @@ public class CDNeedButton extends CDWorldButton{
         return this.mBox;
     }
     
-    public CDNeedButton(String name, double y, Point2D.Double pt, CD cd, 
-        CDContentButton b) {
+    public CDNeedButton(String name, double y, Point2D.Double pt, CD cd) {
         super(name, pt);
         this.mKind = CDButton.Button.NEED;
         this.mCD = cd;
         this.mWidth = 0;
-        this.mContentButton = b;
         this.mContentPosition = y;
         this.mBox = new Rectangle((int) this.getPosition().x, 
             (int) this.getPosition().y, 30, HEIGHT);

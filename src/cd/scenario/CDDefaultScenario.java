@@ -137,7 +137,13 @@ public class CDDefaultScenario extends XScenario {
                 case COLOR:
                 case CONTENT:
                 case NEED:
-                    CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
+                    CDCmdToScroll.execute(cd, 
+                        (e.getWheelRotation() > 0) ? -1 : 1);
+                    break;
+                case SIDE:
+                case HIERARCHY:
+                    int amount = 10;
+                    cd.getSideViewer().shift(e.getWheelRotation() * amount);
             }
         }
 

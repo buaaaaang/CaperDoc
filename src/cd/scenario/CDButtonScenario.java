@@ -228,9 +228,9 @@ public class CDButtonScenario extends XScenario {
                     CDNeedButton need = new CDNeedButton(cont_used.getName(),
                         cont_used.getPosition().y, new Point2D.Double(
                         cd.getPDFViewer().getWorldXPos(), 
-                        box.y + i * CDNeedButton.HEIGHT * 1.2), cd, cont_use);
+                        box.y + i * CDNeedButton.HEIGHT * 1.2), cd);
                     CDImplyButton imply = new CDImplyButton(cont_use.getName(),
-                        cont_use.getPosition().y, cd, cont_used);
+                        cont_use.getPosition().y, cd);
                     if (cont_use == cont_used) {
                         break;
                     }

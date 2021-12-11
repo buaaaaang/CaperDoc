@@ -9,9 +9,15 @@ import java.awt.Point;
 
 public class CDHierarchyButton extends CDSideButton {
     
+    protected CDContentButton mContentButton = null;
+    public CDContentButton getContentButton() {
+        return this.mContentButton;
+    }
+    
     public CDHierarchyButton(String name, double y, CD cd, CDContentButton b) {
-        super(name, y, cd, b);
+        super(name, y, cd);
         this.mKind = CDButton.Button.HIERARCHY;
+        this.mContentButton = b;
     }
 
     @Override
