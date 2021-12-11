@@ -9,7 +9,7 @@ import x.XLoggableCmd;
 
 public class CDCmdToUpdateCropBox extends XLoggableCmd{
     //fields
-    Point mPt = null;
+    private Point mPt = null;
     
     //private constructor
     private CDCmdToUpdateCropBox(XApp app, MouseEvent e) {

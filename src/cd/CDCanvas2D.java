@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -196,7 +197,7 @@ public class CDCanvas2D extends JPanel {
             bs.getLineJoin());
     }
     
-    private void drawPenTip(Graphics2D g2) {
+    public void drawPenTip(Graphics2D g2) {
         BasicStroke bs = (BasicStroke) this.mCurStrokeForPtCurve;
         Point2D.Double worldPt0 = new Point2D.Double(0.0, 0.0);
         Point2D.Double worldPt1 = new Point2D.Double(bs.getLineWidth(), 0.0);
@@ -209,8 +210,12 @@ public class CDCanvas2D extends JPanel {
         Point2D.Double ctr = new Point2D.Double(
             this.getWidth() - CDCanvas2D.PEN_TIP_OFFSET,
             CDCanvas2D.PEN_TIP_OFFSET);
-        Ellipse2D.Double e = new Ellipse2D.Double(ctr.x - r, ctr.y - r, d, d);
+//        Point ctr = e.getPoint();
+//        double x = (double)ctr.x;
+//        double y = (double)ctr.y;
+        Ellipse2D.Double ellipse = new Ellipse2D.Double(ctr.x - r, ctr.y - r, d, d);
+//        Ellipse2D.Double ellipse = new Ellipse2D.Double(x - r, y - r, d, d);
         g2.setColor(this.mCurColorForPtCurve);
-        g2.fill(e);
+        g2.fill(ellipse);
     }
 }
