@@ -4,11 +4,13 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class CDXform {
     // constants
     private static final double MAX_SCALE = 200;
     private static final double MIN_SCALE = 0.4;
+    private static final int MAX_HISTORY_LEN = 50;
     
     // fields
     private CD mCD = null;
@@ -17,6 +19,10 @@ public class CDXform {
     public AffineTransform getCurXformFromWorldToScreen() {
         return this.mCurXformFromWorldToScreen;
     }
+    public void setCurXformFromWorldToScreen(AffineTransform xform) {
+        this.mCurXformFromWorldToScreen = xform;
+        this.updateCurXformFromScreenToWorld();
+    }
     
     private AffineTransform mCurXformFromScreenToWorld = null;
     public AffineTransform getCurXformFromScreenToWorld() {
@@ -24,6 +30,10 @@ public class CDXform {
     }
     
     private AffineTransform mStartXformFromWorldToScreen = null;
+    private AffineTransform mSaveXformFromWorldToScreen = null;
+    public AffineTransform getSaveXformFromWorldToScreen() {
+        return this.mSaveXformFromWorldToScreen;
+    }
     
     private Point mStartScreenPt = null;
     public void setStartScreenPt(Point pt) {
@@ -32,16 +42,19 @@ public class CDXform {
             this.mCurXformFromWorldToScreen);
     }
     
+    
     public CDXform(CD cd) {
         this.mCD = cd;
         this.mCurXformFromScreenToWorld = new AffineTransform();
         this.mCurXformFromWorldToScreen = new AffineTransform();
+        this.mSaveXformFromWorldToScreen = new AffineTransform();
         this.mStartXformFromWorldToScreen = new AffineTransform();
         this.mStartScreenPt = new Point();
         double initialScale = (double) cd.getInitialHeight() / 
             CDPDFViewer.PAGE_INTERVAL;
         this.mCurXformFromWorldToScreen.scale(initialScale, initialScale); 
         this.mCurXformFromScreenToWorld.scale(1/initialScale, 1/initialScale); 
+        this.mXformHistory = new ArrayList<AffineTransform>();
     }
         
     public void updateCurXformFromScreenToWorld(){
@@ -135,7 +148,62 @@ public class CDXform {
         return true;
     }
         
+    
+    private ArrayList<AffineTransform> mXformHistory = null;
+    public void addXformHistory(AffineTransform xform) {
+        this.mXformHistory.add(xform);
+        if (this.mXformHistory.size() > CDXform.MAX_HISTORY_LEN) {
+            int cut = 
+                Math.min(this.mCurPosOnHistory, CDXform.MAX_HISTORY_LEN / 2);
+            this.mXformHistory = new ArrayList<AffineTransform>(
+                this.mXformHistory.subList(cut, this.mXformHistory.size()));
+                this.transCurPosOnHistory(-1 * cut);
+        }
+        
+    }
+    public ArrayList<AffineTransform> getXformHistory() {
+        return this.mXformHistory;
+    }
+    public void freshXformHistory() {
+        if (this.mXformHistory.size() == 0) {
+            return;
+        }
+        this.mXformHistory = new ArrayList<AffineTransform>(
+            this.mXformHistory.subList(0, this.mCurPosOnHistory + 1));
+    }
+    
+    private int mCurPosOnHistory = 0;
+    public int getCurPosOnHistory() {
+        return this.mCurPosOnHistory;
+    }
+    public void setCurPosOnHistory(int step) {
+        if ((-1 < step) && (step < this.mXformHistory.size())) {
+            this.mCurPosOnHistory = step;
+        } else {
+            System.out.println("cannot set cur position to given value");
+        }
+    }
+    public void transCurPosOnHistory(int step) {
+        int newCandidatePos = this.mCurPosOnHistory + step;
+        if ((-1 < newCandidatePos) && (newCandidatePos < this.mXformHistory.size())) {
+            this.mCurPosOnHistory = newCandidatePos;
+        } else {
+            System.out.println("cannot set cur position to given value");
+        }
+    }
+    
     public boolean goToYPos(int y) {
+        this.freshXformHistory();
+        if (this.mXformHistory.size() == 0 ||
+            this.mXformHistory.get(this.mXformHistory.size() - 1) !=
+            this.mCurXformFromWorldToScreen) 
+//                && 똑같은 곳 여러번 클릭했을때 추가 안되도록 해야함
+//            (this.mXformHistory.get(this.mXformHistory.size() - 1).getShearY() !=
+//            this.mCurXformFromWorldToScreen.getShearY())
+            {
+            this.addXformHistory(mCurXformFromWorldToScreen);
+            this.transCurPosOnHistory(1);
+        }
         this.mCurXformFromWorldToScreen = 
             this.getDefaultXformFromWorldToScreen();
         double diff = y - CDPDFViewer.PAGE_INTERVAL * 0.5 * 0.7;
@@ -143,5 +211,4 @@ public class CDXform {
         this.updateCurXformFromScreenToWorld();
         return true;
     }
-    
 }

@@ -10,6 +10,8 @@ import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
 import cd.cmd.CDCmdToScroll;
+import cd.cmd.CDCmdToMoveBackToRecentXform;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -103,6 +105,10 @@ public class CDDefaultScenario extends XScenario {
 
         @Override
         public void handleMouseDrag(MouseEvent e) {
+//            CD cd = (CD)this.mScenario.getApp();
+//            Graphics g = cd.getCanvas().getGraphics();
+//            Graphics2D g2 = (Graphics2D) g;
+//            cd.getCanvas().drawPenTip(g2, e);
         }
 
         @Override
@@ -160,6 +166,20 @@ public class CDDefaultScenario extends XScenario {
             switch (code) {
                 case KeyEvent.VK_S:
                     CDCmdToSaveFile.execute(cd);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    CDCmdToMoveBackToRecentXform.execute(cd, -1);
+                    System.out.println("back");
+                    int len = cd.getXform().getXformHistory().size();
+                    System.out.println("length"+len);
+                    System.out.println("position"+cd.getXform().getCurPosOnHistory());
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    CDCmdToMoveBackToRecentXform.execute(cd, 1);
+                    System.out.println("front");
+                    int len2 = cd.getXform().getXformHistory().size();
+                    System.out.println("length"+len2);
+                    System.out.println("position"+cd.getXform().getCurPosOnHistory());
                     break;
             }
         }
