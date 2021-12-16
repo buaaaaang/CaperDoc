@@ -29,10 +29,8 @@ public class CDColorButton extends CDButton {
     public Color getColor() {
         return this.mColor;
     }
-    private JPanel mPanel = null;
     
-    public CDColorButton(Color color, int right, int top, int radius, 
-        JPanel panel) {
+    public CDColorButton(Color color, int right, int top, int radius) {
         super("");
         this.mKind = CDButton.Button.COLOR;
         this.mColor = color;
@@ -40,13 +38,12 @@ public class CDColorButton extends CDButton {
         this.mScreenPositionFromTop = top;
         this.mRadius = radius; 
         this.mHighLightRadius = (int) (this.mRadius * 1.3);
-        this.mPanel = panel;
     }
 
-    @Override
-    public boolean contains(Point pt) {
-        int dx = this.mPanel.getWidth() - this.mScreenPositionFromRight - pt.x;
-        int dy = this.mScreenPositionFromTop - pt.y;
-        return ((dx*dx + dy*dy) < this.mRadius * this.mRadius);
-    }
+//    @Override
+//    public boolean contains(Point pt) {
+//        int dx = this.mPanel.getWidth() - this.mScreenPositionFromRight - pt.x;
+//        int dy = this.mScreenPositionFromTop - pt.y;
+//        return ((dx*dx + dy*dy) < this.mRadius * this.mRadius);
+//    }
 }

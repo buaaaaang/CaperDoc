@@ -210,27 +210,24 @@ public class CDButtonScenario extends XScenario {
                         p = false;       
                         for (CDContentButton b1: 
                             cd.getButtonMgr().getContentButtons()) {
-                            if (b1.getBox().contains(new Point2D.Double(
-                                cd.getPDFViewer().getWorldXPos() + 10,
+                            if (b1.getBox().contains(new Point2D.Double(10,
                                 box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
                                 p = true;
                             }     
                         }
                         for (CDNeedButton b2: 
                             cd.getButtonMgr().getNeedButtons()) {
-                            if (b2.getBox().contains(new Point2D.Double(
-                                cd.getPDFViewer().getWorldXPos() + 15,
+                            if (b2.getBox().contains(new Point2D.Double(10,
                                 box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
                                 p = true;
                             }
                         }
                     }
                     CDNeedButton need = new CDNeedButton(cont_used.getName(),
-                        cont_used.getPosition().y, new Point2D.Double(
-                        cd.getPDFViewer().getWorldXPos(), 
-                        box.y + i * CDNeedButton.HEIGHT * 1.2), cd);
+                        cont_used.getBox().y, new Rectangle(0, (int) (box.y + 
+                        i * CDNeedButton.HEIGHT * 1.2),0,0));
                     CDImplyButton imply = new CDImplyButton(cont_use.getName(),
-                        cont_use.getPosition().y, cd);
+                        cont_use.getBox().y);
                     if (cont_use == cont_used) {
                         break;
                     }
@@ -288,14 +285,20 @@ public class CDButtonScenario extends XScenario {
 
         @Override
         public void handleMouseDrag(MouseEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
             CDNeedButton button = CDButtonScenario.getSingleton().
                 getCurHandlingNeedButton();
             Point initialPt = button.getInitialPressedPoint();
             if (Math.pow(initialPt.x - e.getPoint().x, 2) + 
                 Math.pow(initialPt.y - e.getPoint().y, 2) >
                 Math.pow(CDButtonScenario.MAX_DRAG_DISTANCE_TO_CLICK, 2)) {
-                button.moveScreenPosition(e.getPoint().x - initialPt.x,
-                    e.getPoint().y - initialPt.y);
+                Point2D.Double wp1 = cd.getXform().calcPtFromScreenToWorld(
+                    e.getPoint());
+                Point2D.Double wp2 = cd.getXform().calcPtFromScreenToWorld(
+                    initialPt);
+                Rectangle box = button.getInitialBox();
+                button.setBox(new Rectangle(box.x + (int) (wp1.x - wp2.x), 
+                    box.y + (int) (wp1.y - wp2.y), box.width, box.height));
             }
         }
 
@@ -305,8 +308,7 @@ public class CDButtonScenario extends XScenario {
             CDNeedButton button = CDButtonScenario.getSingleton().
                 getCurHandlingNeedButton();
             button.setHighlight(false);
-            if (!button.hasMoved()) {
-                
+            if (button.getInitialBox() == button.getBox()) {
                 cd.getXform().goToYPos((int) button.getContentPosition());
             }
             XCmdToChangeScene.execute(cd, this.mReturnScene, null);
@@ -334,7 +336,7 @@ public class CDButtonScenario extends XScenario {
 
     }
     
-    public static final double MAX_DRAG_DISTANCE_TO_CLICK = 10;
+    public static final double MAX_DRAG_DISTANCE_TO_CLICK = 20;
         
     private CDButton mCurHandlingButton = null;
     public void setCurHandlingButton(CDButton button) {

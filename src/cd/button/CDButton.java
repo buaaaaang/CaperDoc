@@ -37,7 +37,7 @@ public abstract class CDButton {
         this.mName = name;
     }
     
-    // abstract methods
-    public abstract boolean contains(Point pt);
-//    public abstract void draw(Graphics2D g2);
+//    // abstract methods
+//    public abstract boolean contains(Point pt);
+////    public abstract void draw(Graphics2D g2);
 }

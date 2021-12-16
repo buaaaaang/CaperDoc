@@ -11,7 +11,6 @@ import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
 import cd.cmd.CDCmdToScroll;
 import cd.cmd.CDCmdToMoveBackToRecentXform;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -97,8 +96,7 @@ public class CDDefaultScenario extends XScenario {
                     CDNeedButton needButton = 
                         cd.getButtonMgr().getCurWorkingNeedButton();
                     needButton.setInitialPressedPoint(e.getPoint());
-                    needButton.setMoved(false);
-                    needButton.setInitialPosition();
+                    needButton.setInitialBox();
                     needButton.setHighlight(true);
                     CDButtonScenario.getSingleton().
                         setCurHandlingNeedButton(needButton);
@@ -137,9 +135,15 @@ public class CDDefaultScenario extends XScenario {
                 case COLOR:
                 case CONTENT:
                 case NEED:
-                    CDCmdToScroll.execute(cd, 
-                        (e.getWheelRotation() > 0) ? -1 : 1);
-                    break;
+                    int k = cd.getPDFViewer().onWhatBranch(e.getPoint());
+                    if (k == -1) {
+                        CDCmdToScroll.execute(cd, 
+                            (e.getWheelRotation() > 0) ? -1 : 1);
+                        break;
+                    } else {
+                        cd.getBranchYPoses().set(k, cd.getBranchYPoses().get(k) + 
+                            ((e.getWheelRotation() > 0) ? -1 : 1) * 100);
+                    }
                 case SIDE:
                 case HIERARCHY:
                     int amount = 10;

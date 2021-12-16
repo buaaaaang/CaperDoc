@@ -3,8 +3,6 @@ package cd;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
 import cd.button.CDContentButton;
-import cd.button.CDHierarchyButton;
-import cd.button.CDImplyButton;
 import cd.button.CDNeedButton;
 import cd.button.CDSideButton;
 import java.awt.Color;
@@ -90,48 +88,56 @@ public class CDButtonViewer extends JPanel {
         if (this.mCD.getButtonMgr().getContentButtons() == null) {
             return;
         }
-        this.mCD.getButtonMgr().getContentButtons().forEach(button -> {
-            this.drawContentButton(g2, button);
-        });
+        for (int i=0; i < this.mCD.getBranchYPoses().size(); i++) {
+            Point p = this.mCD.getPDFViewer().getPDFOrigin(i);
+            this.mCD.getButtonMgr().getContentButtons().forEach(button -> {
+                this.drawContentButton(g2, button, p.x, p.y);
+            });
+        }
     }
     
-    private void drawContentButton(Graphics2D g2, CDContentButton button) {
-        Rectangle box = button.getBox().getBounds();
+    private void drawContentButton(Graphics2D g2, CDContentButton button,
+        int xPos, int yPos) {
+        Rectangle box = button.getBox();
         int width = box.width;
         int height = box.height;
-        int xPos = box.x;
-        int yPos = box.y;
+        Point p = new Point(box.x + xPos, box.y + yPos);
         if (button.isHighlighted()) {
             g2.setColor(CDContentButton.HIGHLIGHT_COLOR);
-            g2.fillRect(xPos, yPos, width, height);
+            g2.fillRect(p.x, p.y, width, height);
         }
         g2.setColor(CDContentButton.COLOR);
-        g2.fillRect(xPos, yPos, width, height);
+        g2.fillRect(p.x, p.y, width, height);
     }
     
     private void drawNeedButtons(Graphics2D g2) {
         if (this.mCD.getButtonMgr().getNeedButtons() == null) {
             return;
         }
-        this.mCD.getButtonMgr().getNeedButtons().forEach(button -> {
-            this.drawNeedButton(g2, button);
-        });
+        for (int i=0; i < this.mCD.getBranchYPoses().size(); i++) {
+            Point p = this.mCD.getPDFViewer().getPDFOrigin(i);
+            this.mCD.getButtonMgr().getNeedButtons().forEach(button -> {
+                this.drawNeedButton(g2, button, p.x, p.y);
+            });
+        }
     }
     
-    private void drawNeedButton(Graphics2D g2, CDNeedButton button) {
-        Point pos = new Point((int) button.getPosition().x, 
-            (int) button.getPosition().y);
+    private void drawNeedButton(Graphics2D g2, CDNeedButton button, 
+        int xPos, int yPos) {
+        Point pos = new Point((int) (button.getBox().x + xPos), 
+            button.getBox().y + yPos);
         g2.setFont(CDNeedButton.FONT);
-        if (button.getWidth() == 0) {
-            button.setWidth(2 * CDNeedButton.GAP_SIDE + g2.getFontMetrics().
+        if (button.getBox().width == 0) {
+            button.setBox(2 * CDNeedButton.GAP_SIDE + g2.getFontMetrics().
                 stringWidth(button.getName()));
         }
         if (button.isHighlighted()) {
             g2.setColor(CDNeedButton.HIGHLIGHT_COLOR);
-            g2.fillRect(pos.x, pos.y, button.getWidth(), CDNeedButton.HEIGHT);
+            g2.fillRect(pos.x, pos.y, button.getBox().width, 
+                CDNeedButton.HEIGHT);
         }
         g2.setColor(CDNeedButton.COLOR);
-        g2.fillRect(pos.x, pos.y, button.getWidth(), CDNeedButton.HEIGHT);
+        g2.fillRect(pos.x, pos.y, button.getBox().width, CDNeedButton.HEIGHT);
         g2.setColor(Color.black);
         g2.drawString(button.getName(), CDNeedButton.GAP_SIDE + pos.x, 
             pos.y + CDNeedButton.GAP_UP_TEXT);

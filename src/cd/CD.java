@@ -1,12 +1,12 @@
 package cd;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import javax.swing.JFrame;
@@ -80,6 +80,11 @@ public class CD extends XApp {
         return this.mXform;
     }
     
+    private ArrayList<Integer> mBranchYPoses = null;
+    public ArrayList<Integer> getBranchYPoses() {
+        return this.mBranchYPoses;
+    }
+    
     private CDEventListener mEventListener = null;
             
     private XScenarioMgr mScenarioMgr = null;
@@ -105,6 +110,11 @@ public class CD extends XApp {
         this.mFrame = new JFrame("CaperDoc");
         this.mFrame.setSize(this.initialWidth, this.initialHeight);
         //this.mFrame.setVisible(true);
+        
+        this.mXform = new CDXform(this);
+        this.mBranchYPoses = new ArrayList<>();
+        this.mBranchYPoses.add(0);
+        this.mBranchYPoses.add(-4000);
 
         this.mPanel = new JPanel();
         this.mPDFViewer = new CDPDFViewer(this, path);
@@ -112,7 +122,6 @@ public class CD extends XApp {
         this.mButtonViewer = new CDButtonViewer(this);
         this.mSideViewer = new CDSideViewer(this);
         
-        this.mXform = new CDXform(this);
         this.mEventListener = new CDEventListener(this);
                 
         this.mScenarioMgr = new CDScenarioMgr(this);
