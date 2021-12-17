@@ -114,7 +114,6 @@ public class CD extends XApp {
         this.mXform = new CDXform(this);
         this.mBranchYPoses = new ArrayList<>();
         this.mBranchYPoses.add(0);
-        this.mBranchYPoses.add(-4000);
 
         this.mPanel = new JPanel();
         this.mPDFViewer = new CDPDFViewer(this, path);
@@ -142,8 +141,8 @@ public class CD extends XApp {
         this.mButtonViewer.setOpaque(false);
         this.mCanvas.setOpaque(false);
         
-        this.mPanel.add(this.mButtonViewer);
         this.mPanel.add(this.mSideViewer);
+        this.mPanel.add(this.mButtonViewer);
         this.mPanel.add(this.mCanvas);
         this.mPanel.add(this.mPDFViewer);
         this.mPanel.setOpaque(false);

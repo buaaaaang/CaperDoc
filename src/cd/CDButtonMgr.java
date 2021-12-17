@@ -184,18 +184,18 @@ public class CDButtonMgr {
             }   
             return new CDSideRemainderButton();
         } else {
-            for (CDContentButton button: this.mContentButtons) {
-                if (this.contains(button, pt)) {
-                    this.mCurWorkingContentButton = button;
-                    return button;
-                }
-            }  
             for (CDNeedButton button: this.mNeedButtons) {
                 if (this.contains(button, pt)) {
                     this.mCurWorkingNeedButton = button;
                     return button;
                 }
             }   
+            for (CDContentButton button: this.mContentButtons) {
+                if (this.contains(button, pt)) {
+                    this.mCurWorkingContentButton = button;
+                    return button;
+                }
+            }  
             return new CDRemainderButton();  
         }
     }

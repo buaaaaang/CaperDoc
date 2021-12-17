@@ -163,4 +163,15 @@ public class CDPDFViewer extends JPanel {
             return pos;
         }
     }
+    
+    public void addPage(int curBranch, int y) {
+        while (this.mYPoses.size() > curBranch + 1) {
+            this.mYPoses.remove(curBranch + 1);
+        }
+        double top = this.mCD.getXform().calcPtFromScreenToWorld(new
+            Point(0, 0)).y;
+        double bottom = this.mCD.getXform().calcPtFromScreenToWorld(new
+            Point(0, this.getHeight())).y;
+        this.mYPoses.add(-1 * y + (int) ((bottom - top) * 1 / 3) + (int) top);
+    }
 }

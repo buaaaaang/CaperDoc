@@ -204,6 +204,7 @@ public class CDXform {
             this.addXformHistory(mCurXformFromWorldToScreen);
             this.transCurPosOnHistory(1);
         }
+        this.mCD.getBranchYPoses().set(0, 0);
         this.mCurXformFromWorldToScreen = 
             this.getDefaultXformFromWorldToScreen();
         double diff = y - CDPDFViewer.PAGE_COL_INTERVAL * 0.5 * 0.7;

@@ -1,6 +1,7 @@
 package cd.scenario;
 
 import cd.CD;
+import cd.CDPDFViewer;
 import cd.CDPtCurve;
 import cd.CDScene;
 import java.awt.Graphics2D;
@@ -61,7 +62,11 @@ public class CDDrawScenario extends XScenario {
             CD cd = (CD) this.mScenario.getApp();
             CDPtCurve curPtCurve = cd.getPtCurveMgr().getCurPtCurve();
             Point pt = e.getPoint();
-
+            int branch = cd.getPDFViewer().onWhatBranch(pt);
+            if (branch != curPtCurve.getCreatedBranch()) {
+                return;
+            }
+            
             int size = cd.getPtCurveMgr().getCurPtCurve().getPts().size();
             Point2D.Double lastWorldPt =
                 curPtCurve.getPts().get(size - 1);
@@ -74,7 +79,10 @@ public class CDDrawScenario extends XScenario {
 
             Point2D.Double worldPt = 
                 cd.getXform().calcPtFromScreenToWorld(pt);
-            cd.getPtCurveMgr().getCurPtCurve().addPt(worldPt);
+            Point2D.Double PDFPt = new Point2D.Double(
+                worldPt.x - branch * CDPDFViewer.PAGE_ROW_INTERVAL,
+                worldPt.y - cd.getBranchYPoses().get(branch));
+            cd.getPtCurveMgr().getCurPtCurve().addPt(PDFPt);
             cd.getCanvas().repaint();
         }
 

@@ -309,7 +309,9 @@ public class CDButtonScenario extends XScenario {
                 getCurHandlingNeedButton();
             button.setHighlight(false);
             if (button.getInitialBox() == button.getBox()) {
-                cd.getXform().goToYPos((int) button.getContentPosition());
+                int curBranch = cd.getPDFViewer().onWhatBranch(e.getPoint());
+                cd.getPDFViewer().addPage(curBranch, 
+                    (int) button.getContentPosition());
             }
             XCmdToChangeScene.execute(cd, this.mReturnScene, null);
         }

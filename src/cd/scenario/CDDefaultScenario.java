@@ -105,11 +105,13 @@ public class CDDefaultScenario extends XScenario {
                         this);
                     break;
                 case NONE:
-                    CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
-                    XCmdToChangeScene.execute(cd, 
-                        CDDrawScenario.DrawScene.getSingleton(), 
-                        CDDefaultScenario.ReadyScene.getSingleton());
-                    break;
+                    if (cd.getPDFViewer().onWhatBranch(e.getPoint()) != -1) {
+                        CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
+                        XCmdToChangeScene.execute(cd, 
+                            CDDrawScenario.DrawScene.getSingleton(), 
+                            CDDefaultScenario.ReadyScene.getSingleton());
+                        break;
+                    }
             }
         }
 

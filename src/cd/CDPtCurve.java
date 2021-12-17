@@ -36,7 +36,12 @@ public class CDPtCurve {
         return this.mStroke;
     }
     
-    public CDPtCurve(Point2D.Double pt, Color c, Stroke s) {
+    private int mCreatedBranch;
+    public int getCreatedBranch() {
+        return this.mCreatedBranch;
+    }
+    
+    public CDPtCurve(Point2D.Double pt, Color c, Stroke s,int branch) {
         this.mPts = new ArrayList<>();
         this.mPts.add(pt);
         this.mBoundingBox = new Rectangle2D.Double(pt.x, pt.y, 0, 0);
@@ -46,6 +51,8 @@ public class CDPtCurve {
         BasicStroke bs = (BasicStroke) s;
         this.mStroke = new BasicStroke(bs.getLineWidth(), bs.getEndCap(),
             bs.getLineJoin());
+        
+        this.mCreatedBranch = branch;
     }
     
     public void addPt(Point2D.Double pt) {

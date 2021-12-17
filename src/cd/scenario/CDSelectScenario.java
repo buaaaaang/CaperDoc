@@ -13,6 +13,7 @@ import cd.CDCanvas2D;
 import cd.CDPtCurve;
 import cd.CDScene;
 import cd.CDBox;
+import cd.CDPDFViewer;
 import cd.button.CDButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToCreateSelectionBox;
@@ -22,6 +23,7 @@ import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForSelectedPtCurves;
 import cd.cmd.CDCmdToScroll;
 import cd.cmd.CDCmdToUpdateSelectionBox;
+import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import x.XApp;
 import x.XCmdToChangeScene;
@@ -74,10 +76,12 @@ public class CDSelectScenario extends XScenario {
             CDButton.Button kind = button.getKind();
             switch (kind) {
                 case NONE:
-                    CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
-                    XCmdToChangeScene.execute(cd, 
-                        CDSelectScenario.SelectScene.getSingleton(), 
-                        this.getReturnScene());
+                    if (cd.getPDFViewer().onWhatBranch(e.getPoint()) != -1) {
+                        CDCmdToCreateSelectionBox.execute(cd, e.getPoint());    
+                        XCmdToChangeScene.execute(cd, 
+                            CDSelectScenario.SelectScene.getSingleton(), 
+                            this.getReturnScene());
+                    }
             }
         }
 
@@ -336,9 +340,14 @@ public class CDSelectScenario extends XScenario {
     
     public void updateSelectedPtCurves() {
         CD cd = (CD) this.mXApp;
+        int branch = cd.getPDFViewer().onWhatBranch(
+            mCurSelectionBox.getAnchorPt());
         AffineTransform at = cd.getXform().getCurXformFromScreenToWorld();
-        Shape worldSelectionBoxShape = at.createTransformedShape(
-            this.mCurSelectionBox);
+        Rectangle wBox = at.createTransformedShape(
+            this.mCurSelectionBox).getBounds();
+        Rectangle PDFSelectionBoxShape = new Rectangle(
+            wBox.x - branch * CDPDFViewer.PAGE_ROW_INTERVAL, 
+            wBox.y - cd.getBranchYPoses().get(branch), wBox.width, wBox.height);
         
         ArrayList<CDPtCurve> newlySelectedPtCurves = new ArrayList<>();
         ArrayList<CDPtCurve> candidatePtCurves = new ArrayList<>();
@@ -348,10 +357,10 @@ public class CDSelectScenario extends XScenario {
             cd.getPtCurveMgr().getPastSelectedPtCurves());
         
         for (CDPtCurve ptCurve: candidatePtCurves) {
-            if (worldSelectionBoxShape.intersects(ptCurve.getBoundingBox())
+            if (PDFSelectionBoxShape.intersects(ptCurve.getBoundingBox())
                 || ptCurve.getBoundingBox().isEmpty()){
                 for (Point2D.Double pt: ptCurve.getPts()) {
-                    if (worldSelectionBoxShape.contains(pt)) {
+                    if (PDFSelectionBoxShape.contains(pt)) {
                         newlySelectedPtCurves.add(ptCurve);
                         break;
                     }
