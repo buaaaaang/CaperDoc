@@ -5,7 +5,7 @@ import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
-import cd.button.CDNeedButton;
+import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
@@ -77,13 +77,13 @@ public class CDDefaultScenario extends XScenario {
                 case HIERARCHY:
                     CDButtonScenario.getSingleton().
                         setCurHandlingButton(button);
-                    CDButtonScenario.getSingleton().
+                    CDSideButtonScenario.getSingleton().
                         setCurHandlingHierarchyButton(cd.getButtonMgr().
                         getCurWorkingHierarchyButton());
                     button.setHighlight(true);
                     XCmdToChangeScene.execute(cd, 
-                        CDButtonScenario.HierarchyPressedScene.getSingleton(), 
-                        this);
+                        CDSideButtonScenario.HierarchyPressedScene.
+                        getSingleton(), this);
                     break;
                 case COLOR:
                     CDColorButton cb = (CDColorButton)button;
@@ -92,16 +92,16 @@ public class CDDefaultScenario extends XScenario {
                         CDColorScenario.ColorScene.getSingleton(), 
                         this);
                     break;
-                case NEED:
-                    CDNeedButton needButton = 
-                        cd.getButtonMgr().getCurWorkingNeedButton();
+                case LINK:
+                    CDLinkButton needButton = 
+                        cd.getButtonMgr().getCurWorkingLinkButton();
                     needButton.setInitialPressedPoint(e.getPoint());
                     needButton.setInitialBox();
                     needButton.setHighlight(true);
                     CDButtonScenario.getSingleton().
                         setCurHandlingNeedButton(needButton);
                     XCmdToChangeScene.execute(cd, 
-                        CDButtonScenario.NeedPressedScene.getSingleton(), 
+                        CDButtonScenario.LinkPressedScene.getSingleton(), 
                         this);
                     break;
                 case NONE:
@@ -136,7 +136,7 @@ public class CDDefaultScenario extends XScenario {
                 case NONE:
                 case COLOR:
                 case CONTENT:
-                case NEED:
+                case LINK:
                     int k = cd.getPDFViewer().onWhatBranch(e.getPoint());
                     if (k == -1) {
                         CDCmdToScroll.execute(cd, 

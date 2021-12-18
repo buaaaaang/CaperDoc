@@ -6,7 +6,7 @@ import java.awt.Point;
 public abstract class CDButton {
     
     public enum Button {
-        COLOR, CONTENT, IMPLY, NEED, HIERARCHY, SIDE, NONE
+        COLOR, CONTENT, IMPLY, LINK, HIERARCHY, SIDE, NONE
     }
     
     // fields

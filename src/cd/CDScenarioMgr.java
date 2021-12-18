@@ -7,6 +7,7 @@ import cd.scenario.CDDefaultScenario;
 import cd.scenario.CDDrawScenario;
 import cd.scenario.CDNavigateScenario;
 import cd.scenario.CDSelectScenario;
+import cd.scenario.CDSideButtonScenario;
 import x.XScenarioMgr;
 
 public class CDScenarioMgr extends XScenarioMgr {
@@ -23,6 +24,7 @@ public class CDScenarioMgr extends XScenarioMgr {
         this.mScenarios.add(CDSelectScenario.createSingleton(this.mApp));
         this.mScenarios.add(CDCropScenario.createSingleton(this.mApp));
         this.mScenarios.add(CDButtonScenario.createSingleton(this.mApp));
+        this.mScenarios.add(CDSideButtonScenario.createSingleton(this.mApp));
         this.mScenarios.add(CDColorScenario.createSingleton(this.mApp));
     }
 

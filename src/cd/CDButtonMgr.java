@@ -5,7 +5,7 @@ import cd.button.CDColorButton;
 import cd.button.CDContentButton;
 import cd.button.CDHierarchyButton;
 import cd.button.CDRemainderButton;
-import cd.button.CDNeedButton;
+import cd.button.CDLinkButton;
 import cd.button.CDImplyButton;
 import cd.button.CDPDFButton;
 import cd.button.CDSideButton;
@@ -35,12 +35,12 @@ public class CDButtonMgr {
         this.mContentButtons.add(button);
     }
     
-    private ArrayList<CDNeedButton> mNeedButtons = null;
-    public ArrayList<CDNeedButton> getNeedButtons() {
-        return this.mNeedButtons;
+    private ArrayList<CDLinkButton> mLinkButtons = null;
+    public ArrayList<CDLinkButton> getLinkButtons() {
+        return this.mLinkButtons;
     }
-    public void addNeedButton(CDNeedButton button) {
-        this.mNeedButtons.add(button);
+    public void addLinkButton(CDLinkButton button) {
+        this.mLinkButtons.add(button);
     }
     
     private ArrayList<CDImplyButton> mImplyButtons = null;
@@ -83,9 +83,9 @@ public class CDButtonMgr {
         return this.mCurWorkingContentButton;
     }
     
-    private CDNeedButton mCurWorkingNeedButton = null;
-    public CDNeedButton getCurWorkingNeedButton() {
-        return this.mCurWorkingNeedButton;
+    private CDLinkButton mCurWorkingLinkButton = null;
+    public CDLinkButton getCurWorkingLinkButton() {
+        return this.mCurWorkingLinkButton;
     }
     
     private CDHierarchyButton mCurWorkingHierarchyButton = null;
@@ -111,7 +111,7 @@ public class CDButtonMgr {
         this.mColorButtons.get(0).setHighlight(true);
         
         this.mContentButtons = new ArrayList<>();
-        this.mNeedButtons = new ArrayList<>();
+        this.mLinkButtons = new ArrayList<>();
         this.mImplyButtons = new ArrayList<>();
         this.mHierarchyButtons = new ArrayList<>();
     }    
@@ -184,9 +184,9 @@ public class CDButtonMgr {
             }   
             return new CDSideRemainderButton();
         } else {
-            for (CDNeedButton button: this.mNeedButtons) {
+            for (CDLinkButton button: this.mLinkButtons) {
                 if (this.contains(button, pt)) {
-                    this.mCurWorkingNeedButton = button;
+                    this.mCurWorkingLinkButton = button;
                     return button;
                 }
             }   

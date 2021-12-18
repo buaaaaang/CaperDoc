@@ -90,7 +90,6 @@ public class CDCanvas2D extends JPanel {
         
         // render the current scene's world objects
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        curScene.renderWorldObjects(g2);
         
         //render common screen objects
         this.drawInfo(g2);        

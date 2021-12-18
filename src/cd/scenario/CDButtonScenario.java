@@ -8,7 +8,7 @@ import cd.button.CDButton.Button;
 import cd.button.CDContentButton;
 import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
-import cd.button.CDNeedButton;
+import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToScroll;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -43,9 +43,7 @@ public class CDButtonScenario extends XScenario {
     protected void addScenes() {
         this.addScene(CDButtonScenario.ContentChoosedScene.
             createSingleton(this));
-        this.addScene(CDButtonScenario.HierarchyPressedScene.
-            createSingleton(this));
-        this.addScene(CDButtonScenario.NeedPressedScene.createSingleton(this));
+        this.addScene(CDButtonScenario.LinkPressedScene.createSingleton(this));
     }
     
     public static class ContentChoosedScene extends CDScene {
@@ -142,19 +140,19 @@ public class CDButtonScenario extends XScenario {
 
     }
     
-    public static class HierarchyPressedScene extends CDScene {
-        private static HierarchyPressedScene mSingleton = null;
-        public static HierarchyPressedScene createSingleton(XScenario scenario) {
-            assert (HierarchyPressedScene.mSingleton == null);
-            HierarchyPressedScene.mSingleton = new HierarchyPressedScene(scenario);
-            return HierarchyPressedScene.mSingleton;
+    public static class LinkPressedScene extends CDScene {
+        private static LinkPressedScene mSingleton = null;
+        public static LinkPressedScene createSingleton(XScenario scenario) {
+            assert (LinkPressedScene.mSingleton == null);
+            LinkPressedScene.mSingleton = new LinkPressedScene(scenario);
+            return LinkPressedScene.mSingleton;
         }
-        public static HierarchyPressedScene getSingleton() {
-            assert (HierarchyPressedScene.mSingleton != null);
-            return HierarchyPressedScene.mSingleton;
+        public static LinkPressedScene getSingleton() {
+            assert (LinkPressedScene.mSingleton != null);
+            return LinkPressedScene.mSingleton;
         }
         
-        public HierarchyPressedScene(XScenario scenario) {
+        public LinkPressedScene(XScenario scenario) {
             super(scenario);
         }
 
@@ -165,128 +163,7 @@ public class CDButtonScenario extends XScenario {
         @Override
         public void handleMouseDrag(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDButtonMgr mgr = cd.getButtonMgr();
-            CDButton button = mgr.checkButton(e.getPoint());
-            Button kind = button.getKind();
-            switch (kind) {
-                case NONE:
-                case COLOR:
-                case CONTENT:
-                case NEED:
-                    cd.getButtonViewer().setDummyButton(
-                        CDButtonScenario.getSingleton().getCurHandlingButton(), 
-                        e.getPoint());
-                    break;
-            }
-        }
-
-        @Override
-        public void handleMouseRelease(MouseEvent e) {
-            CD cd = (CD) this.mScenario.getApp();
-            CDButtonMgr mgr = cd.getButtonMgr();
-            CDButton button = mgr.checkButton(e.getPoint());
-            Button kind = button.getKind();
-            switch (kind) {
-                case HIERARCHY:
-                    if (cd.getButtonMgr().getCurWorkingHierarchyButton() ==
-                        CDButtonScenario.getSingleton().
-                        getCurHandlingButton()) {
-                        cd.getXform().goToYPos((int) cd.getButtonMgr().
-                            getCurWorkingHierarchyButton().
-                            getContentPosition());
-                    }
-                    break;
-                case CONTENT:
-                    CDContentButton cont_use = cd.getButtonMgr().
-                        getCurWorkingContentButton();
-                    Rectangle box = cont_use.getBox().getBounds();
-                    CDContentButton cont_used = CDButtonScenario.getSingleton().
-                        getCurHandlingHierarchyButton().getContentButton();
-                    // we may change site of need button
-                    int i = -1;
-                    boolean p = true;
-                    while (p) {
-                        i++;
-                        p = false;       
-                        for (CDContentButton b1: 
-                            cd.getButtonMgr().getContentButtons()) {
-                            if (b1.getBox().contains(new Point2D.Double(10,
-                                box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
-                                p = true;
-                            }     
-                        }
-                        for (CDNeedButton b2: 
-                            cd.getButtonMgr().getNeedButtons()) {
-                            if (b2.getBox().contains(new Point2D.Double(10,
-                                box.y + i * CDNeedButton.HEIGHT * 1.2 + 10))) {
-                                p = true;
-                            }
-                        }
-                    }
-                    CDNeedButton need = new CDNeedButton(cont_used.getName(),
-                        cont_used.getBox().y, new Rectangle(0, (int) (box.y + 
-                        i * CDNeedButton.HEIGHT * 1.2),0,0));
-                    CDImplyButton imply = new CDImplyButton(cont_use.getName(),
-                        cont_use.getBox().y);
-                    if (cont_use == cont_used) {
-                        break;
-                    }
-                    cd.getButtonMgr().addNeedButton(need);
-                    cd.getButtonMgr().addImplyButton(imply);
-                    cont_use.addNeedButton(need);
-                    cont_used.addImplyButton(imply);
-                    break;
-            }
-            CDButtonScenario.getSingleton().getCurHandlingButton().
-                setHighlight(false);
-            XCmdToChangeScene.execute(cd, this.mReturnScene, null);
-        }
-        
-        @Override
-        public void handleMouseScroll(MouseWheelEvent e) {
-        }
-
-        @Override
-        public void handleKeyDown(KeyEvent e) {
-        }
-
-        @Override
-        public void handleKeyUp(KeyEvent e) {
-        }
-
-        @Override
-        public void renderWorldObjects(Graphics2D g2) {
-        }
-
-        @Override
-        public void renderScreenObjects(Graphics2D g2) {
-        }
-    }
-    
-    public static class NeedPressedScene extends CDScene {
-        private static NeedPressedScene mSingleton = null;
-        public static NeedPressedScene createSingleton(XScenario scenario) {
-            assert (NeedPressedScene.mSingleton == null);
-            NeedPressedScene.mSingleton = new NeedPressedScene(scenario);
-            return NeedPressedScene.mSingleton;
-        }
-        public static NeedPressedScene getSingleton() {
-            assert (NeedPressedScene.mSingleton != null);
-            return NeedPressedScene.mSingleton;
-        }
-        
-        public NeedPressedScene(XScenario scenario) {
-            super(scenario);
-        }
-
-        @Override
-        public void handleMousePress(MouseEvent e) {
-        }
-
-        @Override
-        public void handleMouseDrag(MouseEvent e) {
-            CD cd = (CD) this.mScenario.getApp();
-            CDNeedButton button = CDButtonScenario.getSingleton().
+            CDLinkButton button = CDButtonScenario.getSingleton().
                 getCurHandlingNeedButton();
             Point initialPt = button.getInitialPressedPoint();
             if (Math.pow(initialPt.x - e.getPoint().x, 2) + 
@@ -305,7 +182,7 @@ public class CDButtonScenario extends XScenario {
         @Override
         public void handleMouseRelease(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDNeedButton button = CDButtonScenario.getSingleton().
+            CDLinkButton button = CDButtonScenario.getSingleton().
                 getCurHandlingNeedButton();
             button.setHighlight(false);
             if (button.getInitialBox() == button.getBox()) {
@@ -347,18 +224,11 @@ public class CDButtonScenario extends XScenario {
     public CDButton getCurHandlingButton() {
         return this.mCurHandlingButton;
     }
-    private CDHierarchyButton mCurHandlingHierarchyButton = null;
-    public void setCurHandlingHierarchyButton(CDHierarchyButton button) {
-        this.mCurHandlingHierarchyButton = button;
-    }
-    public CDHierarchyButton getCurHandlingHierarchyButton() {
-        return this.mCurHandlingHierarchyButton;
-    }
-    private CDNeedButton mCurHandlingNeedButton = null;
-    public void setCurHandlingNeedButton(CDNeedButton button) {
+    private CDLinkButton mCurHandlingNeedButton = null;
+    public void setCurHandlingNeedButton(CDLinkButton button) {
         this.mCurHandlingNeedButton = button;
     }
-    public CDNeedButton getCurHandlingNeedButton() {
+    public CDLinkButton getCurHandlingNeedButton() {
         return this.mCurHandlingNeedButton;
     }
     
