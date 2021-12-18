@@ -2,7 +2,6 @@ package cd.button;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.util.ArrayList;
 
 public class CDContentButton extends CDPDFButton {
@@ -39,11 +38,5 @@ public class CDContentButton extends CDPDFButton {
         this.mNeedButtons = new ArrayList<>();
         this.mImplyButtons = new ArrayList<>();
     }
-//
-//    @Override
-//    public boolean contains(Point pt) {
-//        return this.mBox.contains(this.mCD.getXform().
-//            calcPtFromScreenToWorld(pt));
-//    }
     
 }
