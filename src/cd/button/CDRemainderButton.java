@@ -9,9 +9,9 @@ public class CDRemainderButton extends CDButton {
         this.mKind = CDButton.Button.NONE;
     }
     
-    @Override
-    public boolean contains(Point pt) {
-        return true;
-    }
+//    @Override
+//    public boolean contains(Point pt) {
+//        return true;
+//    }
     
 }

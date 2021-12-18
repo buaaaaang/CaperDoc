@@ -75,10 +75,13 @@ public class CDCropScenario extends XScenario {
             CDButton.Button kind = button.getKind();
             switch (kind) {
                 case NONE:
-                    CDCmdToCreateCropBox.execute(cd, e.getPoint());   
-                    XCmdToChangeScene.execute(cd, 
-                        CDCropScenario.CropScene.getSingleton(), 
-                        this.getReturnScene());
+                    if (cd.getPDFViewer().
+                        getPageLocationFromPts(e.getPoint()) != null) {
+                        CDCmdToCreateCropBox.execute(cd, e.getPoint());   
+                        XCmdToChangeScene.execute(cd, 
+                            CDCropScenario.CropScene.getSingleton(), 
+                            this.getReturnScene());
+                    }
             }
         }
 
@@ -151,7 +154,16 @@ public class CDCropScenario extends XScenario {
         @Override
         public void handleMouseDrag(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToUpdateCropBox.execute(cd, e);
+            Point ap = CDCropScenario.getSingleton().mCropBox.getAnchorPt();
+            boolean b1 = cd.getPDFViewer().getPageLocationFromPts(e.getPoint()) 
+                != null;
+            boolean b2 = cd.getPDFViewer().onWhatBranch(ap) ==
+                cd.getPDFViewer().onWhatBranch(e.getPoint());
+            boolean b3 = cd.getPDFViewer().onWhatPage(ap) ==
+                cd.getPDFViewer().onWhatPage(e.getPoint());
+            if (b1 && b2 && b3) {
+                CDCmdToUpdateCropBox.execute(cd, e);
+            }
         }
 
         @Override

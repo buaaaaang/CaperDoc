@@ -3,6 +3,7 @@ package cd.cmd;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import cd.CD;
+import cd.CDPDFViewer;
 import cd.CDPtCurve;
 import x.XApp;
 import x.XLoggableCmd;
@@ -10,7 +11,6 @@ import x.XLoggableCmd;
 public class CDCmdToCreateCurPtCurve extends XLoggableCmd {
     // field
     private Point mScreenPt = null;
-    private Point2D.Double mWorldPt = null;
     
     // private constructor
     private CDCmdToCreateCurPtCurve(XApp app, Point pt) {
@@ -26,11 +26,15 @@ public class CDCmdToCreateCurPtCurve extends XLoggableCmd {
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        this.mWorldPt = cd.getXform().calcPtFromScreenToWorld(this.mScreenPt);
-
-        CDPtCurve curPtCurve = new CDPtCurve(this.mWorldPt, 
+        int branch = cd.getPDFViewer().onWhatBranch(this.mScreenPt);
+        Point2D.Double worldPt = 
+            cd.getXform().calcPtFromScreenToWorld(this.mScreenPt);
+        Point2D.Double PDFPt = new Point2D.Double(
+            worldPt.x - branch * CDPDFViewer.PAGE_ROW_INTERVAL, 
+            worldPt.y - cd.getBranchYPoses().get(branch));
+        CDPtCurve curPtCurve = new CDPtCurve(PDFPt, 
             cd.getCanvas().getCurColorForPtCurve(),
-            cd.getCanvas().getCurStrokeForPtCurve());
+            cd.getCanvas().getCurStrokeForPtCurve(), branch);
         cd.getPtCurveMgr().setCurPtCurve(curPtCurve);
         return true;
     }
@@ -40,7 +44,6 @@ public class CDCmdToCreateCurPtCurve extends XLoggableCmd {
         StringBuffer sb = new StringBuffer();
         sb.append(this.getClass().getSimpleName()).append("\t");
         sb.append(this.mScreenPt).append("\t");
-        sb.append(this.mWorldPt);
         return sb.toString();
         
     }

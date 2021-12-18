@@ -101,11 +101,17 @@ public class CDCanvas2D extends JPanel {
     }
     
     private void drawPtCurve(Graphics2D g2, CDPtCurve ptCurve, Color c, 
-        Stroke s){
+        Stroke s, int branch){
         Path2D.Double path = new Path2D.Double();
-        ArrayList<Point2D.Double> pts = ptCurve.getPts();
-        if (pts.size() < 2) {
+        ArrayList<Point2D.Double> PDFPts = ptCurve.getPts();
+        if (PDFPts.size() < 2) {
             return;
+        }
+        double deltaX = branch * CDPDFViewer.PAGE_ROW_INTERVAL;
+        double deltaY = this.mCD.getBranchYPoses().get(branch);
+        ArrayList<Point2D.Double> pts = new ArrayList<>();
+        for (Point2D.Double p : PDFPts) {
+            pts.add(new Point2D.Double(p.x + deltaX, p.y + deltaY));
         }
         Point2D.Double pt = pts.get(0);
         path.moveTo(pt.x, pt.y);
@@ -156,25 +162,33 @@ public class CDCanvas2D extends JPanel {
     }
 
     private void drawPtCurves(Graphics2D g2) {
-        this.mCD.getPtCurveMgr().getPtCurves().forEach(ptCurve -> {
-            this.drawPtCurve(g2, ptCurve, ptCurve.getColor(), 
-                ptCurve.getStroke());
-        });
+        for (int b=0; b < this.mCD.getBranchYPoses().size(); b++) {
+            for (CDPtCurve ptCurve: this.mCD.getPtCurveMgr().getPtCurves()) {
+                this.drawPtCurve(g2, ptCurve, ptCurve.getColor(), 
+                    ptCurve.getStroke(), b);
+            }
+        }
     }
 
     private void drawCurPtCurve(Graphics2D g2) {
         CDPtCurve ptCurve = this.mCD.getPtCurveMgr().getCurPtCurve();
         if(ptCurve != null){
-            this.drawPtCurve(g2, ptCurve, ptCurve.getColor(), 
-                ptCurve.getStroke());
+            for (int b=0; b < this.mCD.getBranchYPoses().size(); b++) {
+                this.drawPtCurve(g2, ptCurve, ptCurve.getColor(), 
+                    ptCurve.getStroke(), b);
+            }
         }
     }
 
     private void drawSelectedPtCurves(Graphics2D g2) {
-        this.mCD.getPtCurveMgr().getSelectedPtCurves().forEach(selectedPtCurve -> {this.drawPtCurve(g2, selectedPtCurve, 
-                CDCanvas2D.COLOR_SELECTED_PT_CURVE, 
-                selectedPtCurve.getStroke());
-        });
+        for (int b=0; b < this.mCD.getBranchYPoses().size(); b++) {
+            for (CDPtCurve ptCurve: 
+                this.mCD.getPtCurveMgr().getSelectedPtCurves()) {
+                this.drawPtCurve(g2, ptCurve, 
+                    CDCanvas2D.COLOR_SELECTED_PT_CURVE, 
+                    ptCurve.getStroke(), b);
+            };
+        }
     }
 
     private void drawInfo(Graphics2D g2) {

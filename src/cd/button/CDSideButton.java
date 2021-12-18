@@ -24,13 +24,10 @@ public abstract class CDSideButton extends CDButton {
         return this.mContentPosition;
     }
     
-    protected CD mCD;
-    
     // constructor
-    public CDSideButton(String name, double y, CD cd) {
+    public CDSideButton(String name, double y) {
         super(name);
         this.mContentPosition = y;
-        this.mCD = cd;
     }
     
 }
