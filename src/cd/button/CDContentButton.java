@@ -21,6 +21,13 @@ public class CDContentButton extends CDPDFButton {
         return this.mImplyButtons;
     }
     public void addImplyButton(CDImplyButton button) {
+        for (int i=0; i < this.mImplyButtons.size(); i++) {
+            if (this.mImplyButtons.get(i).getContentPosition() > 
+                button.getContentPosition()) {
+                this.mImplyButtons.add(i, button);
+                return;
+            }
+        }
         this.mImplyButtons.add(button);
     }
     

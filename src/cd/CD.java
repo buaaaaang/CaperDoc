@@ -86,6 +86,9 @@ public class CD extends XApp {
     }
     
     private CDEventListener mEventListener = null;
+    public CDEventListener getEventListener() {
+        return this.mEventListener;
+    }
             
     private XScenarioMgr mScenarioMgr = null;
     @Override

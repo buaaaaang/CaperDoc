@@ -21,7 +21,8 @@ import cd.cmd.CDCmdToDeleteSelectedPtCurves;
 import cd.cmd.CDCmdToDeselectSelectedPtCurves;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForSelectedPtCurves;
-import cd.cmd.CDCmdToScroll;
+import cd.cmd.CDCmdToScrollSide;
+import cd.cmd.CDCmdToScrollWorld;
 import cd.cmd.CDCmdToUpdateSelectionBox;
 import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
@@ -259,7 +260,20 @@ public class CDSelectScenario extends XScenario {
         @Override
         public void handleMouseScroll(MouseWheelEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToScroll.execute(cd, (e.getWheelRotation() > 0) ? -1 : 1);
+            CDButton button = cd.getButtonMgr().checkButton(e.getPoint());
+            CDButton.Button kind = button.getKind();
+            switch (kind) {
+                case NONE:
+                case COLOR:
+                case CONTENT:
+                case LINK:
+                    CDCmdToScrollWorld.execute(cd, e);
+                    break;
+                case SIDE:
+                case HIERARCHY:
+                    CDCmdToScrollSide.execute(cd, e);
+                    break;
+            }
         }
 
         @Override
@@ -267,12 +281,6 @@ public class CDSelectScenario extends XScenario {
             CD cd = (CD) this.mScenario.getApp();
             int code = e.getKeyCode();
             switch (code) {
-                case KeyEvent.VK_UP:
-                    CDCmdToScroll.execute(cd, 1);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    CDCmdToScroll.execute(cd, -1);
-                    break;
                 case KeyEvent.VK_CONTROL:
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
                         ZoomPanReadyScene.getSingleton(), this);

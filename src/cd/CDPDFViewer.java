@@ -1,8 +1,11 @@
 package cd;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,9 +23,12 @@ public class CDPDFViewer extends JPanel {
     private static final int PAGE_COL_GAP = 24;
     public static final int PAGE_COL_INTERVAL = 
         CDPDFViewer.PAGE_HEIGHT + CDPDFViewer.PAGE_COL_GAP;
-    private static final int PAGE_ROW_GAP = 120;
+    private static final int PAGE_ROW_GAP = 220;
     public static final int PAGE_ROW_INTERVAL = 
         CDPDFViewer.PAGE_WIDTH + CDPDFViewer.PAGE_ROW_GAP;
+    public static final Color FOCUS_COLOR = new Color(0,0,0,128);
+    public static final Stroke FOCUS_STROKE = new BasicStroke(40f,
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
     
     
     // fields
@@ -46,6 +52,22 @@ public class CDPDFViewer extends JPanel {
     
     private int mNPages;
     
+    private int mFocus;
+    public int getFocus() {
+        return this.mFocus;
+    }
+    public void incrementFocus(int a) {
+        System.out.println(this.mFocus + "    " + a);
+        this.mFocus += a;
+        System.out.println(this.mFocus + "    " );
+    }
+    public void setFocus(Point p) {
+        int f = this.onWhatBranch(p);
+        if (f != -1) {
+            this.mFocus = f;
+        }
+    }
+    
     public CDPDFViewer(CD cd, String path) throws IOException {
         this.mCD = cd;
         double initialScale = (double) CDPDFViewer.PAGE_HEIGHT / 
@@ -66,6 +88,7 @@ public class CDPDFViewer extends JPanel {
         this.mRenderer = new PDFRenderer(this.mDoc); 
         this.mYPoses = cd.getBranchYPoses();
         this.mNPages = this.mDoc.getNumberOfPages();
+        this.mFocus = 0;
     }
     
     public Point getPDFOrigin(int i) {
@@ -83,13 +106,15 @@ public class CDPDFViewer extends JPanel {
         
         // Render PDF pages
         for (int i = 0; i < this.mYPoses.size(); i++) {
-            Point p = this.getPDFOrigin(i);
-            renderPDF(g2, p.x, p.y);
+            this.renderPDF(g2, i);
         }
         
+        this.drawFocus(g2);
     }    
     
-    private void renderPDF(Graphics2D g2, int xPos, int yPos) {
+    private void renderPDF(Graphics2D g2, int branch) {
+        int xPos = this.getPDFOrigin(branch).x;
+        int yPos = this.getPDFOrigin(branch).y;
         double topY = this.mCD.getXform().
             calcPtFromScreenToWorld(new Point(0,0)).y - yPos;
         double bottomY = this.mCD.getXform().
@@ -117,7 +142,22 @@ public class CDPDFViewer extends JPanel {
         }     
     }
     
+    public void drawFocus(Graphics2D g2) {
+        int wx1 = this.worldXPos + this.mFocus * CDPDFViewer.PAGE_ROW_INTERVAL;
+        int wx2 = CDPDFViewer.PAGE_WIDTH + wx1;
+        int x1 = this.mCD.getXform().
+            calcPtFromWorldToScreen(new Point2D.Double(wx1,0)).x;
+        int x2 = this.mCD.getXform().
+            calcPtFromWorldToScreen(new Point2D.Double(wx2,0)).x;
+        g2.setColor(CDPDFViewer.FOCUS_COLOR);
+        g2.setStroke(CDPDFViewer.FOCUS_STROKE);
+        g2.drawLine(x1, 0, x2, 0);
+    }
+    
     public int onWhatBranch(Point pt) {
+        if (pt.x < CD.HIERARCHY_WIDTH) {
+            return -1;
+        }
         Point2D.Double p = this.mCD.getXform().calcPtFromScreenToWorld(pt);
         double wx = p.x - this.worldXPos;
         for (int i = 0; i < this.mYPoses.size(); i++) {
@@ -132,7 +172,8 @@ public class CDPDFViewer extends JPanel {
     public int onWhatPage(Point pt) {
         CDXform xform = this.mCD.getXform();
         int branch = this.onWhatBranch(pt);
-        Point2D.Double worldPt = xform.calcPtFromScreenToWorld(pt);;
+        if (branch < 0) return -1;
+        Point2D.Double worldPt = xform.calcPtFromScreenToWorld(pt);
         double pdfY = worldPt.y - this.mCD.getBranchYPoses().get(branch);
         return (int) Math.floor(pdfY / CDPDFViewer.PAGE_COL_INTERVAL);
     }
@@ -173,5 +214,12 @@ public class CDPDFViewer extends JPanel {
         double bottom = this.mCD.getXform().calcPtFromScreenToWorld(new
             Point(0, this.getHeight())).y;
         this.mYPoses.add(-1 * y + (int) ((bottom - top) * 1 / 3) + (int) top);
+    }
+    
+    public Point2D.Double getPointOnWorld(Point pt, int branch) {
+        double x = this.worldXPos + 
+            branch * CDPDFViewer.PAGE_ROW_INTERVAL + pt.x;
+        double y = this.mCD.getBranchYPoses().get(branch) + pt.y;
+        return new Point2D.Double(x, y);
     }
 }

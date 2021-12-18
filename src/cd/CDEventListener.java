@@ -1,5 +1,6 @@
 package cd;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -15,6 +16,11 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     
     public CDEventListener(CD cd) {
         this.mCD = cd;
+    }    
+    
+    private Point mCurPoint = null;
+    public Point getCurPoint() {
+        return this.mCurPoint;
     }
 
     @Override
@@ -23,8 +29,9 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
 
     @Override
     public void mousePressed(MouseEvent e) {
-        
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        this.mCurPoint = e.getPoint();
+        this.mCD.getPDFViewer().setFocus(e.getPoint());
         curScene.handleMousePress(e);
         this.mCD.getPanel().repaint();
     }
@@ -32,6 +39,7 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     @Override
     public void mouseReleased(MouseEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        this.mCurPoint = e.getPoint();
         curScene.handleMouseRelease(e);
         this.mCD.getPanel().repaint();
     }
@@ -47,17 +55,20 @@ public class CDEventListener implements MouseListener, MouseMotionListener,
     @Override
     public void mouseDragged(MouseEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        this.mCurPoint = e.getPoint();
         curScene.handleMouseDrag(e);
         this.mCD.getPanel().repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        this.mCurPoint = e.getPoint();
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
+        this.mCurPoint = e.getPoint();
         curScene.handleMouseScroll(e);
         this.mCD.getPanel().repaint();
     }

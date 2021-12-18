@@ -42,21 +42,6 @@ public class CDButtonMgr {
     public void addLinkButton(CDLinkButton button) {
         this.mLinkButtons.add(button);
     }
-    
-    private ArrayList<CDImplyButton> mImplyButtons = null;
-    public ArrayList<CDImplyButton> getImplyButtons() {
-        return this.mImplyButtons;
-    }
-    public void addImplyButton(CDImplyButton button) {
-        for (int i=0; i < this.mImplyButtons.size(); i++) {
-            if (this.mImplyButtons.get(i).getContentPosition() > 
-                button.getContentPosition()) {
-                this.mImplyButtons.add(i, button);
-                return;
-            }
-        }
-        this.mImplyButtons.add(button);
-    }
 
     private ArrayList<CDHierarchyButton> mHierarchyButtons = null;
     public ArrayList<CDHierarchyButton> getHierarchyButtons() {
@@ -73,29 +58,29 @@ public class CDButtonMgr {
         this.mHierarchyButtons.add(button);
     }
     
-    private CDColorButton mCurWorkingColorButton = null;
-    public CDColorButton getCurWorkingColorButton() {
-        return this.mCurWorkingColorButton;
+    private CDColorButton mCurMouseColorButton = null;
+    public CDColorButton getCurMouseColorButton() {
+        return this.mCurMouseColorButton;
     }
     
-    private CDContentButton mCurWorkingContentButton = null;
-    public CDContentButton getCurWorkingContentButton() {
-        return this.mCurWorkingContentButton;
+    private CDContentButton mCurMouseContentButton = null;
+    public CDContentButton getCurMouseContentButton() {
+        return this.mCurMouseContentButton;
     }
     
-    private CDLinkButton mCurWorkingLinkButton = null;
-    public CDLinkButton getCurWorkingLinkButton() {
-        return this.mCurWorkingLinkButton;
+    private CDLinkButton mCurMouseLinkButton = null;
+    public CDLinkButton getCurMouseLinkButton() {
+        return this.mCurMouseLinkButton;
     }
     
-    private CDHierarchyButton mCurWorkingHierarchyButton = null;
-    public CDHierarchyButton getCurWorkingHierarchyButton() {
-        return this.mCurWorkingHierarchyButton;
+    private CDHierarchyButton mCurMouseHierarchyButton = null;
+    public CDHierarchyButton getCurMouseHierarchyButton() {
+        return this.mCurMouseHierarchyButton;
     }
     
-    private CDImplyButton mCurWorkingImplyButton = null;
-    public CDImplyButton getCurWorkingImplyButton() {
-        return this.mCurWorkingImplyButton;
+    private CDImplyButton mCurMouseImplyButton = null;
+    public CDImplyButton getCurMouseImplyButton() {
+        return this.mCurMouseImplyButton;
     }
     
     
@@ -112,18 +97,17 @@ public class CDButtonMgr {
         
         this.mContentButtons = new ArrayList<>();
         this.mLinkButtons = new ArrayList<>();
-        this.mImplyButtons = new ArrayList<>();
         this.mHierarchyButtons = new ArrayList<>();
     }    
     
     private boolean contains(CDColorButton button, Point pt) {
         int dx = this.mCD.getPanel().getWidth() - 
-            button.getScreenPositionFromRight() - pt.x;
-        int dy = button.getScreenPositionFromTop() - pt.y;
+            button.getScreenPositionFromRight() + button.getRadius() - pt.x;
+        int dy = button.getScreenPositionFromTop() + button.getRadius() - pt.y;
         return ((dx*dx + dy*dy) < button.getRadius() * button.getRadius());
     }
     
-    private boolean contains(CDPDFButton button, Point pt) {
+    public boolean contains(CDPDFButton button, Point pt) {
         boolean b = false;
         Rectangle box = button.getBox();
         Point2D.Double p = this.mCD.getXform().calcPtFromScreenToWorld(pt);
@@ -146,7 +130,6 @@ public class CDButtonMgr {
         boolean b1 = pt.y > (CDSideButton.HEIGHT * n - shift) &&
             pt.y < (CDSideButton.HEIGHT * (n + 1) - shift);
         boolean b2 = pt.x < CD.HIERARCHY_WIDTH - CDSideButton.GAP_SIDE;
-        System.out.println("" + (b1 && b2));
         return b1 && b2;
     }
     
@@ -165,34 +148,38 @@ public class CDButtonMgr {
     public CDButton checkButton(Point pt) {
         for (CDColorButton button: this.mColorButtons) {
             if (this.contains(button, pt)) {
-                this.mCurWorkingColorButton = button;
+                this.mCurMouseColorButton = button;
                 return button;
             }
         }
         if (pt.x < CD.HIERARCHY_WIDTH) { 
-            for (CDImplyButton button: this.mImplyButtons) {
-                if (this.contains(button, pt)) {
-                    this.mCurWorkingImplyButton = button;
-                    return button;
-                }
-            }   
-            for (CDHierarchyButton button: this.mHierarchyButtons) {
-                if (this.contains(button, pt)) {
-                    this.mCurWorkingHierarchyButton = button;
-                    return button;
-                }
-            }   
+            if (this.mCD.getSideViewer().getMode() == CDSideViewer.Mode.IMPLY) {
+                for (CDImplyButton button: this.mCD.getSideViewer().
+                    getImplyContent().getImplyButtons()) {
+                    if (this.contains(button, pt)) {
+                        this.mCurMouseImplyButton = button;
+                        return button;
+                    }
+                }   
+            } else {
+                for (CDHierarchyButton button: this.mHierarchyButtons) {
+                    if (this.contains(button, pt)) {
+                        this.mCurMouseHierarchyButton = button;
+                        return button;
+                    }
+                }   
+            }
             return new CDSideRemainderButton();
         } else {
             for (CDLinkButton button: this.mLinkButtons) {
                 if (this.contains(button, pt)) {
-                    this.mCurWorkingLinkButton = button;
+                    this.mCurMouseLinkButton = button;
                     return button;
                 }
             }   
             for (CDContentButton button: this.mContentButtons) {
                 if (this.contains(button, pt)) {
-                    this.mCurWorkingContentButton = button;
+                    this.mCurMouseContentButton = button;
                     return button;
                 }
             }  

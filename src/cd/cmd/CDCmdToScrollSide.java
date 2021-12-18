@@ -1,33 +1,34 @@
 package cd.cmd;
 
 import cd.CD;
+import java.awt.event.MouseWheelEvent;
 import x.XApp;
 import x.XLoggableCmd;
 
-public class CDCmdToScroll extends XLoggableCmd {
+public class CDCmdToScrollSide extends XLoggableCmd {
     // constants
-    private static final int SCROLL_AMOUNT = 100;
+    private static final int SCROLL_AMOUNT = 10;
     
     // fields
-    private int mDir;
+    private MouseWheelEvent mEvent;
     
     // private constructor
-    private CDCmdToScroll(XApp app, int dir) {
+    private CDCmdToScrollSide(XApp app, MouseWheelEvent e) {
         super(app);
-        this.mDir = dir;
+        this.mEvent = e;
     }
     
     // JSICmdToDoSomething.execute(jsi, ...)
-    public static boolean execute(XApp app, int dir) {
-        CDCmdToScroll cmd = new CDCmdToScroll(app, dir);
+    public static boolean execute(XApp app, MouseWheelEvent e) {
+        CDCmdToScrollSide cmd = new CDCmdToScrollSide(app, e);
         return cmd.execute();
     }
     
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-      
-        cd.getXform().translateUp(this.mDir * CDCmdToScroll.SCROLL_AMOUNT);
+        cd.getSideViewer().shift(this.mEvent.getWheelRotation() * 
+            CDCmdToScrollSide.SCROLL_AMOUNT);
 
         return true;
     }

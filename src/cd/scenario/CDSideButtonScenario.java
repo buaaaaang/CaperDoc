@@ -9,6 +9,8 @@ import cd.button.CDContentButton;
 import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
+import cd.button.CDSideButton;
+import cd.cmd.CDCmdToNavigateBySide;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -17,6 +19,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import javax.swing.SwingUtilities;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -41,25 +44,25 @@ public class CDSideButtonScenario extends XScenario {
 
     @Override
     protected void addScenes() {
-        this.addScene(CDSideButtonScenario.HierarchyPressedScene.
+        this.addScene(CDSideButtonScenario.SideButtonPressedScene.
             createSingleton(this));
         this.addScene(CDSideButtonScenario.GenerateLinkScene.
             createSingleton(this));
     }
     
-    public static class HierarchyPressedScene extends CDScene {
-        private static HierarchyPressedScene mSingleton = null;
-        public static HierarchyPressedScene createSingleton(XScenario scenario) {
-            assert (HierarchyPressedScene.mSingleton == null);
-            HierarchyPressedScene.mSingleton = new HierarchyPressedScene(scenario);
-            return HierarchyPressedScene.mSingleton;
+    public static class SideButtonPressedScene extends CDScene {
+        private static SideButtonPressedScene mSingleton = null;
+        public static SideButtonPressedScene createSingleton(XScenario scenario) {
+            assert (SideButtonPressedScene.mSingleton == null);
+            SideButtonPressedScene.mSingleton = new SideButtonPressedScene(scenario);
+            return SideButtonPressedScene.mSingleton;
         }
-        public static HierarchyPressedScene getSingleton() {
-            assert (HierarchyPressedScene.mSingleton != null);
-            return HierarchyPressedScene.mSingleton;
+        public static SideButtonPressedScene getSingleton() {
+            assert (SideButtonPressedScene.mSingleton != null);
+            return SideButtonPressedScene.mSingleton;
         }
         
-        public HierarchyPressedScene(XScenario scenario) {
+        public SideButtonPressedScene(XScenario scenario) {
             super(scenario);
         }
 
@@ -78,15 +81,15 @@ public class CDSideButtonScenario extends XScenario {
                 case COLOR:
                 case CONTENT:
                 case LINK:
-                    CDHierarchyButton hb = CDSideButtonScenario.
-                        getSingleton().getCurHandlingHierarchyButton();
+                    CDSideButton hb = CDSideButtonScenario.
+                        getSingleton().getCurHandlingSideButton();
                     CDSideButtonScenario.getSingleton().setDummyName(
                         hb.getName());
                     CDSideButtonScenario.getSingleton().setDummyContentPosition(
                         hb.getContentPosition());
                     XCmdToChangeScene.execute(cd, 
                         CDSideButtonScenario.GenerateLinkScene.
-                        getSingleton(), this);
+                        getSingleton(), this.mReturnScene);
                     break;
             }
         }
@@ -99,16 +102,11 @@ public class CDSideButtonScenario extends XScenario {
             CDButton.Button kind = button.getKind();
             switch (kind) {
                 case HIERARCHY:
-                    if (cd.getButtonMgr().getCurWorkingHierarchyButton() ==
-                        CDSideButtonScenario.getSingleton().
-                        getCurHandlingHierarchyButton()) {
-                        cd.getXform().goToYPos((int) cd.getButtonMgr().
-                            getCurWorkingHierarchyButton().
-                            getContentPosition());
-                    }
+                case IMPLY:
+                    CDCmdToNavigateBySide.execute(cd, e);
                     break;
             }
-            CDSideButtonScenario.getSingleton().getCurHandlingHierarchyButton().
+            CDSideButtonScenario.getSingleton().getCurHandlingSideButton().
                 setHighlight(false);
             XCmdToChangeScene.execute(cd, this.mReturnScene, null);
         }
@@ -165,8 +163,7 @@ public class CDSideButtonScenario extends XScenario {
                 case SIDE:
                 case HIERARCHY:
                     CDSideButtonScenario.getSingleton().initializeDummy();
-                    XCmdToChangeScene.execute(cd, 
-                        CDDefaultScenario.ReadyScene.getSingleton(), null);
+                    XCmdToChangeScene.execute(cd, this.mReturnScene, null);
                 case NONE:
                 case LINK:
                 case COLOR:
@@ -187,8 +184,7 @@ public class CDSideButtonScenario extends XScenario {
             int branch = cd.getPDFViewer().onWhatBranch(e.getPoint());
             if (branch < 0) {
                 CDSideButtonScenario.getSingleton().initializeDummy();
-                XCmdToChangeScene.execute(cd, 
-                    CDDefaultScenario.ReadyScene.getSingleton(), null);
+                XCmdToChangeScene.execute(cd, this.mReturnScene, null);
             } else {
                 CDSideButtonScenario s = 
                     CDSideButtonScenario.getSingleton();
@@ -203,8 +199,7 @@ public class CDSideButtonScenario extends XScenario {
                     s.getDummyContentPosition(), box);
                 cd.getButtonMgr().addLinkButton(b);
                 s.initializeDummy();
-                XCmdToChangeScene.execute(cd, 
-                    CDDefaultScenario.ReadyScene.getSingleton(), null);
+                XCmdToChangeScene.execute(cd, this.mReturnScene, null);
             }
         }
         
@@ -223,6 +218,9 @@ public class CDSideButtonScenario extends XScenario {
         @Override
         public void renderWorldObjects(Graphics2D g2) {
             CDSideButtonScenario s = CDSideButtonScenario.getSingleton();
+            if (s.getDummyPt() == null) {
+                return;
+            }
             g2.setFont(CDLinkButton.FONT);
             if (s.getDummyWidth() == 0) {
                 s.setDummyWidth(2 * CDLinkButton.GAP_SIDE + g2.getFontMetrics().
@@ -245,12 +243,12 @@ public class CDSideButtonScenario extends XScenario {
 
     }
     
-    private CDHierarchyButton mCurHandlingHierarchyButton = null;
-    public void setCurHandlingHierarchyButton(CDHierarchyButton button) {
-        this.mCurHandlingHierarchyButton = button;
+    private CDSideButton mCurHandlingSideButton = null;
+    public void setCurHandlingSideButton(CDSideButton button) {
+        this.mCurHandlingSideButton = button;
     }
-    public CDHierarchyButton getCurHandlingHierarchyButton() {
-        return this.mCurHandlingHierarchyButton;
+    public CDSideButton getCurHandlingSideButton() {
+        return this.mCurHandlingSideButton;
     }
     
     private Point mDummyPt = null;
@@ -286,7 +284,7 @@ public class CDSideButtonScenario extends XScenario {
         this.mDummyWidth = 0;
         this.mDummyName = null;
         this.mDummyContentPosition = 0;
-        this.mCurHandlingHierarchyButton.setHighlight(false);
+        this.mCurHandlingSideButton.setHighlight(false);
     }
     
 }

@@ -3,18 +3,26 @@ package cd;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
 import cd.button.CDContentButton;
+import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
 import cd.button.CDSideButton;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 
 public class CDButtonViewer extends JPanel {
     // fields and constants
+    static private final Color COLOR_ARROW = new Color(255,100,0,64);
+    static public final Color COLOR_DRAWING_ARROW = new Color(255,0,255,64);
+    public static final Stroke STROKE_ARROW = new BasicStroke(15f,
+        BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    
     private CD mCD = null;
     
     public CDButtonViewer(CD cd) {
@@ -79,24 +87,50 @@ public class CDButtonViewer extends JPanel {
         }
         for (int i=0; i < this.mCD.getBranchYPoses().size(); i++) {
             Point p = this.mCD.getPDFViewer().getPDFOrigin(i);
-            this.mCD.getButtonMgr().getContentButtons().forEach(button -> {
-                this.drawContentButton(g2, button, p.x, p.y);
-            });
+            for (CDContentButton button : 
+                this.mCD.getButtonMgr().getContentButtons()){
+                this.drawContentButton(g2, button, p.x, p.y, i);
+            }
         }
     }
     
+    private void drawArrow(Graphics2D g2, int x1, int y1, int x2, int y2) {
+        g2.drawLine(x1, y1, x2, y2);
+        
+    }
+    
     private void drawContentButton(Graphics2D g2, CDContentButton button,
-        int xPos, int yPos) {
+        int xPos, int yPos, int branch) {
         Rectangle box = button.getBox();
         int width = box.width;
         int height = box.height;
-        Point p = new Point(box.x + xPos, box.y + yPos);
+        Point p1 = new Point(box.x + xPos, box.y + yPos);
+        g2.setColor(CDContentButton.COLOR);
+        g2.fillRect(p1.x, p1.y, width, height);
         if (button.isHighlighted()) {
             g2.setColor(CDContentButton.HIGHLIGHT_COLOR);
-            g2.fillRect(p.x, p.y, width, height);
+            g2.fillRect(p1.x, p1.y, width, height);
+            g2.setColor(CDButtonViewer.COLOR_ARROW);
+            g2.setStroke(STROKE_ARROW);
+            if (branch > 0) {
+                for (CDImplyButton b : button.getImplyButtons()) {
+                    Point2D.Double p2 = this.mCD.getPDFViewer().getPointOnWorld(
+                        new Point((int) b.getContentXPos(), 
+                        (int) b.getContentPosition()), branch - 1);
+                    Point sp1 = this.mCD.getXform().calcPtFromWorldToScreen(
+                        new Point2D.Double(p1.x, p1.y));
+                    Point sp2 = this.mCD.getXform().calcPtFromWorldToScreen(p2);
+                    if (-1 * this.getHeight() * 1.4 < sp1.y &&
+                        sp1.y < this.getHeight() * 1.4 &&
+                        -1 * this.getHeight() * 1.4 < sp2.y &&
+                        sp2.y < this.getHeight() * 1.4) {
+                        this.drawArrow(g2, p1.x, p1.y + height / 2, 
+                            (int) p2.x, (int) p2.y);
+                    }
+                }
+            }
         }
-        g2.setColor(CDContentButton.COLOR);
-        g2.fillRect(p.x, p.y, width, height);
+
     }
     
     private void drawLinkButtons(Graphics2D g2) {

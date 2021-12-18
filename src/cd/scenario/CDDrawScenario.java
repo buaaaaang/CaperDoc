@@ -72,10 +72,6 @@ public class CDDrawScenario extends XScenario {
                 curPtCurve.getPts().get(size - 1);
             Point lastScreenPt = cd.getXform().calcPtFromWorldToScreen(
                 lastWorldPt);
-            if (pt.distance(lastScreenPt) < 
-                CDPtCurve.MIN_DIST_BTWN_PTS) {
-                return;
-            }
 
             Point2D.Double worldPt = 
                 cd.getXform().calcPtFromScreenToWorld(pt);
