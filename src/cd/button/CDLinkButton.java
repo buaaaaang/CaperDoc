@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-public class CDNeedButton extends CDPDFButton{
+public class CDLinkButton extends CDPDFButton{
     
     public static final Color COLOR = new Color(255,0,0,128);
     public static final Color HIGHLIGHT_COLOR = new Color(0,0,0,64);
@@ -23,10 +23,9 @@ public class CDNeedButton extends CDPDFButton{
 
     public void setBox(int width) {
         this.mBox.add(new Point(this.mBox.x + width, 
-            (int) (this.mBox.y + CDNeedButton.HEIGHT)));
+            (int) (this.mBox.y + CDLinkButton.HEIGHT)));
     }
     public void setBox(Rectangle box) {
-        System.out.println(box.width + " ");
         if (box.x < -1 * (int) (box.width / 2.0) || 
             box.x > CDPDFViewer.PAGE_WIDTH - (int) (box.width / 2.0)) {
             return;
@@ -50,9 +49,9 @@ public class CDNeedButton extends CDPDFButton{
         this.mInitialPressedPoint = pt;
     }
     
-    public CDNeedButton(String name, double y, Rectangle box) {
+    public CDLinkButton(String name, double y, Rectangle box) {
         super(name, box);
-        this.mKind = CDButton.Button.NEED;
+        this.mKind = CDButton.Button.LINK;
         this.mContentPosition = y;
     }
     

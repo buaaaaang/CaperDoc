@@ -32,9 +32,8 @@ public class CDCanvas2D extends JPanel {
     private static final Font FONT_INFO = 
         new Font("Monospaced", Font.PLAIN, 24);
     private static final int INFO_TOP_ALIGNMENT_X = 250;
-    private static final int INFO_TOP_ALIGNMENT_Y = 30;
+    private static final int INFO_TOP_ALIGNMENT_Y = 50;
     
-    private static final double PEN_TIP_OFFSET = 30.0;
     public static final float STROKE_WIDTH_INCREMENT = 1f;
     public static final float STROKE_MIN_WIDTH = 1f;
     
@@ -90,11 +89,9 @@ public class CDCanvas2D extends JPanel {
         
         // render the current scene's world objects
         CDScene curScene = (CDScene) this.mCD.getScenarioMgr().getCurScene();
-        curScene.renderWorldObjects(g2);
         
         //render common screen objects
-        this.drawInfo(g2);        
-        this.drawPenTip(g2);
+        this.drawInfo(g2);    
         
         //render the current scene's screen objects
         curScene.renderScreenObjects(g2);
@@ -197,7 +194,7 @@ public class CDCanvas2D extends JPanel {
         g2.setColor(CDCanvas2D.COLOR_INFO);
         g2.setFont(CDCanvas2D.FONT_INFO);
         g2.drawString(str, this.getWidth() - CDCanvas2D.INFO_TOP_ALIGNMENT_X, 
-                CDCanvas2D.INFO_TOP_ALIGNMENT_Y);
+            this.getHeight() - CDCanvas2D.INFO_TOP_ALIGNMENT_Y);
     } 
 
     public void increaseStrokeWidthForCurPtCurve(float f) {
@@ -209,27 +206,5 @@ public class CDCanvas2D extends JPanel {
         }
         this.mCurStrokeForPtCurve = new BasicStroke(w, bs.getEndCap(),
             bs.getLineJoin());
-    }
-    
-    public void drawPenTip(Graphics2D g2) {
-        BasicStroke bs = (BasicStroke) this.mCurStrokeForPtCurve;
-        Point2D.Double worldPt0 = new Point2D.Double(0.0, 0.0);
-        Point2D.Double worldPt1 = new Point2D.Double(bs.getLineWidth(), 0.0);
-        Point screenPt0 = this.mCD.getXform().calcPtFromWorldToScreen(
-            worldPt0);
-        Point screenPt1 = this.mCD.getXform().calcPtFromWorldToScreen(
-            worldPt1);
-        double d = screenPt0.distance(screenPt1);
-        double r = d / 2.0;
-        Point2D.Double ctr = new Point2D.Double(
-            this.getWidth() - CDCanvas2D.PEN_TIP_OFFSET,
-            CDCanvas2D.PEN_TIP_OFFSET);
-//        Point ctr = e.getPoint();
-//        double x = (double)ctr.x;
-//        double y = (double)ctr.y;
-        Ellipse2D.Double ellipse = new Ellipse2D.Double(ctr.x - r, ctr.y - r, d, d);
-//        Ellipse2D.Double ellipse = new Ellipse2D.Double(x - r, y - r, d, d);
-        g2.setColor(this.mCurColorForPtCurve);
-        g2.fill(ellipse);
     }
 }

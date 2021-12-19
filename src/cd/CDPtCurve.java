@@ -10,9 +10,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class CDPtCurve {
-    //constants
-    public static final double MIN_DIST_BTWN_PTS = 5.0f;
-    
     //fields
     private ArrayList<Point2D.Double> mPts = null;
     public ArrayList<Point2D.Double> getPts() {

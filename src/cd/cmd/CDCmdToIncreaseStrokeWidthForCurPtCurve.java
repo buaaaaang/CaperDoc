@@ -2,6 +2,7 @@ package cd.cmd;
 
 import java.awt.BasicStroke;
 import cd.CD;
+import cd.scenario.CDDefaultScenario;
 import x.XApp;
 import x.XLoggableCmd;
 
@@ -24,6 +25,7 @@ public class CDCmdToIncreaseStrokeWidthForCurPtCurve extends XLoggableCmd {
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
+        CDDefaultScenario.getSingleton().setDrawPenTip(true);
         BasicStroke bs = 
             (BasicStroke) cd.getCanvas().getCurStrokeForPtCurve();
         cd.getCanvas().increaseStrokeWidthForCurPtCurve(this.mWDelta);

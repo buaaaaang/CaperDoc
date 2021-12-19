@@ -1,27 +1,35 @@
 package cd.cmd;
 
 import cd.CD;
+import cd.button.CDContentButton;
+import cd.scenario.CDWorldButtonScenario;
+import java.util.ArrayList;
 import x.XApp;
 import x.XLoggableCmd;
 
-public class CDCmdToSaveFile extends XLoggableCmd {
+public class CDCmdToChooseAllContentBox extends XLoggableCmd {
     //fields
     
     //private constructor
-    private CDCmdToSaveFile(XApp app) {
+    private CDCmdToChooseAllContentBox(XApp app) {
         super(app);
     }
     
     // JSICmdToDoSomething.execute(jsi, ...)
     public static boolean execute(XApp app) {
-        CDCmdToSaveFile cmd = new CDCmdToSaveFile(app);
+        CDCmdToChooseAllContentBox cmd = new CDCmdToChooseAllContentBox(app);
         return cmd.execute();
     }
     
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        cd.save();
+        ArrayList<CDContentButton> buttons = 
+            cd.getButtonMgr().getContentButtons();
+        CDWorldButtonScenario.getSingleton().initializeChoosedButton();
+        for (CDContentButton b: buttons) {
+            CDWorldButtonScenario.getSingleton().addChoosedButton(b);
+        }
         return true;
     }
 

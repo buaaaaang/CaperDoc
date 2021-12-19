@@ -5,16 +5,21 @@ import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
-import cd.button.CDNeedButton;
+import cd.cmd.CDCmdToChooseAllContentBox;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
 import cd.cmd.CDCmdToSaveFile;
-import cd.cmd.CDCmdToScroll;
-import cd.cmd.CDCmdToMoveBackToRecentXform;
+import cd.cmd.CDCmdToScrollWorld;
+import cd.cmd.CDCmdToScrollSide;
+import cd.cmd.CDCmdToSetLinkPressed;
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -66,24 +71,22 @@ public class CDDefaultScenario extends XScenario {
             switch (kind) {
                 case CONTENT:
                     cd.getSideViewer().setImplyMode(
-                        cd.getButtonMgr().getCurWorkingContentButton());
-                    CDButtonScenario.getSingleton().
-                        setCurHandlingButton(button);
+                        cd.getButtonMgr().getCurMouseContentButton());
+                    CDWorldButtonScenario.getSingleton().
+                        setCurHandlingContentButton(
+                        cd.getButtonMgr().getCurMouseContentButton());
                     button.setHighlight(true);
-                    XCmdToChangeScene.execute(cd, 
-                        CDButtonScenario.ContentChoosedScene.getSingleton(), 
-                        null);
+                    CDWorldButtonScenario.getSingleton().setStartPoint(e.getPoint());
+                    XCmdToChangeScene.execute(cd, CDWorldButtonScenario.
+                        ContentPressedScene.getSingleton(), this);
                     break;
                 case HIERARCHY:
-                    CDButtonScenario.getSingleton().
-                        setCurHandlingButton(button);
-                    CDButtonScenario.getSingleton().
-                        setCurHandlingHierarchyButton(cd.getButtonMgr().
-                        getCurWorkingHierarchyButton());
+                    CDSideButtonScenario.getSingleton().setCurHandlingSideButton(
+                        cd.getButtonMgr().getCurMouseHierarchyButton());
                     button.setHighlight(true);
                     XCmdToChangeScene.execute(cd, 
-                        CDButtonScenario.HierarchyPressedScene.getSingleton(), 
-                        this);
+                        CDSideButtonScenario.SideButtonPressedScene.
+                        getSingleton(), this);
                     break;
                 case COLOR:
                     CDColorButton cb = (CDColorButton)button;
@@ -92,24 +95,16 @@ public class CDDefaultScenario extends XScenario {
                         CDColorScenario.ColorScene.getSingleton(), 
                         this);
                     break;
-                case NEED:
-                    CDNeedButton needButton = 
-                        cd.getButtonMgr().getCurWorkingNeedButton();
-                    needButton.setInitialPressedPoint(e.getPoint());
-                    needButton.setInitialBox();
-                    needButton.setHighlight(true);
-                    CDButtonScenario.getSingleton().
-                        setCurHandlingNeedButton(needButton);
-                    XCmdToChangeScene.execute(cd, 
-                        CDButtonScenario.NeedPressedScene.getSingleton(), 
-                        this);
+                case LINK:
+                    CDCmdToSetLinkPressed.execute(cd, e.getPoint());
+                    XCmdToChangeScene.execute(cd, CDWorldButtonScenario.
+                        LinkPressedScene.getSingleton(), this);
                     break;
                 case NONE:
                     if (cd.getPDFViewer().onWhatBranch(e.getPoint()) != -1) {
                         CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
                         XCmdToChangeScene.execute(cd, 
-                            CDDrawScenario.DrawScene.getSingleton(), 
-                            CDDefaultScenario.ReadyScene.getSingleton());
+                            CDDrawScenario.DrawScene.getSingleton(), this);
                         break;
                     }
             }
@@ -117,10 +112,6 @@ public class CDDefaultScenario extends XScenario {
 
         @Override
         public void handleMouseDrag(MouseEvent e) {
-//            CD cd = (CD)this.mScenario.getApp();
-//            Graphics g = cd.getCanvas().getGraphics();
-//            Graphics2D g2 = (Graphics2D) g;
-//            cd.getCanvas().drawPenTip(g2, e);
         }
 
         @Override
@@ -136,20 +127,14 @@ public class CDDefaultScenario extends XScenario {
                 case NONE:
                 case COLOR:
                 case CONTENT:
-                case NEED:
-                    int k = cd.getPDFViewer().onWhatBranch(e.getPoint());
-                    if (k == -1) {
-                        CDCmdToScroll.execute(cd, 
-                            (e.getWheelRotation() > 0) ? -1 : 1);
-                        break;
-                    } else {
-                        cd.getBranchYPoses().set(k, cd.getBranchYPoses().get(k) + 
-                            ((e.getWheelRotation() > 0) ? -1 : 1) * 100);
-                    }
+                case LINK:
+                    CDCmdToScrollWorld.execute(cd, e);
+                    break;
                 case SIDE:
+                case IMPLY:
                 case HIERARCHY:
-                    int amount = 10;
-                    cd.getSideViewer().shift(e.getWheelRotation() * amount);
+                    CDCmdToScrollSide.execute(cd, e);
+                    break;
             }
         }
 
@@ -158,23 +143,23 @@ public class CDDefaultScenario extends XScenario {
             CD cd = (CD) this.mScenario.getApp();
             int code = e.getKeyCode();
             switch (code) {
-                case KeyEvent.VK_UP:
-                    CDCmdToScroll.execute(cd, 1);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    CDCmdToScroll.execute(cd, -1);
-                    break;
+//                case KeyEvent.VK_UP:
+//                    CDCmdToScrollWorld.execute(cd, 1);
+//                    break;
+//                case KeyEvent.VK_DOWN:
+//                    CDCmdToScrollWorld.execute(cd, -1);
+//                    break;
                 case KeyEvent.VK_CONTROL:
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
                         ZoomPanReadyScene.getSingleton(), this);
                     break;
                 case KeyEvent.VK_CLOSE_BRACKET:
                     CDCmdToIncreaseStrokeWidthForCurPtCurve.execute(cd, 
-                            CDCanvas2D.STROKE_WIDTH_INCREMENT);
+                        CDCanvas2D.STROKE_WIDTH_INCREMENT);
                     break;
                 case KeyEvent.VK_OPEN_BRACKET:
                     CDCmdToIncreaseStrokeWidthForCurPtCurve.execute(cd, 
-                            -CDCanvas2D.STROKE_WIDTH_INCREMENT);
+                        -CDCanvas2D.STROKE_WIDTH_INCREMENT);
                     break;
                 case KeyEvent.VK_SHIFT:
                     XCmdToChangeScene.execute(cd, 
@@ -198,19 +183,21 @@ public class CDDefaultScenario extends XScenario {
                     CDCmdToSaveFile.execute(cd);
                     break;
                 case KeyEvent.VK_LEFT:
-                    CDCmdToMoveBackToRecentXform.execute(cd, -1);
-                    System.out.println("back");
-                    int len = cd.getXform().getXformHistory().size();
-                    System.out.println("length"+len);
-                    System.out.println("position"+cd.getXform().getCurPosOnHistory());
+                    cd.getXform().goToNextBranch(-1);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    CDCmdToMoveBackToRecentXform.execute(cd, 1);
-                    System.out.println("front");
-                    int len2 = cd.getXform().getXformHistory().size();
-                    System.out.println("length"+len2);
-                    System.out.println("position"+cd.getXform().getCurPosOnHistory());
+                    cd.getXform().goToNextBranch(1);
                     break;
+                case KeyEvent.VK_CLOSE_BRACKET:
+                    CDDefaultScenario.getSingleton().setDrawPenTip(false);
+                    break;
+                case KeyEvent.VK_OPEN_BRACKET:
+                    CDDefaultScenario.getSingleton().setDrawPenTip(false);
+                    break;
+                case KeyEvent.VK_A:
+                    CDCmdToChooseAllContentBox.execute(cd);
+                    XCmdToChangeScene.execute(cd, CDWorldButtonScenario.
+                        ContentChoosedScene.getSingleton(), null);
             }
         }
 
@@ -220,6 +207,34 @@ public class CDDefaultScenario extends XScenario {
 
         @Override
         public void renderScreenObjects(Graphics2D g2) {
+            CD cd = (CD) this.mScenario.getApp();
+            if (cd.getEventListener().getCurPoint() == null ||
+                !CDDefaultScenario.getSingleton().getDrawPenTip()) {
+                return;
+            }
+            BasicStroke bs = (BasicStroke) cd.getCanvas().
+                getCurStrokeForPtCurve();
+            Point2D.Double worldPt0 = new Point2D.Double(0.0, 0.0);
+            Point2D.Double worldPt1 = new Point2D.Double(bs.getLineWidth(), 0.0);
+            Point screenPt0 = cd.getXform().calcPtFromWorldToScreen(
+                worldPt0);
+            Point screenPt1 = cd.getXform().calcPtFromWorldToScreen(
+                worldPt1);
+            double d = screenPt0.distance(screenPt1);
+            double r = d / 2.0;
+            Point ctr = cd.getEventListener().getCurPoint();
+            Ellipse2D.Double ellipse = 
+                new Ellipse2D.Double(ctr.x - r, ctr.y - r, d, d);
+            g2.setColor(cd.getCanvas().getCurColorForPtCurve());
+            g2.fill(ellipse);
         }
+    }
+    
+    private boolean mDrawPenTip = false;
+    private boolean getDrawPenTip() {
+        return this.mDrawPenTip;
+    }
+    public void setDrawPenTip(boolean b) {
+        this.mDrawPenTip = b;
     }
 }

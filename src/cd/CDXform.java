@@ -54,7 +54,6 @@ public class CDXform {
             CDPDFViewer.PAGE_COL_INTERVAL;
         this.mCurXformFromWorldToScreen.scale(initialScale, initialScale); 
         this.mCurXformFromScreenToWorld.scale(1/initialScale, 1/initialScale); 
-        this.mXformHistory = new ArrayList<AffineTransform>();
     }
         
     public void updateCurXformFromScreenToWorld(){
@@ -147,69 +146,50 @@ public class CDXform {
         this.updateCurXformFromScreenToWorld();
         return true;
     }
-        
-    
-    private ArrayList<AffineTransform> mXformHistory = null;
-    public void addXformHistory(AffineTransform xform) {
-        this.mXformHistory.add(xform);
-        if (this.mXformHistory.size() > CDXform.MAX_HISTORY_LEN) {
-            int cut = 
-                Math.min(this.mCurPosOnHistory, CDXform.MAX_HISTORY_LEN / 2);
-            this.mXformHistory = new ArrayList<AffineTransform>(
-                this.mXformHistory.subList(cut, this.mXformHistory.size()));
-                this.transCurPosOnHistory(-1 * cut);
-        }
-        
-    }
-    public ArrayList<AffineTransform> getXformHistory() {
-        return this.mXformHistory;
-    }
-    public void freshXformHistory() {
-        if (this.mXformHistory.size() == 0) {
-            return;
-        }
-        this.mXformHistory = new ArrayList<AffineTransform>(
-            this.mXformHistory.subList(0, this.mCurPosOnHistory + 1));
-    }
-    
-    private int mCurPosOnHistory = 0;
-    public int getCurPosOnHistory() {
-        return this.mCurPosOnHistory;
-    }
-    public void setCurPosOnHistory(int step) {
-        if ((-1 < step) && (step < this.mXformHistory.size())) {
-            this.mCurPosOnHistory = step;
-        } else {
-            System.out.println("cannot set cur position to given value");
-        }
-    }
-    public void transCurPosOnHistory(int step) {
-        int newCandidatePos = this.mCurPosOnHistory + step;
-        if ((-1 < newCandidatePos) && (newCandidatePos < this.mXformHistory.size())) {
-            this.mCurPosOnHistory = newCandidatePos;
-        } else {
-            System.out.println("cannot set cur position to given value");
-        }
-    }
     
     public boolean goToYPos(int y) {
-        this.freshXformHistory();
-        if (this.mXformHistory.size() == 0 ||
-            this.mXformHistory.get(this.mXformHistory.size() - 1) !=
-            this.mCurXformFromWorldToScreen) 
-//                && 똑같은 곳 여러번 클릭했을때 추가 안되도록 해야함
-//            (this.mXformHistory.get(this.mXformHistory.size() - 1).getShearY() !=
-//            this.mCurXformFromWorldToScreen.getShearY())
-            {
-            this.addXformHistory(mCurXformFromWorldToScreen);
-            this.transCurPosOnHistory(1);
-        }
         this.mCD.getBranchYPoses().set(0, 0);
         this.mCurXformFromWorldToScreen = 
             this.getDefaultXformFromWorldToScreen();
         double diff = y - CDPDFViewer.PAGE_COL_INTERVAL * 0.5 * 0.7;
         this.mCurXformFromWorldToScreen.translate(0, -diff);
         this.updateCurXformFromScreenToWorld();
+        return true;
+    }
+    
+    public boolean goToNextBranch(int dir) {
+        Point2D.Double lp = this.calcPtFromScreenToWorld(
+            new Point(CD.HIERARCHY_WIDTH,0));
+        Point2D.Double rp = this.calcPtFromScreenToWorld(
+            new Point(this.mCD.getPDFViewer().getWidth(), 0));
+        if (dir > 0) {
+            if (this.mCD.getPDFViewer().getFocus() < 
+                this.mCD.getBranchYPoses().size() - 1) {
+                this.mCD.getPDFViewer().incrementFocus(1);
+            }
+            if (rp.x >= this.mCD.getPDFViewer().getWorldXPos() +
+                CDPDFViewer.PAGE_ROW_INTERVAL * 
+                this.mCD.getBranchYPoses().size()) {
+                return false;
+            }
+            this.mCurXformFromWorldToScreen.translate(
+                -1 * dir * Math.min(CDPDFViewer.PAGE_ROW_INTERVAL, 
+                this.mCD.getPDFViewer().getWorldXPos() +
+                CDPDFViewer.PAGE_ROW_INTERVAL * 
+                this.mCD.getBranchYPoses().size() - rp.x), 0);
+            this.updateCurXformFromScreenToWorld();
+        } else {
+            if (this.mCD.getPDFViewer().getFocus() > 0) {
+                this.mCD.getPDFViewer().incrementFocus(-1);
+            }
+            if (lp.x <= this.mCD.getPDFViewer().getWorldXPos()) {
+                return false;
+            }
+            this.mCurXformFromWorldToScreen.translate(
+                -1 * dir * Math.min(CDPDFViewer.PAGE_ROW_INTERVAL, 
+                lp.x - this.mCD.getPDFViewer().getWorldXPos()), 0);
+            this.updateCurXformFromScreenToWorld();
+        }
         return true;
     }
 }
