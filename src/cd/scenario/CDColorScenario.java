@@ -70,25 +70,31 @@ public class CDColorScenario extends XScenario {
             switch (kind) {
                 case COLOR:
                     CDColorButton selectedColorButton = (CDColorButton)button;
-//                    System.out.println("here");
-                    Color originalColor = cd.getCanvas().getCurColorForPtCurve();
+                    Color originalColor = 
+                        cd.getCanvas().getCurColorForPtCurve();
                     Color newColor = selectedColorButton.getColor();
-                    if ((selectedColorButton == scenario.getCurHandlingButton()) &&
+                    if ((selectedColorButton == 
+                        scenario.getCurHandlingButton()) &&
                         (originalColor != newColor)) {
                         cd.getCanvas().setCurColorForPtCurve(newColor);
                         Color highlightColor = new Color(255, 200, 0, 128);
-                        if (((originalColor.getAlpha() != highlightColor.getAlpha()) && // check wheter color changed between highlighter and normal pens
-                            (newColor.getAlpha() == highlightColor.getAlpha())) ||
-                            ((originalColor.getAlpha() == highlightColor.getAlpha()) && 
-                            (newColor.getAlpha() != highlightColor.getAlpha()))) {
-//                       if (true) {
-                            System.out.println("asdfsaf");
-                            Stroke savedStroke = cd.getCanvas().getSavedStrokeForPtCurve();
-                            Stroke curStroke = cd.getCanvas().getCurStrokeForPtCurve();
+                        if (((originalColor.getAlpha() != 
+                            highlightColor.getAlpha()) && 
+                            (newColor.getAlpha() == 
+                            highlightColor.getAlpha())) ||
+                            ((originalColor.getAlpha() == 
+                            highlightColor.getAlpha()) && 
+                            (newColor.getAlpha() != 
+                            highlightColor.getAlpha()))) {
+                            Stroke savedStroke = 
+                                cd.getCanvas().getSavedStrokeForPtCurve();
+                            Stroke curStroke = 
+                                cd.getCanvas().getCurStrokeForPtCurve();
                             cd.getCanvas().setSavedStrokeForPtCurve(curStroke);
                             cd.getCanvas().setCurStrokeForPtCurve(savedStroke);
                         }
-                        for (CDColorButton colorButton : cd.getButtonMgr().getColorButtons()) {
+                        for (CDColorButton colorButton : 
+                            cd.getButtonMgr().getColorButtons()) {
                             colorButton.setHighlight(false);
                         }
                         selectedColorButton.setHighlight(true);
@@ -98,6 +104,14 @@ public class CDColorScenario extends XScenario {
                         CDDefaultScenario.ReadyScene.getSingleton(), 
                         null);
                     scenario.setCurHandlingButton(null);
+                case NONE:
+                case SIDE:
+                case CONTENT:
+                case HIERARCHY:
+                case LINK:
+                    XCmdToChangeScene.execute(cd, 
+                        CDDefaultScenario.ReadyScene.getSingleton(), 
+                        null);
             }
         }
         

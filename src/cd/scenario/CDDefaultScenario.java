@@ -76,7 +76,8 @@ public class CDDefaultScenario extends XScenario {
                         setCurHandlingContentButton(
                         cd.getButtonMgr().getCurMouseContentButton());
                     button.setHighlight(true);
-                    CDWorldButtonScenario.getSingleton().setStartPoint(e.getPoint());
+                    CDWorldButtonScenario.getSingleton().
+                        setStartPoint(e.getPoint());
                     XCmdToChangeScene.execute(cd, CDWorldButtonScenario.
                         ContentPressedScene.getSingleton(), this);
                     break;
