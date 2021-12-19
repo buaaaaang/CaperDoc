@@ -2,7 +2,6 @@ package cd.scenario;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -241,12 +240,6 @@ public class CDSelectScenario extends XScenario {
 
         @Override
         public void handleMousePress(MouseEvent e) {
-            CD cd = (CD) this.mScenario.getApp();
-            Point pt = e.getPoint();
-            CDCmdToCreateCurPtCurve.execute(cd, pt);        
-            XCmdToChangeScene.execute(cd, 
-                CDDrawScenario.DrawScene.getSingleton(), this);
-
         }
 
         @Override

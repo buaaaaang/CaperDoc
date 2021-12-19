@@ -143,12 +143,6 @@ public class CDDefaultScenario extends XScenario {
             CD cd = (CD) this.mScenario.getApp();
             int code = e.getKeyCode();
             switch (code) {
-//                case KeyEvent.VK_UP:
-//                    CDCmdToScrollWorld.execute(cd, 1);
-//                    break;
-//                case KeyEvent.VK_DOWN:
-//                    CDCmdToScrollWorld.execute(cd, -1);
-//                    break;
                 case KeyEvent.VK_CONTROL:
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
                         ZoomPanReadyScene.getSingleton(), this);

@@ -41,7 +41,6 @@ public class CDCmdToCreateContentButton extends XLoggableCmd {
             CDCropScenario.getSingleton().createCroppedImage(
             cropPage, rectToCrop);
         String ocrText = CDCropScenario.readImage(croppedImage);
-        System.out.println("cropped image" + ": " + ocrText);
         CDBox cropBox = CDCropScenario.getSingleton().getCropBox();
         AffineTransform at = cd.getXform().getCurXformFromScreenToWorld();
         Rectangle box = at.createTransformedShape(cropBox).getBounds();
