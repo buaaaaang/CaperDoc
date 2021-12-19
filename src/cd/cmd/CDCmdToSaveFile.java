@@ -21,7 +21,7 @@ public class CDCmdToSaveFile extends XLoggableCmd {
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        
+        cd.save();
         return true;
     }
 

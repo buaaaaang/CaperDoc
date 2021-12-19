@@ -8,7 +8,6 @@ import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDButton.Button;
 import cd.button.CDContentButton;
-import cd.button.CDHierarchyButton;
 import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToChooseAllContentBox;

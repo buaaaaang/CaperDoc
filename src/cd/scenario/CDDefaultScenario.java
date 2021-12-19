@@ -5,7 +5,6 @@ import cd.CDCanvas2D;
 import cd.CDScene;
 import cd.button.CDButton;
 import cd.button.CDColorButton;
-import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToChooseAllContentBox;
 import cd.cmd.CDCmdToCreateCurPtCurve;
 import cd.cmd.CDCmdToIncreaseStrokeWidthForCurPtCurve;
@@ -105,8 +104,7 @@ public class CDDefaultScenario extends XScenario {
                     if (cd.getPDFViewer().onWhatBranch(e.getPoint()) != -1) {
                         CDCmdToCreateCurPtCurve.execute(cd, e.getPoint());
                         XCmdToChangeScene.execute(cd, 
-                            CDDrawScenario.DrawScene.getSingleton(), 
-                            CDDefaultScenario.ReadyScene.getSingleton());
+                            CDDrawScenario.DrawScene.getSingleton(), this);
                         break;
                     }
             }

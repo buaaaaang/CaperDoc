@@ -12,7 +12,7 @@ public class CDContentButton extends CDPDFButton {
     public void setHierarchyButton(CDHierarchyButton b) {
         this.mHierarchyButton = b;
     }
-    public CDHierarchyButton getNeedButton() {
+    public CDHierarchyButton getHierarchyButton() {
         return this.mHierarchyButton;
     }
     
