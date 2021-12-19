@@ -26,9 +26,10 @@ public class CDCmdToDeleteChoosedContentBox extends XLoggableCmd {
         CD cd = (CD) this.mApp;
         ArrayList<CDContentButton> selected = 
             CDWorldButtonScenario.getSingleton().getChoosedButton();
-        ArrayList<CDContentButton> all = cd.getButtonMgr().getContentButtons();
         for (CDContentButton b: selected) {
-            all.remove(b);
+            cd.getButtonMgr().getContentButtons().remove(b);
+            cd.getButtonMgr().getHierarchyButtons().
+                remove(b.getHierarchyButton());
         }
         return true;
     }

@@ -268,6 +268,7 @@ public class CDWorldButtonScenario extends XScenario {
                     break;
                 case KeyEvent.VK_DELETE:
                     CDCmdToDeleteChoosedContentBox.execute(cd);
+                    cd.getSideViewer().setHierarchyMode();
                     XCmdToChangeScene.execute(cd, CDDefaultScenario.
                         ReadyScene.getSingleton(), null);
                     break;
