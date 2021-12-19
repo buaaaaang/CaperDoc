@@ -4,6 +4,7 @@ import cd.CD;
 import cd.CDPDFViewer;
 import cd.CDPtCurve;
 import cd.CDScene;
+import cd.cmd.CDCmdToDrawPtCurve;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -60,26 +61,7 @@ public class CDDrawScenario extends XScenario {
         @Override
         public void handleMouseDrag(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDPtCurve curPtCurve = cd.getPtCurveMgr().getCurPtCurve();
-            Point pt = e.getPoint();
-            int branch = cd.getPDFViewer().onWhatBranch(pt);
-            if (branch != curPtCurve.getCreatedBranch()) {
-                return;
-            }
-            
-            int size = cd.getPtCurveMgr().getCurPtCurve().getPts().size();
-            Point2D.Double lastWorldPt =
-                curPtCurve.getPts().get(size - 1);
-            Point lastScreenPt = cd.getXform().calcPtFromWorldToScreen(
-                lastWorldPt);
-
-            Point2D.Double worldPt = 
-                cd.getXform().calcPtFromScreenToWorld(pt);
-            Point2D.Double PDFPt = new Point2D.Double(
-                worldPt.x - branch * CDPDFViewer.PAGE_ROW_INTERVAL,
-                worldPt.y - cd.getBranchYPoses().get(branch));
-            cd.getPtCurveMgr().getCurPtCurve().addPt(PDFPt);
-            cd.getCanvas().repaint();
+            CDCmdToDrawPtCurve.execute(cd, e);
         }
 
         @Override

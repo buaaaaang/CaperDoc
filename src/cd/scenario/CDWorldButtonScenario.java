@@ -11,6 +11,9 @@ import cd.button.CDContentButton;
 import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToChooseAllContentBox;
+import cd.cmd.CDCmdToMakeImplyButton;
+import cd.cmd.CDCmdToMakeNewBranch;
+import cd.cmd.CDCmdToMoveDummy;
 import cd.cmd.CDCmdToScrollSide;
 import cd.cmd.CDCmdToScrollWorld;
 import cd.cmd.CDCmdToSetLinkPressed;
@@ -102,15 +105,7 @@ public class CDWorldButtonScenario extends XScenario {
                                 ReadyScene.getSingleton(), null);
                         }
                     } else {
-                        CDContentButton from = s.getCurHandlingContentButton();
-                        if (!s.isChoosed(s.getCurHandlingContentButton())) {
-                            s.addChoosedButton(s.getCurHandlingContentButton());
-                        }
-                        CDContentButton to = b;
-                        CDImplyButton ib = new CDImplyButton(to.getName(),
-                            to.getBox().x + to.getBox().width, 
-                            to.getBox().y + to.getBox().height / 2);
-                        from.addImplyButton(ib);
+                        CDCmdToMakeImplyButton.execute(cd);
                         XCmdToChangeScene.execute(cd, CDWorldButtonScenario.
                             ContentChoosedScene.getSingleton(), null);
                     }
@@ -258,14 +253,18 @@ public class CDWorldButtonScenario extends XScenario {
                     XCmdToChangeScene.execute(cd, CDNavigateScenario.
                         ZoomPanReadyScene.getSingleton(), this);
                     break;
-                case KeyEvent.VK_A:
-                    CDCmdToChooseAllContentBox.execute(cd);
-                    break;
             }
         }
 
         @Override
         public void handleKeyUp(KeyEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            int code = e.getKeyCode();
+            switch (code) {
+                case KeyEvent.VK_A:
+                    CDCmdToChooseAllContentBox.execute(cd);
+                    break;
+            }
         }
 
         @Override
@@ -301,20 +300,7 @@ public class CDWorldButtonScenario extends XScenario {
         @Override
         public void handleMouseDrag(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDLinkButton button = CDWorldButtonScenario.getSingleton().
-                getCurHandlingNeedButton();
-            Point initialPt = button.getInitialPressedPoint();
-            if (Math.pow(initialPt.x - e.getPoint().x, 2) + 
-                Math.pow(initialPt.y - e.getPoint().y, 2) >
-                Math.pow(CDWorldButtonScenario.MAX_DRAG_DISTANCE_TO_CLICK, 2)) {
-                Point2D.Double wp1 = cd.getXform().calcPtFromScreenToWorld(
-                    e.getPoint());
-                Point2D.Double wp2 = cd.getXform().calcPtFromScreenToWorld(
-                    initialPt);
-                Rectangle box = button.getInitialBox();
-                button.setBox(new Rectangle(box.x + (int) (wp1.x - wp2.x), 
-                    box.y + (int) (wp1.y - wp2.y), box.width, box.height));
-            }
+            CDCmdToMoveDummy.execute(cd, e);
         }
 
         @Override
@@ -324,9 +310,7 @@ public class CDWorldButtonScenario extends XScenario {
                 getCurHandlingNeedButton();
             button.setHighlight(false);
             if (button.getInitialBox() == button.getBox()) {
-                int curBranch = cd.getPDFViewer().onWhatBranch(e.getPoint());
-                cd.getPDFViewer().addPage(curBranch, 
-                    (int) button.getContentPosition());
+                CDCmdToMakeNewBranch.execute(cd, e);
             }
             XCmdToChangeScene.execute(cd, this.mReturnScene, null);
         }

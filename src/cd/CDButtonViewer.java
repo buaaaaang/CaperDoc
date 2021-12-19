@@ -1,11 +1,9 @@
 package cd;
 
-import cd.button.CDButton;
 import cd.button.CDColorButton;
 import cd.button.CDContentButton;
 import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
-import cd.button.CDSideButton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;

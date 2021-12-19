@@ -57,9 +57,7 @@ public class CDPDFViewer extends JPanel {
         return this.mFocus;
     }
     public void incrementFocus(int a) {
-        System.out.println(this.mFocus + "    " + a);
         this.mFocus += a;
-        System.out.println(this.mFocus + "    " );
     }
     public void setFocus(Point p) {
         int f = this.onWhatBranch(p);
@@ -214,6 +212,7 @@ public class CDPDFViewer extends JPanel {
         double bottom = this.mCD.getXform().calcPtFromScreenToWorld(new
             Point(0, this.getHeight())).y;
         this.mYPoses.add(-1 * y + (int) ((bottom - top) * 1 / 3) + (int) top);
+        this.mCD.getXform().goToNextBranch(1);
     }
     
     public Point2D.Double getPointOnWorld(Point pt, int branch) {

@@ -27,12 +27,13 @@ public class CDCmdToNavigateBySide extends XLoggableCmd {
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
         if (cd.getButtonMgr().getCurMouseHierarchyButton() ==
+            CDSideButtonScenario.getSingleton().getCurHandlingSideButton() ||
+            cd.getButtonMgr().getCurMouseImplyButton() ==
             CDSideButtonScenario.getSingleton().getCurHandlingSideButton()) {
             if (SwingUtilities.isLeftMouseButton(this.mEvent)) {
                 cd.getPDFViewer().addPage(cd.getPDFViewer().getFocus(),
                     (int) cd.getButtonMgr().getCurMouseHierarchyButton().
                     getContentPosition());
-                cd.getXform().goToNextBranch(1);
             } else {
                 cd.getXform().goToYPos((int) cd.getButtonMgr().
                     getCurMouseHierarchyButton().getContentPosition());

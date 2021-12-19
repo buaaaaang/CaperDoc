@@ -2,24 +2,21 @@ package cd.scenario;
 
 import cd.CD;
 import cd.CDButtonMgr;
-import cd.CDPDFViewer;
 import cd.CDScene;
 import cd.button.CDButton;
-import cd.button.CDContentButton;
-import cd.button.CDHierarchyButton;
-import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
 import cd.button.CDSideButton;
+import cd.cmd.CDCmdToMakeDummy;
+import cd.cmd.CDCmdToRemoveDummy;
+import cd.cmd.CDCmdToMakeLinkBox;
 import cd.cmd.CDCmdToNavigateBySide;
+import cd.cmd.CDCmdToSetDummyPoint;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.Point2D;
-import javax.swing.SwingUtilities;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -81,12 +78,7 @@ public class CDSideButtonScenario extends XScenario {
                 case COLOR:
                 case CONTENT:
                 case LINK:
-                    CDSideButton hb = CDSideButtonScenario.
-                        getSingleton().getCurHandlingSideButton();
-                    CDSideButtonScenario.getSingleton().setDummyName(
-                        hb.getName());
-                    CDSideButtonScenario.getSingleton().setDummyContentPosition(
-                        hb.getContentPosition());
+                    CDCmdToMakeDummy.execute(cd);
                     XCmdToChangeScene.execute(cd, 
                         CDSideButtonScenario.GenerateLinkScene.
                         getSingleton(), this.mReturnScene);
@@ -162,16 +154,13 @@ public class CDSideButtonScenario extends XScenario {
             switch (kind) {
                 case SIDE:
                 case HIERARCHY:
-                    CDSideButtonScenario.getSingleton().initializeDummy();
+                    CDCmdToRemoveDummy.execute(cd);
                     XCmdToChangeScene.execute(cd, this.mReturnScene, null);
                 case NONE:
                 case LINK:
                 case COLOR:
                 case CONTENT:
-                    Point2D.Double wPt = cd.getXform().
-                        calcPtFromScreenToWorld(e.getPoint());
-                    CDSideButtonScenario.getSingleton().setDummyPt(
-                        new Point((int) wPt.x, (int) wPt.y));
+                    CDCmdToSetDummyPoint.execute(cd, e);
             }
         }
 
@@ -183,22 +172,10 @@ public class CDSideButtonScenario extends XScenario {
             CDButton.Button kind = button.getKind();
             int branch = cd.getPDFViewer().onWhatBranch(e.getPoint());
             if (branch < 0) {
-                CDSideButtonScenario.getSingleton().initializeDummy();
+                CDCmdToRemoveDummy.execute(cd);
                 XCmdToChangeScene.execute(cd, this.mReturnScene, null);
             } else {
-                CDSideButtonScenario s = 
-                    CDSideButtonScenario.getSingleton();
-                Rectangle box = new Rectangle(s.getDummyPt().x - branch * 
-                    CDPDFViewer.PAGE_ROW_INTERVAL - 
-                    (int) cd.getPDFViewer().getWorldXPos() - (int) 
-                    (0.5 * s.getDummyWidth()), s.getDummyPt().y - 
-                    (int) (0.5 * CDLinkButton.HEIGHT) - 
-                    cd.getBranchYPoses().get(branch), s.getDummyWidth(),
-                    CDLinkButton.HEIGHT);
-                CDLinkButton b = new CDLinkButton(s.getDummyName(), 
-                    s.getDummyContentPosition(), box);
-                cd.getButtonMgr().addLinkButton(b);
-                s.initializeDummy();
+                CDCmdToMakeLinkBox.execute(cd, branch);
                 XCmdToChangeScene.execute(cd, this.mReturnScene, null);
             }
         }
@@ -279,7 +256,7 @@ public class CDSideButtonScenario extends XScenario {
     public double getDummyContentPosition() {
         return this.mDummyContentPosition;
     }    
-    public void initializeDummy() {
+    public void removeDummy() {
         this.mDummyPt = null;
         this.mDummyWidth = 0;
         this.mDummyName = null;

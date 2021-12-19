@@ -3,7 +3,6 @@ package cd.cmd;
 import cd.scenario.CDCropScenario;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import cd.scenario.CDSelectScenario;
 import x.XApp;
 import x.XLoggableCmd;
 
