@@ -11,27 +11,26 @@ import java.awt.geom.Point2D;
 import x.XApp;
 import x.XLoggableCmd;
 
-public class CDCmdToMoveDummy extends XLoggableCmd {
+public class CDCmdToMoveLink extends XLoggableCmd {
     //fields
     MouseEvent mEvent = null;
     
     //private constructor
-    private CDCmdToMoveDummy(XApp app, MouseEvent e) {
+    private CDCmdToMoveLink(XApp app, MouseEvent e) {
         super(app);
         this.mEvent = e;
     }
     
     // JSICmdToDoSomething.execute(jsi, ...)
     public static boolean execute(XApp app, MouseEvent e) {
-        CDCmdToMoveDummy cmd = new CDCmdToMoveDummy(app, e);
+        CDCmdToMoveLink cmd = new CDCmdToMoveLink(app, e);
         return cmd.execute();
     }
     
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        CDLinkButton button = CDWorldButtonScenario.getSingleton().
-            getCurHandlingNeedButton();
+        CDLinkButton button = CDWorldButtonScenario.getSingleton().getCurHandlingLinkButton();
         Point initialPt = button.getInitialPressedPoint();
         if (Math.pow(initialPt.x - this.mEvent.getPoint().x, 2) + 
             Math.pow(initialPt.y - this.mEvent.getPoint().y, 2) >

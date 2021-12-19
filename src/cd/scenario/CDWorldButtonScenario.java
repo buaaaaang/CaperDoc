@@ -11,9 +11,11 @@ import cd.button.CDContentButton;
 import cd.button.CDImplyButton;
 import cd.button.CDLinkButton;
 import cd.cmd.CDCmdToChooseAllContentBox;
+import cd.cmd.CDCmdToDeleteChoosedContentBox;
+import cd.cmd.CDCmdToDeleteLinkButton;
 import cd.cmd.CDCmdToMakeImplyButton;
 import cd.cmd.CDCmdToMakeNewBranch;
-import cd.cmd.CDCmdToMoveDummy;
+import cd.cmd.CDCmdToMoveLink;
 import cd.cmd.CDCmdToScrollSide;
 import cd.cmd.CDCmdToScrollWorld;
 import cd.cmd.CDCmdToSetLinkPressed;
@@ -264,6 +266,11 @@ public class CDWorldButtonScenario extends XScenario {
                 case KeyEvent.VK_A:
                     CDCmdToChooseAllContentBox.execute(cd);
                     break;
+                case KeyEvent.VK_DELETE:
+                    CDCmdToDeleteChoosedContentBox.execute(cd);
+                    XCmdToChangeScene.execute(cd, CDDefaultScenario.
+                        ReadyScene.getSingleton(), null);
+                    break;
             }
         }
 
@@ -300,14 +307,13 @@ public class CDWorldButtonScenario extends XScenario {
         @Override
         public void handleMouseDrag(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDCmdToMoveDummy.execute(cd, e);
+            CDCmdToMoveLink.execute(cd, e);
         }
 
         @Override
         public void handleMouseRelease(MouseEvent e) {
             CD cd = (CD) this.mScenario.getApp();
-            CDLinkButton button = CDWorldButtonScenario.getSingleton().
-                getCurHandlingNeedButton();
+            CDLinkButton button = CDWorldButtonScenario.getSingleton().getCurHandlingLinkButton();
             button.setHighlight(false);
             if (button.getInitialBox() == button.getBox()) {
                 CDCmdToMakeNewBranch.execute(cd, e);
@@ -325,6 +331,14 @@ public class CDWorldButtonScenario extends XScenario {
 
         @Override
         public void handleKeyUp(KeyEvent e) {
+            CD cd = (CD) this.mScenario.getApp();
+            int code = e.getKeyCode();
+            switch (code) {
+                case KeyEvent.VK_DELETE:
+                    CDCmdToDeleteLinkButton.execute(cd);
+                    XCmdToChangeScene.execute(cd, this.mReturnScene, null);
+                break;
+            }
         }
 
         @Override
@@ -350,11 +364,14 @@ public class CDWorldButtonScenario extends XScenario {
     public void setCurHandlingNeedButton(CDLinkButton button) {
         this.mCurHandlingNeedButton = button;
     }
-    public CDLinkButton getCurHandlingNeedButton() {
+    public CDLinkButton getCurHandlingLinkButton() {
         return this.mCurHandlingNeedButton;
     }
     
     private ArrayList<CDContentButton> mChoosedButtons = null;
+    public ArrayList<CDContentButton> getChoosedButton() {
+        return this.mChoosedButtons;
+    }
     public void addChoosedButton(CDContentButton b) {
         if (this.mChoosedButtons == null) {
             this.mChoosedButtons = new ArrayList<>();

@@ -3,33 +3,29 @@ package cd.cmd;
 import cd.CD;
 import cd.button.CDLinkButton;
 import cd.scenario.CDWorldButtonScenario;
-import java.awt.event.MouseEvent;
 import x.XApp;
 import x.XLoggableCmd;
 
-public class CDCmdToMakeNewBranch extends XLoggableCmd {
+public class CDCmdToDeleteLinkButton extends XLoggableCmd {
     //fields
-    MouseEvent mEvent;
     
     //private constructor
-    private CDCmdToMakeNewBranch(XApp app, MouseEvent e) {
+    private CDCmdToDeleteLinkButton(XApp app) {
         super(app);
-        this.mEvent = e;
     }
     
     // JSICmdToDoSomething.execute(jsi, ...)
-    public static boolean execute(XApp app, MouseEvent e) {
-        CDCmdToMakeNewBranch cmd = new CDCmdToMakeNewBranch(app, e);
+    public static boolean execute(XApp app) {
+        CDCmdToDeleteLinkButton cmd = new CDCmdToDeleteLinkButton(app);
         return cmd.execute();
     }
     
     @Override
     protected boolean defineCmd() {
         CD cd = (CD) this.mApp;
-        CDLinkButton button = CDWorldButtonScenario.getSingleton().getCurHandlingLinkButton();
-        int curBranch = cd.getPDFViewer().onWhatBranch(this.mEvent.getPoint());
-        cd.getPDFViewer().addPage(curBranch, 
-            (int) button.getContentPosition());
+        CDLinkButton b = 
+            CDWorldButtonScenario.getSingleton().getCurHandlingLinkButton();
+        cd.getButtonMgr().getLinkButtons().remove(b);
         return true;
     }
 
